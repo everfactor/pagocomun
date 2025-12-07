@@ -56,7 +56,7 @@ module NavigationHelper
   def admin_organizations
     return [] unless Current.user
 
-    if Current.user.base_super_admin?
+    if Current.user.role_super_admin?
       Organization.all
     else
       Current.user.member_organizations

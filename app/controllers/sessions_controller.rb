@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
       Current.user = user
-      if user.base_super_admin? || user.base_org_admin?
+      if user.role_super_admin? || user.role_org_admin?
         redirect_to admin_dashboard_index_path, notice: "Welcome back, #{user.first_name || user.email_address}!"
       else
         redirect_to root_path, notice: "Welcome back, #{user.first_name || user.email_address}!"
