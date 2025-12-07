@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Admin - Pagocomun" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Pagocomun">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-50 dark:bg-gray-950">
+    <div class="flex h-screen">
+      <%= render "shared/admin_sidebar" %>
+
+      <div class="flex flex-1 flex-col overflow-hidden">
+        <main class="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+          <% if notice %>
+            <div class="mb-4 rounded-md bg-blue-50 p-4 dark:bg-blue-900/20">
+              <p class="text-sm font-medium text-blue-800 dark:text-blue-200"><%= notice %></p>
+            </div>
+          <% end %>
+
+          <% if alert %>
+            <div class="mb-4 rounded-md bg-red-50 p-4 dark:bg-red-900/20">
+              <p class="text-sm font-medium text-red-800 dark:text-red-200"><%= alert %></p>
+            </div>
+          <% end %>
+
+          <%= yield %>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_authentication!
-    redirect_to login_path, alert: "Please log in" unless Current.user
+    return if Current.user
+    redirect_to login_path, alert: "Please log in"
   end
 end

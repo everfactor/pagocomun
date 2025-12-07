@@ -11,7 +11,11 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
       Current.user = user
-      redirect_to root_path, notice: "Welcome back, #{user.first_name}!"
+      if user.base_super_admin? || user.base_org_admin?
+        redirect_to admin_dashboard_index_path, notice: "Welcome back, #{user.first_name || user.email_address}!"
+      else
+        redirect_to root_path, notice: "Welcome back, #{user.first_name || user.email_address}!"
+      end
     else
       flash.now[:alert] = "Invalid email or password"
       render :new, status: :unprocessable_entity
@@ -19,6 +23,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    Rails.logger.info "Destroying session for user: #{Current.user.inspect}"
     session[:user_id] = nil
     Current.user = nil
     redirect_to login_path, notice: "Logged out successfully"
