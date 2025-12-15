@@ -20,27 +20,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_06_233214) do
     t.datetime "created_at", null: false
     t.date "due_date"
     t.string "period"
-    t.integer "status", default: 0
+    t.string "status", default: "pending"
     t.bigint "unit_id", null: false
     t.datetime "updated_at", null: false
     t.index ["unit_id"], name: "index_bills_on_unit_id"
-  end
-
-  create_table "communities", force: :cascade do |t|
-    t.string "address"
-    t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.bigint "organization_id", null: false
-    t.string "tbk_child_commerce_code", null: false, comment: "Provided by Transbank per building"
-    t.datetime "updated_at", null: false
-    t.index ["organization_id"], name: "index_communities_on_organization_id"
   end
 
   create_table "organization_memberships", force: :cascade do |t|
     t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.bigint "organization_id", null: false
-    t.integer "role", default: 3, null: false
+    t.string "role", default: "viewer", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["organization_id", "user_id"], name: "index_organization_memberships_on_organization_id_and_user_id", unique: true
@@ -50,11 +40,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_06_233214) do
 
   create_table "organizations", force: :cascade do |t|
     t.boolean "active", default: true
+    t.string "address"
     t.datetime "created_at", null: false
     t.string "name", null: false
-    t.integer "org_type", default: 0, null: false
+    t.text "note", comment: "Note for approval/rejection tracking"
+    t.string "org_type", default: "community", null: false
     t.string "rut", null: false
     t.string "slug"
+    t.string "status", default: "pending", null: false
+    t.string "tbk_child_commerce_code", comment: "Provided by Transbank per organization"
     t.string "transbank_id", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_organizations_on_slug"
@@ -78,7 +72,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_06_233214) do
     t.integer "amount", null: false
     t.bigint "bill_id", null: false
     t.string "child_buy_order", null: false
-    t.bigint "community_id", null: false
     t.datetime "created_at", null: false
     t.jsonb "gateway_payload"
     t.bigint "organization_id", null: false
@@ -93,7 +86,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_06_233214) do
     t.datetime "updated_at", null: false
     t.index ["bill_id"], name: "index_payments_on_bill_id"
     t.index ["child_buy_order"], name: "index_payments_on_child_buy_order", unique: true
-    t.index ["community_id"], name: "index_payments_on_community_id"
     t.index ["organization_id"], name: "index_payments_on_organization_id"
     t.index ["parent_buy_order"], name: "index_payments_on_parent_buy_order", unique: true
     t.index ["payer_user_id"], name: "index_payments_on_payer_user_id"
@@ -115,42 +107,43 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_06_233214) do
   end
 
   create_table "units", force: :cascade do |t|
-    t.bigint "community_id", null: false
     t.datetime "created_at", null: false
     t.string "number", null: false
+    t.bigint "organization_id", null: false
     t.float "proration"
     t.string "tower"
     t.datetime "updated_at", null: false
-    t.index ["community_id", "number", "tower"], name: "idx_units_unique_key", unique: true
-    t.index ["community_id"], name: "index_units_on_community_id"
+    t.index ["organization_id", "number", "tower"], name: "idx_units_unique_key", unique: true
+    t.index ["organization_id"], name: "index_units_on_organization_id"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "role", default: "resident", null: false
     t.datetime "created_at", null: false
     t.string "email_address", null: false
     t.string "first_name"
     t.string "last_name"
+    t.text "note", comment: "Note for approval/rejection tracking"
     t.bigint "organization_id"
     t.string "password_digest", null: false
+    t.string "role", default: "resident", null: false
+    t.text "signup_note", comment: "Note provided by user during signup"
+    t.string "status", default: "pending", null: false
     t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["organization_id"], name: "index_users_on_organization_id"
   end
 
   add_foreign_key "bills", "units"
-  add_foreign_key "communities", "organizations"
   add_foreign_key "organization_memberships", "organizations"
   add_foreign_key "organization_memberships", "users"
   add_foreign_key "payment_methods", "users"
   add_foreign_key "payments", "bills"
-  add_foreign_key "payments", "communities"
   add_foreign_key "payments", "organizations"
   add_foreign_key "payments", "payment_methods"
   add_foreign_key "payments", "units"
   add_foreign_key "payments", "users", column: "payer_user_id"
   add_foreign_key "unit_user_assignments", "units"
   add_foreign_key "unit_user_assignments", "users"
-  add_foreign_key "units", "communities"
+  add_foreign_key "units", "organizations"
   add_foreign_key "users", "organizations"
 end

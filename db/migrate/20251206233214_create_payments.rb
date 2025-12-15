@@ -2,7 +2,6 @@ class CreatePayments < ActiveRecord::Migration[8.1]
   def change
     create_table :payments do |t|
       t.references :organization, null: false, foreign_key: true
-      t.references :community, null: false, foreign_key: true
       t.references :unit, null: false, foreign_key: true
       t.references :bill, null: false, foreign_key: true
       t.references :payment_method, null: true, foreign_key: true

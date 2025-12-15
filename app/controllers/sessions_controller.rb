@@ -9,6 +9,19 @@ class SessionsController < ApplicationController
     user = User.find_by(email_address: params[:email_address])
 
     if user&.authenticate(params[:password])
+      unless user.status_approved?
+        flash.now[:alert] = case user.status
+                            when "pending"
+                              "Your account is pending approval. Please wait for an administrator to approve your account."
+                            when "rejected"
+                              "Your account has been rejected. Please contact support for more information."
+                            else
+                              "Your account is not active. Please contact support."
+                            end
+        render :new, status: :unprocessable_entity
+        return
+      end
+
       session[:user_id] = user.id
       Current.user = user
       if user.role_super_admin? || user.role_org_admin?

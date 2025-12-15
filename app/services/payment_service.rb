@@ -2,8 +2,7 @@ class PaymentService < ApplicationService
   def initialize(bill)
     @bill = bill
     @unit = bill.unit
-    @community = @unit.community
-    @organization = @community.organization
+    @organization = @unit.organization
   end
 
   def call
@@ -23,7 +22,7 @@ class PaymentService < ApplicationService
 
   private
 
-  attr_reader :bill, :unit, :community, :organization
+  attr_reader :bill, :unit, :organization
 
   def find_payer_assignment(date)
     unit.unit_user_assignments.on_date(date).order(starts_on: :desc).first
@@ -65,7 +64,7 @@ class PaymentService < ApplicationService
       buy_order: parent_buy_order,
       details: [
         {
-          commerce_code: @community.tbk_child_commerce_code,
+          commerce_code: organization.tbk_child_commerce_code,
           buy_order: child_buy_order,
           amount: bill.amount
         }
@@ -76,7 +75,6 @@ class PaymentService < ApplicationService
   def create_payment_record(payer_user:, payment_method:, parent_buy_order:, child_buy_order:, response:)
     Payment.create!(
       organization: organization,
-      community: community,
       unit: unit,
       bill: bill,
       payment_method: payment_method,

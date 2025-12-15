@@ -4,7 +4,7 @@ class CreateOrganizationMemberships < ActiveRecord::Migration[8.1]
       t.references :organization, null: false, foreign_key: true
       t.references :user, null: false, foreign_key: true
       # enum: admin, manager, staff, viewer, resident
-      t.integer :role, null: false, default: 3
+      t.string :role, null: false, default: "viewer"
       t.boolean :active, default: true
 
       t.timestamps

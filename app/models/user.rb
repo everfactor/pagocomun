@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :assigned_units, through: :unit_user_assignments, source: :unit
 
   enum :role, %w[super_admin org_admin manager resident].index_by(&:itself), prefix: :role
+  enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status
 
   validates :email_address, presence: true, uniqueness: true
   validates :password_digest, presence: true, length: { minimum: 8 }, if: -> { new_record? || !password_digest.nil? }

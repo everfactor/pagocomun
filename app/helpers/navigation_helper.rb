@@ -17,11 +17,6 @@ module NavigationHelper
         icon: :users
       },
       {
-        name: "Communities",
-        path: admin_communities_path,
-        icon: :communities
-      },
-      {
         name: "Units",
         path: admin_units_path,
         icon: :units

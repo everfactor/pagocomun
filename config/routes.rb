@@ -27,7 +27,6 @@ Rails.application.routes.draw do
     resources :dashboard, only: [:index]
     resources :organizations
     resources :users
-    resources :communities
     resources :units
     resources :bills, only: [:index, :show]
     resources :payments, only: [:index, :show]
