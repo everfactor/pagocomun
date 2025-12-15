@@ -1,0 +1,36 @@
+<tr id="<%= dom_id user %>">
+  <td class="px-6 py-4 whitespace-nowrap">
+    <div class="text-sm font-medium text-gray-900">
+      <%= link_to user.first_name.present? ? "#{user.first_name} #{user.last_name}".strip : user.email_address, admin_user_path(user), class: "text-blue-600 hover:text-blue-900" %>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+    <%= user.email_address %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+    <%= user.role.humanize %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
+      case user.status
+      when 'approved'
+        'bg-green-100 text-green-800'
+      when 'pending'
+        'bg-yellow-100 text-yellow-800'
+      when 'rejected'
+        'bg-red-100 text-red-800'
+      else
+        'bg-gray-100 text-gray-800'
+      end
+    %>">
+      <%= user.status.humanize %>
+    </span>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+    <%= link_to "View", admin_user_path(user), class: "text-blue-600 hover:text-blue-900 mr-4" %>
+    <%= link_to "Edit", edit_admin_user_path(user), class: "text-indigo-600 hover:text-indigo-900 mr-4" %>
+    <%= link_to "Delete", admin_user_path(user), method: :delete,
+        data: { confirm: "Are you sure?", turbo_method: :delete },
+        class: "text-red-600 hover:text-red-900" %>
+  </td>
+</tr>

@@ -1,0 +1,9 @@
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "shared/flash_messages" %>
+<% end %>
+
+<%= turbo_stream.prepend "payment_methods" do %>
+  <%= render @payment_method %>
+<% end %>
+
+<%= turbo_stream.remove "new_payment_method" %>

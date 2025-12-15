@@ -1,0 +1,72 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Payment Method #<%= @payment_method.id %></h1>
+      <p class="mt-2 text-sm text-gray-600">Payment method details</p>
+    </div>
+    <div class="flex gap-2">
+      <%= link_to "Edit", edit_admin_payment_method_path(@payment_method), class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+      <%= link_to "Back to List", admin_payment_methods_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Payment Method Information</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">User</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <%= link_to @payment_method.user.email_address, admin_user_path(@payment_method.user), class: "text-blue-600 hover:text-blue-900" %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Transbank Username</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @payment_method.tbk_username %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Transbank Token</dt>
+            <dd class="mt-1 text-sm text-gray-900 font-mono text-xs"><%= @payment_method.tbk_token %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Card Type</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @payment_method.card_type || "N/A" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Last 4 Digits</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @payment_method.card_last_4 || "N/A" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Active</dt>
+            <dd class="mt-1">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= @payment_method.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+                <%= @payment_method.active? ? "Active" : "Inactive" %>
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Related Data</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Payments</dt>
+            <dd class="mt-1 text-2xl font-semibold text-gray-900"><%= @payment_method.payments.count %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Created At</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @payment_method.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @payment_method.updated_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

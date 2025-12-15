@@ -1,0 +1,109 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900"><%= @organization.name %></h1>
+      <p class="mt-2 text-sm text-gray-600">Organization details</p>
+    </div>
+    <div class="flex gap-2">
+      <%= link_to "Edit", edit_admin_organization_path(@organization), class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+      <%= link_to "Back to List", admin_organizations_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Name</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @organization.name %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">RUT</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @organization.rut %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Type</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @organization.org_type.humanize %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Status</dt>
+            <dd class="mt-1">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
+                case @organization.status
+                when 'approved'
+                  'bg-green-100 text-green-800'
+                when 'pending'
+                  'bg-yellow-100 text-yellow-800'
+                when 'rejected'
+                  'bg-red-100 text-red-800'
+                else
+                  'bg-gray-100 text-gray-800'
+                end
+              %>">
+                <%= @organization.status.humanize %>
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Active</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @organization.active? ? "Yes" : "No" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Address</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @organization.address || "N/A" %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Transbank Information</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Transbank ID</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @organization.transbank_id %></dd>
+          </div>
+          <% if @organization.org_type_community? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Child Commerce Code</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @organization.tbk_child_commerce_code || "N/A" %></dd>
+            </div>
+          <% end %>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Slug</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @organization.slug || "N/A" %></dd>
+          </div>
+          <% if @organization.note.present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Note</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= simple_format(@organization.note) %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 overflow-hidden rounded-lg bg-white shadow">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Related Data</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Users</dt>
+          <dd class="mt-1 text-2xl font-semibold text-gray-900"><%= @organization.users.count %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Units</dt>
+          <dd class="mt-1 text-2xl font-semibold text-gray-900"><%= @organization.units.count %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Members</dt>
+          <dd class="mt-1 text-2xl font-semibold text-gray-900"><%= @organization.members.count %></dd>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

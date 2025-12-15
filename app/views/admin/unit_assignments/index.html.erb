@@ -1,0 +1,35 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Unit Assignments</h1>
+      <p class="mt-2 text-sm text-gray-600">Manage unit to user assignments</p>
+    </div>
+    <%= link_to "New Assignment", new_admin_unit_assignment_path, class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Unit</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">User</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Starts On</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Ends On</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Active</th>
+            <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="unit_assignments" class="bg-white divide-y divide-gray-200">
+          <% if @unit_assignments.any? %>
+            <%= render @unit_assignments %>
+          <% else %>
+            <tr>
+              <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No unit assignments found</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

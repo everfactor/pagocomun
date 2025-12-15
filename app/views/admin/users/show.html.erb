@@ -1,0 +1,85 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900"><%= @user.first_name.present? ? "#{@user.first_name} #{@user.last_name}".strip : @user.email_address %></h1>
+      <p class="mt-2 text-sm text-gray-600">User details</p>
+    </div>
+    <div class="flex gap-2">
+      <%= link_to "Edit", edit_admin_user_path(@user), class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+      <%= link_to "Back to List", admin_users_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Email</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @user.email_address %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">First Name</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @user.first_name || "N/A" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Last Name</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @user.last_name || "N/A" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Role</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @user.role.humanize %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Status</dt>
+            <dd class="mt-1">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
+                case @user.status
+                when 'approved'
+                  'bg-green-100 text-green-800'
+                when 'pending'
+                  'bg-yellow-100 text-yellow-800'
+                when 'rejected'
+                  'bg-red-100 text-red-800'
+                else
+                  'bg-gray-100 text-gray-800'
+                end
+              %>">
+                <%= @user.status.humanize %>
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Additional Information</h2>
+        <dl class="space-y-4">
+          <% if @user.signup_note.present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Signup Note</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= simple_format(@user.signup_note) %></dd>
+            </div>
+          <% end %>
+          <% if @user.note.present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Admin Note</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= simple_format(@user.note) %></dd>
+            </div>
+          <% end %>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Created At</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @user.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @user.updated_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

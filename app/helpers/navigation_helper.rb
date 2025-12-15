@@ -61,18 +61,18 @@ module NavigationHelper
   def nav_item_classes(is_active)
     base_classes = "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold"
     if is_active
-      "#{base_classes} bg-gray-50 text-blue-600 dark:bg-white/5 dark:text-white"
+      "#{base_classes} bg-gray-50 text-blue-600"
     else
-      "#{base_classes} text-gray-700 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white"
+      "#{base_classes} text-gray-700 hover:bg-gray-50 hover:text-blue-600"
     end
   end
 
   def nav_icon_classes(is_active)
     base_classes = "size-6 shrink-0"
     if is_active
-      "#{base_classes} text-blue-600 dark:text-white"
+      "#{base_classes} text-blue-600"
     else
-      "#{base_classes} text-gray-400 group-hover:text-blue-600 dark:group-hover:text-white"
+      "#{base_classes} text-gray-400 group-hover:text-blue-600"
     end
   end
 end

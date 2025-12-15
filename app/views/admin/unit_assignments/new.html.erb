@@ -1,0 +1,12 @@
+<div class="mx-auto max-w-4xl">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">New Unit Assignment</h1>
+    <p class="mt-2 text-sm text-gray-600">Assign a user to a unit</p>
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <div class="p-6">
+      <%= render "form", unit_assignment: @unit_assignment, units: @units, users: @users %>
+    </div>
+  </div>
+</div>

@@ -14,4 +14,16 @@ class User < ApplicationRecord
 
   validates :email_address, presence: true, uniqueness: true
   validates :password_digest, presence: true, length: { minimum: 8 }, if: -> { new_record? || !password_digest.nil? }
+  validate :role_allowed_for_signup, on: :create
+
+  private
+
+  def role_allowed_for_signup
+    return unless new_record?
+    return if role.nil?
+
+    unless %w[org_admin manager resident].include?(role)
+      errors.add(:role, "must be one of: org_admin, manager, or resident")
+    end
+  end
 end

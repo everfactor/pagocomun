@@ -19,23 +19,13 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-gray-50 dark:bg-gray-950">
+  <body class="bg-gray-50" data-controller="sidebar">
     <div class="flex h-screen">
       <%= render "shared/admin_sidebar" %>
 
       <div class="flex flex-1 flex-col overflow-hidden">
         <main class="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
-          <% if notice %>
-            <div class="mb-4 rounded-md bg-blue-50 p-4 dark:bg-blue-900/20">
-              <p class="text-sm font-medium text-blue-800 dark:text-blue-200"><%= notice %></p>
-            </div>
-          <% end %>
-
-          <% if alert %>
-            <div class="mb-4 rounded-md bg-red-50 p-4 dark:bg-red-900/20">
-              <p class="text-sm font-medium text-red-800 dark:text-red-200"><%= alert %></p>
-            </div>
-          <% end %>
+          <%= render "shared/flash_messages" %>
 
           <%= yield %>
         </main>

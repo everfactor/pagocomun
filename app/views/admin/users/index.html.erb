@@ -1,0 +1,34 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Users</h1>
+      <p class="mt-2 text-sm text-gray-600">Manage all users</p>
+    </div>
+    <%= link_to "New User", new_admin_user_path, class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Role</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Status</th>
+            <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users" class="bg-white divide-y divide-gray-200">
+          <% if @users.any? %>
+            <%= render @users %>
+          <% else %>
+            <tr>
+              <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No users found</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

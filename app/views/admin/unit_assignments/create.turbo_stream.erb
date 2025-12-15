@@ -1,0 +1,9 @@
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "shared/flash_messages" %>
+<% end %>
+
+<%= turbo_stream.prepend "unit_assignments" do %>
+  <%= render @unit_assignment %>
+<% end %>
+
+<%= turbo_stream.remove "new_unit_assignment" %>

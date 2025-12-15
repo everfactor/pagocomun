@@ -1,0 +1,125 @@
+<%= form_with model: [:admin, organization], local: true, data: { turbo: true } do |f| %>
+  <% if organization.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4 mb-6">
+      <div class="text-sm font-medium text-red-800">
+        <p class="mb-2">Please fix the following errors:</p>
+        <ul class="list-disc list-inside space-y-1">
+          <% organization.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="space-y-6">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div>
+        <%= f.label :name, class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.text_field :name, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :rut, class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.text_field :rut, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div>
+        <%= f.label :org_type, "Organization Type", class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.select :org_type, options_for_select([
+            ["Community", "community"],
+            ["Rental Space", "rental_space"]
+          ], organization.org_type), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :slug, class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.text_field :slug, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :address, class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_field :address, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div>
+        <%= f.label :transbank_id, "Transbank ID", class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.text_field :transbank_id, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div id="tbk_child_commerce_code_field" style="<%= 'display: none;' unless organization.org_type_community? %>">
+        <%= f.label :tbk_child_commerce_code, "Child Commerce Code", class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.text_field :tbk_child_commerce_code, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        </div>
+      </div>
+    </div>
+
+    <% if Current.user.role_super_admin? %>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <%= f.label :status, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= f.select :status, options_for_select([
+              ["Pending", "pending"],
+              ["Approved", "approved"],
+              ["Rejected", "rejected"]
+            ], organization.status), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :active, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= f.check_box :active, class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :note, class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_area :note, rows: 4, placeholder: "Add notes about approval/rejection...", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-4 pt-4 border-t border-gray-200">
+      <%= link_to "Cancel", admin_organizations_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= f.submit class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const orgTypeSelect = document.querySelector('#organization_org_type');
+    const childCodeField = document.getElementById('tbk_child_commerce_code_field');
+
+    if (orgTypeSelect && childCodeField) {
+      orgTypeSelect.addEventListener('change', function() {
+        if (this.value === 'community') {
+          childCodeField.style.display = 'block';
+        } else {
+          childCodeField.style.display = 'none';
+        }
+      });
+    }
+  });
+</script>

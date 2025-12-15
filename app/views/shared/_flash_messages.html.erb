@@ -1,0 +1,13 @@
+<div id="flash-messages" class="flash-container">
+  <% if notice %>
+    <div class="flash-message flash-notice rounded-md bg-blue-50 p-4 mb-4">
+      <p class="text-sm font-medium text-blue-800"><%= notice %></p>
+    </div>
+  <% end %>
+
+  <% if alert %>
+    <div class="flash-message flash-alert rounded-md bg-red-50 p-4 mb-4">
+      <p class="text-sm font-medium text-red-800"><%= alert %></p>
+    </div>
+  <% end %>
+</div>

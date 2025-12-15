@@ -1,0 +1,34 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Payment Methods</h1>
+      <p class="mt-2 text-sm text-gray-600">Manage all payment methods</p>
+    </div>
+    <%= link_to "New Payment Method", new_admin_payment_method_path, class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">User</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Card Type</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Last 4</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Active</th>
+            <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="payment_methods" class="bg-white divide-y divide-gray-200">
+          <% if @payment_methods.any? %>
+            <%= render @payment_methods %>
+          <% else %>
+            <tr>
+              <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No payment methods found</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

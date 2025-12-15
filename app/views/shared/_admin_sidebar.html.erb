@@ -1,8 +1,13 @@
-<div class="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:border-white/10 dark:bg-gray-900 dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:bg-black/10">
-  <div class="relative flex h-16 shrink-0 items-center">
-    <%= link_to admin_dashboard_index_path, class: "flex items-center" do %>
-      <span class="text-xl font-bold text-blue-600 dark:text-blue-400">Pago Común</span>
+<div data-sidebar-target="sidebar" class="relative flex shrink-0 flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white transition-all duration-300 w-64 sidebar-container">
+  <div class="relative flex h-16 shrink-0 items-center justify-between px-4 sidebar-header">
+    <%= link_to admin_dashboard_index_path, class: "flex items-center min-w-0 flex-1 sidebar-logo" do %>
+      <span data-sidebar-target="navText" class="text-xl font-bold text-blue-600 whitespace-nowrap">Pago Común</span>
     <% end %>
+    <button type="button" data-action="click->sidebar#toggle" class="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors shrink-0" title="Toggle sidebar">
+      <svg data-sidebar-target="toggleIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5 transition-transform duration-300">
+        <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
   </div>
 
   <nav class="relative flex flex-1 flex-col">
@@ -12,9 +17,9 @@
           <% admin_nav_items.each do |item| %>
             <% is_active = current_nav_item?(item[:path]) %>
             <li>
-              <%= link_to item[:path], class: nav_item_classes(is_active) do %>
+              <%= link_to item[:path], class: nav_item_classes(is_active), title: item[:name] do %>
                 <%= icon(item[:icon], classes: nav_icon_classes(is_active)) %>
-                <%= item[:name] %>
+                <span data-sidebar-target="navText" class="truncate"><%= item[:name] %></span>
               <% end %>
             </li>
           <% end %>
@@ -23,15 +28,15 @@
 
       <% if admin_organizations.any? %>
         <li>
-          <div class="text-xs/6 font-semibold text-gray-400">Your Organizations</div>
+          <div data-sidebar-target="orgText" class="text-xs/6 font-semibold text-gray-400 px-2">Your Organizations</div>
           <ul role="list" class="-mx-2 mt-2 space-y-1">
             <% admin_organizations.each do |org| %>
               <li>
-                <%= link_to admin_organization_path(org), class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white" do %>
-                  <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-[0.625rem] font-medium text-gray-400 group-hover:border-blue-600 group-hover:text-blue-600 dark:border-white/15 dark:bg-white/5 dark:group-hover:border-white/20 dark:group-hover:text-white">
+                <%= link_to admin_organization_path(org), class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-blue-600 sidebar-org-link", title: org.name do %>
+                  <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-[0.625rem] font-medium text-gray-400 group-hover:border-blue-600 group-hover:text-blue-600">
                     <%= org.name.first.upcase %>
                   </span>
-                  <span class="truncate"><%= org.name %></span>
+                  <span data-sidebar-target="orgText" class="truncate"><%= org.name %></span>
                 <% end %>
               </li>
             <% end %>
@@ -39,23 +44,77 @@
         </li>
       <% end %>
 
-      <li class="-mx-6 mt-auto">
-        <div class="flex items-center gap-x-4 px-6 py-3">
+      <li class="-mx-6 mt-auto sidebar-footer">
+        <div class="flex items-center gap-x-4 px-6 py-3 sidebar-footer-content">
           <% if Current.user %>
-            <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 dark:bg-blue-900 dark:text-blue-300 outline -outline-offset-1 outline-black/5 dark:outline-white/10">
+            <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 outline -outline-offset-1 outline-black/5 shrink-0">
               <span class="text-sm font-semibold">
                 <%= Current.user.first_name&.first || Current.user.email_address.first.upcase %>
               </span>
             </div>
-            <span class="flex-1 text-sm/6 font-semibold text-gray-900 dark:text-white">
-              <%= Current.user.first_name || Current.user.email_address %>
-            </span>
+            <span data-sidebar-target="userText" class="flex-1 text-sm/6 font-semibold text-gray-900 truncate min-w-0"><%= Current.user.first_name || Current.user.email_address %></span>
           <% end %>
-          <%= button_to logout_path, method: :delete, class: "text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" do %>
-            Logout
+          <%= button_to logout_path, method: :delete, class: "text-xs text-gray-500 hover:text-gray-700 shrink-0 p-1", title: "Logout" do %>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           <% end %>
         </div>
       </li>
     </ul>
   </nav>
 </div>
+
+<style>
+  /* Collapsed sidebar styles */
+  .sidebar-container.collapsed {
+    width: 4rem !important; /* 64px */
+  }
+
+  .sidebar-container.collapsed [data-sidebar-target="navText"] {
+    display: none !important;
+  }
+
+  .sidebar-container.collapsed [data-sidebar-target="orgText"] {
+    display: none !important;
+  }
+
+  .sidebar-container.collapsed [data-sidebar-target="userText"] {
+    display: none !important;
+  }
+
+  .sidebar-container.collapsed .sidebar-header {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    justify-content: center;
+  }
+
+  .sidebar-container.collapsed .sidebar-logo {
+    flex: 0;
+  }
+
+  .sidebar-container.collapsed .sidebar-org-link {
+    gap: 0;
+  }
+
+  .sidebar-container.collapsed .sidebar-footer {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .sidebar-container.collapsed .sidebar-footer-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  /* Toggle icon rotation */
+  .sidebar-container:not(.collapsed) [data-sidebar-target="toggleIcon"] {
+    transform: rotate(0deg);
+  }
+
+  .sidebar-container.collapsed [data-sidebar-target="toggleIcon"] {
+    transform: rotate(180deg);
+  }
+</style>

@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
+  get "signup", to: "registrations#new"
+  post "signup", to: "registrations#create"
 
   # Payment Methods (non-admin)
   resources :payment_methods, only: [:create] do
@@ -30,7 +32,7 @@ Rails.application.routes.draw do
     resources :units
     resources :bills, only: [:index, :show]
     resources :payments, only: [:index, :show]
-    resources :payment_methods, only: [:index, :show]
+    resources :payment_methods
     resources :unit_assignments, path: "unit-assignments"
   end
 

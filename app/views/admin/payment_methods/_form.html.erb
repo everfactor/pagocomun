@@ -1,0 +1,68 @@
+<%= form_with model: [:admin, payment_method], local: true, data: { turbo: true } do |f| %>
+  <% if payment_method.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4 mb-6">
+      <div class="text-sm font-medium text-red-800">
+        <p class="mb-2">Please fix the following errors:</p>
+        <ul class="list-disc list-inside space-y-1">
+          <% payment_method.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="space-y-6">
+    <div>
+      <%= f.label :user_id, "User", class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.collection_select :user_id, users, :id, :email_address, { prompt: "Select a user" }, { required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div>
+        <%= f.label :tbk_username, "Transbank Username", class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.text_field :tbk_username, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :tbk_token, "Transbank Token", class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.text_field :tbk_token, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm font-mono text-xs" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div>
+        <%= f.label :card_type, "Card Type", class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.text_field :card_type, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :card_last_4, "Last 4 Digits", class: "block text-sm font-medium leading-6 text-gray-900" %>
+        <div class="mt-2">
+          <%= f.text_field :card_last_4, maxlength: 4, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :active, "Active", class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.check_box :active, class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600" %>
+        <span class="ml-2 text-sm text-gray-500">Payment method is active</span>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-4 pt-4 border-t border-gray-200">
+      <%= link_to "Cancel", admin_payment_methods_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= f.submit class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+    </div>
+  </div>
+<% end %>

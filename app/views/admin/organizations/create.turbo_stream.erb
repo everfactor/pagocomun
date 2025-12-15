@@ -1,0 +1,9 @@
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "shared/flash_messages" %>
+<% end %>
+
+<%= turbo_stream.prepend "organizations" do %>
+  <%= render @organization %>
+<% end %>
+
+<%= turbo_stream.remove "new_organization" %>
