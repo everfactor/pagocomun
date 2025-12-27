@@ -66,3 +66,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "transbank-sdk"
+
+gem "pundit", "~> 2.5"

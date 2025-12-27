@@ -30,11 +30,15 @@ Rails.application.routes.draw do
     resources :organizations
     resources :users
     resources :units
+    resources :unit_imports, only: [:new, :create]
     resources :bills, only: [:index, :show]
     resources :payments, only: [:index, :show]
     resources :payment_methods
     resources :unit_assignments, path: "unit-assignments"
   end
+
+  # Resident Dashboard
+  resources :dashboard, only: [:index]
 
   # Defines the root path route ("/")
   root "home#index"

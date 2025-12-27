@@ -1,6 +1,7 @@
 module Admin
   class UnitsController < BaseController
     before_action :set_unit, only: [:show, :edit, :update, :destroy]
+    before_action :set_unit, only: [:show, :edit, :update, :destroy]
 
     def index
       if params[:organization_id].present?

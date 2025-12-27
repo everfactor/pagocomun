@@ -5,7 +5,11 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
+  include Pundit::Authorization
   before_action :set_current_user
+
+  # Handle Pundit NotAuthorizedError
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
 
@@ -16,5 +20,18 @@ class ApplicationController < ActionController::Base
   def require_authentication!
     return if Current.user
     redirect_to login_path, alert: "Please log in"
+  end
+
+  def user_not_authorized
+    flash[:alert] = "Access denied."
+    if Current.user
+        redirect_back(fallback_location: root_path)
+    else
+        redirect_to login_path
+    end
+  end
+
+  def current_user
+    Current.user
   end
 end
