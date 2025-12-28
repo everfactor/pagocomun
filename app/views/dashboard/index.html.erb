@@ -27,7 +27,7 @@
           <h2 class="text-xl font-bold text-gray-900">Auto-Pay Not Enabled</h2>
           <p class="mt-1 text-sm text-gray-600">Enroll your credit card to pay bills automatically.</p>
         </div>
-        <%= button_to "Enroll Card", payment_methods_path(user_id: @user.id), method: :post, data: { turbo: false }, class: "rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" %>
+        <%= button_to "Enroll Card", payment_methods_path(user_id: @user.to_gid_param), method: :post, data: { turbo: false }, class: "rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" %>
       </div>
     </div>
   <% end %>

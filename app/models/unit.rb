@@ -8,10 +8,9 @@ class Unit < ApplicationRecord
   validates :number, presence: true
   validates :number, uniqueness: { scope: [:organization_id, :tower] }
 
-  def active_assignment
-    unit_user_assignments.where(active: true)
-                         .where("starts_on <= ?", Date.current)
-                         .where("ends_on IS NULL OR ends_on >= ?", Date.current)
-                         .first
-  end
+  has_one :active_assignment, -> {
+    where(active: true)
+    .where("starts_on <= ?", Date.current)
+    .where("ends_on IS NULL OR ends_on >= ?", Date.current)
+  }, class_name: "UnitUserAssignment"
 end
