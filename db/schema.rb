@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_06_233214) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_07_233331) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -108,11 +108,14 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_06_233214) do
 
   create_table "units", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "mobile_number"
     t.string "number", null: false
     t.bigint "organization_id", null: false
     t.float "proration"
     t.string "tower"
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_units_on_email"
     t.index ["organization_id", "number", "tower"], name: "idx_units_unique_key", unique: true
     t.index ["organization_id"], name: "index_units_on_organization_id"
   end

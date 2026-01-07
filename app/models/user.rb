@@ -9,6 +9,13 @@ class User < ApplicationRecord
   has_many :unit_user_assignments, dependent: :destroy
   has_many :assigned_units, through: :unit_user_assignments, source: :unit
   has_many :payments, foreign_key: :payer_user_id
+  belongs_to :unit, primary_key: :email, foreign_key: :email_address, optional: true
+
+  # super_admin toti, pedro
+  # org_admin
+  # manager
+  # resident this user doen't need login to enroll credit/debit card
+
 
   enum :role, %w[super_admin org_admin manager resident].index_by(&:itself), prefix: :role
   enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status

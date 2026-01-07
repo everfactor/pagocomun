@@ -39,6 +39,29 @@
 
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Datos de contacto</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Email</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <%= @unit.email %>
+              <% if @unit.user %>
+                <span class="ml-2 text-xs text-gray-500">
+                  (<%= link_to "Associated User", admin_user_path(@unit.user), class: "text-blue-600 hover:text-blue-900" %>)
+                </span>
+              <% end %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Mobile Number</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @unit.mobile_number || "N/A" %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Related Data</h2>
         <dl class="space-y-4">
           <div>

@@ -107,7 +107,7 @@ module Admin
     end
 
     def unit_params
-      params.require(:unit).permit(:number, :tower, :proration, :organization_id)
+      params.require(:unit).permit(:number, :tower, :proration, :organization_id, :email, :mobile_number)
     end
   end
 end
