@@ -16,7 +16,6 @@ class User < ApplicationRecord
   # manager
   # resident this user doen't need login to enroll credit/debit card
 
-
   enum :role, %w[super_admin org_admin manager resident].index_by(&:itself), prefix: :role
   enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status
 
@@ -40,6 +39,4 @@ class User < ApplicationRecord
       errors.add(:role, "must be one of: org_admin, manager, or resident")
     end
   end
-
-
 end
