@@ -1,0 +1,161 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Panel de Control</h1>
+    <p class="mt-2 text-sm text-gray-600">Resumen de tus organizaciones</p>
+  </div>
+
+<% if @organizations_count == 0 %>
+  <div class="mt-8">
+    <div class="rounded-lg bg-white p-8 text-center shadow">
+      <h3 class="text-sm font-semibold text-gray-900">Comienza creando tu primera organización</h3>
+      <p class="mt-1 text-sm text-gray-500">Selecciona el tipo de organización que deseas registrar.</p>
+      <div class="mt-8 flex justify-center gap-6">
+        <%= link_to new_manage_organization_path(org_type: 'rental_space'), class: "group block max-w-xs rounded-lg p-6 ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-blue-500 hover:ring-blue-500" do %>
+          <div class="flex items-center space-x-3">
+             <div class="h-10 w-10 flex items-center justify-center rounded-md bg-blue-500 text-white group-hover:bg-white group-hover:text-blue-500 transition-colors">
+              <%= icon(:organizations, classes: "h-6 w-6") %>
+            </div>
+            <h3 class="text-slate-900 group-hover:text-white text-sm font-semibold">Nuevo Espacio de Alquiler</h3>
+          </div>
+          <p class="text-slate-500 group-hover:text-white text-sm">Gestiona espacios de alquiler.</p>
+        <% end %>
+
+        <%= link_to new_manage_organization_path(org_type: 'community'), class: "group block max-w-xs rounded-lg p-6 ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-teal-500 hover:ring-teal-500" do %>
+          <div class="flex items-center space-x-3">
+            <div class="h-10 w-10 flex items-center justify-center rounded-md bg-teal-500 text-white group-hover:bg-white group-hover:text-teal-500 transition-colors">
+              <%= icon(:users, classes: "h-6 w-6") %>
+            </div>
+            <h3 class="text-slate-900 group-hover:text-white text-sm font-semibold">Nueva Comunidad</h3>
+          </div>
+          <p class="text-slate-500 group-hover:text-white text-sm">Administra condominios y comunidades de vecinos.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="flex h-10 w-10 items-center justify-center rounded-md bg-blue-500 text-white">
+              <%= icon(:organizations, classes: "h-6 w-6") %>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="truncate text-sm font-medium text-gray-500">Organizaciones</dt>
+              <dd class="text-lg font-semibold text-gray-900"><%= @organizations_count %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="flex h-10 w-10 items-center justify-center rounded-md bg-teal-500 text-white">
+              <%= icon(:users, classes: "h-6 w-6") %>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="truncate text-sm font-medium text-gray-500">Usuarios</dt>
+              <dd class="text-lg font-semibold text-gray-900"><%= @users_count %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="flex h-10 w-10 items-center justify-center rounded-md bg-indigo-500 text-white">
+              <%= icon(:units, classes: "h-6 w-6") %>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="truncate text-sm font-medium text-gray-500">Unidades</dt>
+              <dd class="text-lg font-semibold text-gray-900"><%= @units_count %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Estado de Cobros</h2>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Pendientes</span>
+            <span class="text-lg font-semibold text-yellow-600"><%= @pending_bills_count %></span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Pagados</span>
+            <span class="text-lg font-semibold text-green-600"><%= @paid_bills_count %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Total Recaudado</h2>
+        <div class="text-3xl font-bold text-gray-900">
+          <%= number_to_currency(@total_payments, unit: "$", separator: ".", delimiter: ".") %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 overflow-hidden rounded-lg bg-white shadow">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Pagos Recientes</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Monto</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Estado</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Fecha</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% if @recent_payments.any? %>
+              <% @recent_payments.each do |payment| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#<%= payment.id %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <%= number_to_currency(payment.amount, unit: "$", separator: ".", delimiter: ".") %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= payment.status_authorized? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                      <%= payment.status %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= payment.created_at.strftime("%b %d, %Y") %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">No hay pagos registrados</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% end %>
+</div>

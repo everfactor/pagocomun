@@ -2,7 +2,7 @@
   <% if user.errors.any? %>
     <div class="rounded-md bg-red-50 p-4 mb-6">
       <div class="text-sm font-medium text-red-800">
-        <p class="mb-2">Please fix the following errors:</p>
+        <p class="mb-2"><%= t('activerecord.errors.template.header', model: t('activerecord.models.user'), count: user.errors.count, default: "Please fix the errors below:") %></p>
         <ul class="list-disc list-inside space-y-1">
           <% user.errors.full_messages.each do |message| %>
             <li><%= message %></li>
@@ -12,94 +12,5 @@
     </div>
   <% end %>
 
-  <div class="space-y-6">
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      <div>
-        <%= f.label :email_address, "Email Address", class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.email_field :email_address, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-        </div>
-      </div>
-
-      <div>
-        <%= f.label :role, class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <% role_options = [
-            ["Organization Admin", "org_admin"],
-            ["Manager", "manager"],
-            ["Resident", "resident"]
-          ] %>
-          <% role_options << ["Super Admin", "super_admin"] if Current.user.role_super_admin? %>
-          <%= f.select :role, options_for_select(role_options, user.role), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      <div>
-        <%= f.label :password, class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.password_field :password, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-          <p class="mt-1 text-xs text-gray-500"><%= user.persisted? ? "Leave blank to keep current password" : "Must be at least 8 characters" %></p>
-        </div>
-      </div>
-
-      <div>
-        <%= f.label :password_confirmation, "Confirm Password", class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.password_field :password_confirmation, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      <div>
-        <%= f.label :first_name, "First Name", class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.text_field :first_name, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-        </div>
-      </div>
-
-      <div>
-        <%= f.label :last_name, "Last Name", class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.text_field :last_name, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-        </div>
-      </div>
-    </div>
-
-    <% if Current.user.role_super_admin? %>
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <div>
-          <%= f.label :status, class: "block text-sm font-medium leading-6 text-gray-900" %>
-          <div class="mt-2">
-            <%= f.select :status, options_for_select([
-              ["Pending", "pending"],
-              ["Approved", "approved"],
-              ["Rejected", "rejected"]
-            ], user.status), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
-          </div>
-        </div>
-
-        <div>
-          <%= f.label :organization_id, "Organization", class: "block text-sm font-medium leading-6 text-gray-900" %>
-          <div class="mt-2">
-            <%= f.collection_select :organization_id, Organization.all, :id, :name, { prompt: "Select organization", include_blank: true }, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-
-    <div>
-      <%= f.label :note, "Admin Note", class: "block text-sm font-medium leading-6 text-gray-900" %>
-      <div class="mt-2">
-        <%= f.text_area :note, rows: 4, placeholder: "Add notes about approval/rejection...", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-      </div>
-    </div>
-
-    <div class="flex items-center justify-end gap-4 pt-4 border-t border-gray-200">
-      <%= link_to "Cancel", admin_users_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
-      <%= f.submit class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
-    </div>
-  </div>
+  <%= render "shared/forms/user_fields", f: f, cancel_path: admin_users_path %>
 <% end %>

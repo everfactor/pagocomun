@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_07_233331) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_08_010636) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -49,10 +49,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_233331) do
     t.string "slug"
     t.string "status", default: "pending", null: false
     t.string "tbk_child_commerce_code", comment: "Provided by Transbank per organization"
-    t.string "transbank_id", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_organizations_on_slug"
-    t.index ["transbank_id"], name: "index_organizations_on_transbank_id", unique: true
   end
 
   create_table "payment_methods", force: :cascade do |t|

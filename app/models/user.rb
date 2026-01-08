@@ -23,13 +23,31 @@ class User < ApplicationRecord
   validates :password_digest, presence: true, length: { minimum: 8 }, if: -> { new_record? || !password_digest.nil? }
   validate :role_allowed_for_signup, on: :create
 
+  after_create_commit :send_enrollment_email, if: :role_resident?
+
+  def enrollment_token
+    to_sgid(expires_in: 30.days, for: 'enrollment').to_s
+  end
+
   has_one :active_assignment, -> {
     where(active: true)
     .where("starts_on <= ?", Date.current)
     .where("ends_on IS NULL OR ends_on >= ?", Date.current)
   }, class_name: "UnitUserAssignment"
 
+  def self.locate_signed(token)
+    GlobalID::Locator.locate_signed(token, for: 'enrollment')
+  end
+
+  def signed_token
+    to_sgid(expires_in: 30.days, for: 'enrollment').to_s
+  end
+
   private
+
+  def send_enrollment_email
+    ResidentMailer.with(user: self).enrollment_email.deliver_later
+  end
 
   def role_allowed_for_signup
     return unless new_record?

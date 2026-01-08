@@ -28,4 +28,80 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  activerecord:
+    models:
+      organization: "Organization"
+      user: "User"
+      unit: "Unit"
+    attributes:
+      organization:
+        name: "Name"
+        rut: "RUT"
+        slug: "Slug"
+        address: "Address"
+        tbk_child_commerce_code: "Commerce Code"
+        status: "Status"
+        active: "Active"
+        note: "Note"
+        org_type: "Organization Type"
+      user:
+        email_address: "Email Address"
+        password: "Password"
+        password_confirmation: "Confirm Password"
+        first_name: "First Name"
+        last_name: "Last Name"
+        role: "Role"
+        status: "Status"
+        note: "Admin Note"
+        organization_id: "Organization"
+      unit:
+        number: "Number"
+        tower: "Tower"
+        proration: "Proration"
+        organization_id: "Organization"
+        email: "Email"
+        mobile_number: "Mobile Number"
+
+  helpers:
+    submit:
+      create: "Create %{model}"
+      update: "Update %{model}"
+      submit: "Save"
+    select:
+      prompt: "Select an option"
+    links:
+      cancel: "Cancel"
+      save: "Save"
+
+  enums:
+    organization:
+      org_type:
+        community: "Community"
+        real_estate: "Real Estate"
+        rental_space: "Rental Space"
+      status:
+        pending: "Pending"
+        approved: "Approved"
+        rejected: "Rejected"
+    user:
+      role:
+        super_admin: "Super Admin"
+        org_admin: "Organization Admin"
+        manager: "Manager"
+        resident: "Resident"
+      status:
+        pending: "Pending"
+        approved: "Approved"
+        rejected: "Rejected"
+
+  dashboard:
+    index:
+      welcome: "Welcome, %{name}"
+      unit: "Unit: %{unit}"
+      no_unit: "No Unit Assigned"
+      autopay_active: "Auto-Pay Active"
+      autopay_success_detail: "Your default payment method is set up."
+      autopay_not_enabled: "Auto-Pay Not Enabled"
+      autopay_not_enabled_detail: "Enroll your credit card to pay bills automatically."
+      enroll_card: "Enroll Card"
+

@@ -3,7 +3,7 @@ class OrganizationMembership < ApplicationRecord
   belongs_to :user
 
   # You can tailor roles; including resident and viewer helps with B2B2C ACLs
-  enum :role, %w[admin manager staff viewer resident].index_by(&:itself), prefix: :role
+  enum :role, %w[admin manager].index_by(&:itself), prefix: :role
 
   validates :organization_id, uniqueness: { scope: :user_id }
 end

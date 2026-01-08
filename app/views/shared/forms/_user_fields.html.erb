@@ -1,0 +1,98 @@
+<div class="space-y-6">
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <div>
+      <%= f.label :email_address, class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.email_field :email_address, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :role, class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <% roles = if Current.user.role_super_admin?
+             [
+               [t('enums.user.role.super_admin'), 'super_admin'],
+               [t('enums.user.role.org_admin'), 'org_admin'],
+               [t('enums.user.role.manager'), 'manager'],
+               [t('enums.user.role.resident'), 'resident']
+             ]
+           else
+             [
+               [t('enums.user.role.manager'), 'manager'],
+               [t('enums.user.role.resident'), 'resident']
+             ]
+           end %>
+        <%= f.select :role, options_for_select(roles, f.object.role), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <div>
+      <%= f.label :password, class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.password_field :password, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <% if f.object.persisted? %>
+          <p class="mt-1 text-xs text-gray-500"><%= t('activerecord.attributes.user.password_hint_edit', default: "Leave blank to keep current") %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :password_confirmation, class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.password_field :password_confirmation, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <div>
+      <%= f.label :first_name, class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_field :first_name, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :last_name, class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_field :last_name, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :organization_id, class: "block text-sm font-medium leading-6 text-gray-900" %>
+    <div class="mt-2">
+      <% organizations = Current.user.role_super_admin? ? Organization.all : Current.user.member_organizations %>
+      <%= f.collection_select :organization_id, organizations, :id, :name, { prompt: t('helpers.select.prompt') }, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+    </div>
+  </div>
+
+  <% if Current.user.role_super_admin? %>
+    <div>
+      <%= f.label :status, class: "block text-sm font-medium leading-6 text-gray-900" %>
+      <div class="mt-2">
+        <%= f.select :status, options_for_select([
+          [t('enums.user.status.pending'), 'pending'],
+          [t('enums.user.status.approved'), 'approved'],
+          [t('enums.user.status.rejected'), 'rejected']
+        ], f.object.status), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+      </div>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :note, class: "block text-sm font-medium leading-6 text-gray-900" %>
+    <div class="mt-2">
+      <%= f.text_area :note, rows: 4, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-4 pt-4 border-t border-gray-200">
+    <%= link_to t('helpers.links.cancel'), cancel_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    <%= f.submit t('helpers.links.save'), class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  </div>
+</div>

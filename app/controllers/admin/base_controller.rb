@@ -12,7 +12,7 @@ module Admin
     end
 
     def admin?
-      Current.user&.role_super_admin? || Current.user&.role_org_admin?
+      Current.user&.role_super_admin?
     end
 
     def set_current_user

@@ -1,0 +1,66 @@
+<div data-sidebar-target="sidebar" class="relative flex shrink-0 flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white transition-all duration-300 w-64 sidebar-container">
+  <div class="relative flex h-16 shrink-0 items-center justify-between px-4 sidebar-header">
+    <%= link_to manage_dashboard_index_path, class: "flex items-center min-w-0 flex-1 sidebar-logo" do %>
+      <span data-sidebar-target="navText" class="text-xl font-bold text-blue-600 whitespace-nowrap">Pago Común</span>
+    <% end %>
+    <button type="button" data-action="click->sidebar#toggle" class="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors shrink-0" title="Toggle sidebar">
+      <svg data-sidebar-target="toggleIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5 transition-transform duration-300">
+        <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="relative flex flex-1 flex-col">
+    <ul role="list" class="flex flex-1 flex-col gap-y-7">
+      <li>
+        <ul role="list" class="-mx-2 space-y-1">
+          <% manage_nav_items.each do |item| %>
+            <% is_active = current_nav_item?(item[:path]) %>
+            <li>
+              <%= link_to item[:path], class: nav_item_classes(is_active), title: item[:name] do %>
+                <%= icon(item[:icon], classes: nav_icon_classes(is_active)) %>
+                <span data-sidebar-target="navText" class="truncate"><%= item[:name] %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+
+      <% if admin_organizations.any? %>
+        <li>
+          <div data-sidebar-target="orgText" class="text-xs/6 font-semibold text-gray-400 px-2">Sus Organizaciones</div>
+          <ul role="list" class="-mx-2 mt-2 space-y-1">
+            <% admin_organizations.each do |org| %>
+              <li>
+                <%= link_to manage_organization_path(org), class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-blue-600 sidebar-org-link", title: org.name do %>
+                  <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-[0.625rem] font-medium text-gray-400 group-hover:border-blue-600 group-hover:text-blue-600">
+                    <%= org.name.first.upcase %>
+                  </span>
+                  <span data-sidebar-target="orgText" class="truncate"><%= org.name %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
+
+      <li class="-mx-6 mt-auto sidebar-footer">
+        <div class="flex items-center gap-x-4 px-6 py-3 sidebar-footer-content">
+          <% if Current.user %>
+            <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 outline -outline-offset-1 outline-black/5 shrink-0">
+              <span class="text-sm font-semibold">
+                <%= Current.user.first_name&.first || Current.user.email_address.first.upcase %>
+              </span>
+            </div>
+            <span data-sidebar-target="userText" class="flex-1 text-sm/6 font-semibold text-gray-900 truncate min-w-0"><%= Current.user.first_name || Current.user.email_address %></span>
+          <% end %>
+          <%= button_to logout_path, method: :delete, class: "text-xs text-gray-500 hover:text-gray-700 shrink-0 p-1", title: "Logout" do %>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          <% end %>
+        </div>
+      </li>
+    </ul>
+  </nav>
+</div>

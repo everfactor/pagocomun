@@ -1,0 +1,67 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <nav class="flex mb-2" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-2">
+          <li><%= link_to "Unidades", manage_units_path(organization_id: @unit.organization_id), class: "text-sm font-medium text-gray-500 hover:text-gray-700" %></li>
+          <li class="flex items-center space-x-2">
+             <svg class="h-5 w-5 flex-shrink-0 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" /></svg>
+             <span class="text-sm font-medium text-gray-500">Unidad <%= @unit.number %></span>
+          </li>
+        </ol>
+      </nav>
+      <h1 class="text-3xl font-bold text-gray-900">Unidad <%= @unit.number %></h1>
+    </div>
+    <div class="flex gap-4">
+      <%= link_to "Editar", edit_manage_unit_path(@unit), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="overflow-hidden rounded-lg bg-white shadow">
+        <div class="px-6 py-5 border-b border-gray-200">
+          <h3 class="text-base font-semibold leading-6 text-gray-900">Detalles de la Unidad</h3>
+        </div>
+        <div class="px-6 py-5">
+          <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Organización</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.organization.name %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Número</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.number %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Torre</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.tower %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Prorrateo</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= number_to_percentage(@unit.proration * 100, precision: 4) %></dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-lg bg-white shadow">
+        <div class="px-6 py-5 border-b border-gray-200">
+          <h3 class="text-base font-semibold leading-6 text-gray-900">Datos de contacto</h3>
+        </div>
+        <div class="px-6 py-5">
+          <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Email</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.email.presence || 'N/A' %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Teléfono móvil</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.mobile_number.presence || 'N/A' %></dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

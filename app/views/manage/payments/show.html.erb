@@ -1,0 +1,67 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <nav class="flex mb-2" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-2">
+          <li><%= link_to "Pagos", manage_payments_path, class: "text-sm font-medium text-gray-500 hover:text-gray-700" %></li>
+          <li class="flex items-center space-x-2">
+             <svg class="h-5 w-5 flex-shrink-0 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" /></svg>
+             <span class="text-sm font-medium text-gray-500">Pago #<%= @payment.id %></span>
+          </li>
+        </ol>
+      </nav>
+      <h1 class="text-3xl font-bold text-gray-900">Pago #<%= @payment.id %></h1>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <h3 class="text-base font-semibold leading-6 text-gray-900">Detalles del Pago</h3>
+      </div>
+      <div class="px-6 py-5">
+        <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Monto</dt>
+            <dd class="mt-1 text-sm font-bold text-gray-900"><%= number_to_currency(@payment.amount, unit: "$", separator: ".", delimiter: ".") %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Estado</dt>
+            <dd class="mt-1">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
+                case @payment.status
+                when 'authorized'
+                  'bg-green-100 text-green-800'
+                when 'initiated'
+                  'bg-yellow-100 text-yellow-800'
+                when 'failed'
+                  'bg-red-100 text-red-800'
+                else
+                  'bg-gray-100 text-gray-800'
+                end
+              %>">
+                <%= @payment.status.humanize %>
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Organización</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @payment.organization.name %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Unidad</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @payment.unit.number %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Fecha</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @payment.created_at.strftime("%d/%m/%Y %H:%M") %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">ID Transacción</dt>
+            <dd class="mt-1 text-sm text-gray-900 underline"><%= @payment.buy_order || 'N/A' %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

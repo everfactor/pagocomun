@@ -44,6 +44,41 @@ module NavigationHelper
     ]
   end
 
+  def manage_nav_items
+    [
+      {
+        name: "Dashboard",
+        path: manage_dashboard_index_path,
+        icon: :dashboard
+      },
+      {
+        name: "Organizaciones",
+        path: manage_organizations_path,
+        icon: :organizations
+      },
+      {
+        name: "Usuarios",
+        path: manage_users_path,
+        icon: :users
+      },
+      {
+        name: "Unidades",
+        path: manage_units_path,
+        icon: :units
+      },
+      {
+        name: "Cobros",
+        path: manage_bills_path,
+        icon: :bills
+      },
+      {
+        name: "Pagos",
+        path: manage_payments_path,
+        icon: :payments
+      }
+    ]
+  end
+
   def current_nav_item?(path)
     request.path == path || request.path.start_with?(path + "/")
   end

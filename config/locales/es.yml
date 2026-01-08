@@ -1,0 +1,77 @@
+es:
+  activerecord:
+    models:
+      organization: "Organización"
+      user: "Usuario"
+      unit: "Unidad"
+    attributes:
+      organization:
+        name: "Nombre"
+        rut: "RUT"
+        slug: "Slug"
+        address: "Dirección"
+        tbk_child_commerce_code: "Código Comercio"
+        status: "Estado"
+        active: "Activo"
+        note: "Notas"
+        org_type: "Tipo de Organización"
+      user:
+        email_address: "Correo Electrónico"
+        password: "Contraseña"
+        password_confirmation: "Confirmar Contraseña"
+        first_name: "Nombre"
+        last_name: "Apellido"
+        role: "Rol"
+        status: "Estado"
+        note: "Notas"
+        organization_id: "Organización"
+      unit:
+        number: "Número"
+        tower: "Torre"
+        proration: "Prorrateo"
+        organization_id: "Organización"
+        email: "Email"
+        mobile_number: "Teléfono"
+
+  helpers:
+    submit:
+      create: "Crear %{model}"
+      update: "Actualizar %{model}"
+      submit: "Guardar"
+    select:
+      prompt: "Seleccione una opción"
+    links:
+      cancel: "Cancelar"
+      save: "Guardar"
+
+  enums:
+    organization:
+      org_type:
+        community: "Comunidad"
+        real_estate: "Inmobiliaria"
+        rental_space: "Espacio de Arriendo"
+      status:
+        pending: "Pendiente"
+        approved: "Aprobado"
+        rejected: "Rechazado"
+    user:
+      role:
+        super_admin: "Super Administrador"
+        org_admin: "Administrador de Organización"
+        manager: "Administrador / Gestor"
+        resident: "Residente"
+      status:
+        pending: "Pendiente"
+        approved: "Aprobado"
+        rejected: "Rechazado"
+
+  dashboard:
+    index:
+      welcome: "Bienvenido, %{name}"
+      unit: "Unidad: %{unit}"
+      no_unit: "Sin unidad asignada"
+      autopay_active: "Pago Automático Activo"
+      autopay_success_detail: "Tu método de pago predeterminado está configurado."
+      autopay_not_enabled: "Pago Automático no Activado"
+      autopay_not_enabled_detail: "Inscribe tu tarjeta de crédito para pagar tus cuentas automáticamente."
+      enroll_card: "Inscribir Tarjeta"

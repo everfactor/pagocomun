@@ -14,7 +14,11 @@ class ApplicationController < ActionController::Base
   private
 
   def set_current_user
-    Current.user = session[:user_id] ? User.find_by(id: session[:user_id]) : nil
+    if params[:token].present?
+      user = GlobalID::Locator.locate_signed(params[:token], for: 'enrollment')
+      Current.user = user if user
+    end
+    Current.user ||= session[:user_id] ? User.find_by(id: session[:user_id]) : nil
   end
 
   def require_authentication!

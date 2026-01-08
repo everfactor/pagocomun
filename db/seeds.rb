@@ -6,14 +6,13 @@
 puts "Creating base organization..."
 
 # Create base organization
-organization = Organization.find_or_create_by!(transbank_id: "TBK-ORG-001") do |org|
+organization = Organization.find_or_create_by!(tbk_child_commerce_code: "597055555532") do |org|
   org.name = "Pago Común Demo Organization"
   org.rut = "76.123.456-7"
   org.slug = "demo-org"
   org.active = true
   org.org_type = :community
   org.address = "Av. Providencia 1208, of 207, Santiago"
-  org.tbk_child_commerce_code = "597055555532"
 end
 
 puts "✓ Organization created: #{organization.name}"

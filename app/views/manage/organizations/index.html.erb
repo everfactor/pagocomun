@@ -1,0 +1,94 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Organizaciones</h1>
+      <p class="mt-2 text-sm text-gray-600">Gestione sus organizaciones asociadas</p>
+    </div>
+    <% if Current.user.role_org_admin? %>
+      <div class="relative inline-block text-left" data-controller="dropdown" data-action="click@window->dropdown#clickOutside">
+        <button type="button"
+                class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
+                id="menu-button"
+                aria-expanded="true"
+                aria-haspopup="true"
+                data-action="click->dropdown#toggle">
+          Nueva Organización
+          <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </button>
+
+        <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+             role="menu"
+             aria-orientation="vertical"
+             aria-labelledby="menu-button"
+             tabindex="-1"
+             data-dropdown-target="menu">
+          <div class="py-1" role="none">
+            <%= link_to "Comunidad", new_manage_organization_path(org_type: 'community'), class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100", role: "menuitem", tabindex: "-1" %>
+            <%= link_to "Espacio de Arriendo", new_manage_organization_path(org_type: 'rental_space'), class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100", role: "menuitem", tabindex: "-1" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Nombre</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">RUT</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Tipo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Estado</th>
+            <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="organizations" class="bg-white divide-y divide-gray-200">
+          <% if @organizations.any? %>
+            <% @organizations.each do |organization| %>
+              <tr id="<%= dom_id organization %>">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">
+                    <%= link_to organization.name, manage_organization_path(organization), class: "text-blue-600 hover:text-blue-900" %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= organization.rut %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= organization.org_type.humanize %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
+                    case organization.status
+                    when 'approved'
+                      'bg-green-100 text-green-800'
+                    when 'pending'
+                      'bg-yellow-100 text-yellow-800'
+                    when 'rejected'
+                      'bg-red-100 text-red-800'
+                    else
+                      'bg-gray-100 text-gray-800'
+                    end
+                  %>">
+                    <%= organization.status.humanize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <%= link_to "Ver", manage_organization_path(organization), class: "text-blue-600 hover:text-blue-900 mr-4" %>
+                  <%= link_to "Editar", edit_manage_organization_path(organization), class: "text-indigo-600 hover:text-indigo-900 mr-4" %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No se encontraron organizaciones</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

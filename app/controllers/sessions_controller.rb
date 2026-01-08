@@ -8,15 +8,15 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(email_address: params[:email_address])
 
-    if user&.authenticate(params[:password])
+      if user&.authenticate(params[:password])
       unless user.status_approved?
         flash.now[:alert] = case user.status
                             when "pending"
-                              "Your account is pending approval. Please wait for an administrator to approve your account."
+                              "Su cuenta está pendiente de aprobación. Por favor, espere a que un administrador la apruebe."
                             when "rejected"
-                              "Your account has been rejected. Please contact support for more information."
+                              "Su cuenta ha sido rechazada. Por favor, contacte con soporte para más información."
                             else
-                              "Your account is not active. Please contact support."
+                              "Su cuenta no está activa. Por favor, contacte con soporte."
                             end
         render :new, status: :unprocessable_entity
         return
@@ -24,10 +24,12 @@ class SessionsController < ApplicationController
 
       session[:user_id] = user.id
       Current.user = user
-      if user.role_super_admin? || user.role_org_admin?
-        redirect_to admin_dashboard_index_path, notice: "Welcome back, #{user.first_name || user.email_address}!"
+      if user.role_super_admin?
+        redirect_to admin_dashboard_index_path, notice: "¡Bienvenido de nuevo, #{user.first_name || user.email_address}!"
+      elsif user.role_org_admin? || user.role_manager?
+        redirect_to manage_dashboard_index_path, notice: "¡Bienvenido de nuevo, #{user.first_name || user.email_address}!"
       else
-        redirect_to root_path, notice: "Welcome back, #{user.first_name || user.email_address}!"
+        redirect_to root_path, notice: "¡Bienvenido de nuevo, #{user.first_name || user.email_address}!"
       end
     else
       flash.now[:alert] = "Invalid email or password"

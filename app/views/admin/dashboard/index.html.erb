@@ -3,8 +3,6 @@
     <p class="mt-2 text-sm text-gray-600">Overview of your system</p>
   </div>
 
-
-
   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="p-5">
@@ -110,7 +108,7 @@
                     <%= number_to_currency(payment.amount, unit: "$", separator: ".", delimiter: ".") %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= payment.authorized? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= payment.status_authorized? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
                       <%= payment.status %>
                     </span>
                   </td>

@@ -1,6 +1,5 @@
-class PaymentMethodsController < ApplicationController
+class PaymentMethodsController < ActionController::Base
   before_action :set_user, only: [:create, :finish]
-  before_action -> { authorize :payment_method }
 
   def create
     username  = "USER-#{@user.id}"
@@ -25,12 +24,12 @@ class PaymentMethodsController < ApplicationController
           card_type: @request["card_type"],
           card_last_4: @request["card_number"]
         )
-      redirect_to dashboard_index_path, notice: "Auto-pay activated!"
+      redirect_to dashboard_index_path(user_id: params[:user_id])
     else
-      redirect_to dashboard_index_path, alert: "Enrollment failed"
+      redirect_to dashboard_index_path(user_id: params[:user_id]), alert: "Enrollment failed"
     end
   rescue Transbank::Shared::TransbankError => e
-      redirect_to dashboard_index_path, alert: "Enrollment error: #{e.message}"
+    redirect_to dashboard_index_path(user_id: params[:user_id]), alert: "Enrollment error: #{e.message}"
   end
 
 

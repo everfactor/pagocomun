@@ -2,7 +2,7 @@
   <% if unit.errors.any? %>
     <div class="rounded-md bg-red-50 p-4 mb-6">
       <div class="text-sm font-medium text-red-800">
-        <p class="mb-2">Please fix the following errors:</p>
+        <p class="mb-2"><%= t('activerecord.errors.template.header', model: t('activerecord.models.unit'), count: unit.errors.count, default: "Please fix the errors below:") %></p>
         <ul class="list-disc list-inside space-y-1">
           <% unit.errors.full_messages.each do |message| %>
             <li><%= message %></li>
@@ -12,60 +12,6 @@
     </div>
   <% end %>
 
-  <div class="space-y-6">
-    <% if organization.nil? %>
-      <div>
-        <%= f.label :organization_id, "Organization", class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.collection_select :organization_id, (@organizations || []), :id, :name, { prompt: "Select organization" }, { required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
-        </div>
-      </div>
-    <% else %>
-      <%= f.hidden_field :organization_id, value: organization.id %>
-    <% end %>
-
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      <div>
-        <%= f.label :number, class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.text_field :number, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-        </div>
-      </div>
-
-      <div>
-        <%= f.label :tower, class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.text_field :tower, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <%= f.label :proration, class: "block text-sm font-medium leading-6 text-gray-900" %>
-      <div class="mt-2">
-        <%= f.number_field :proration, step: 0.01, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      <div>
-        <%= f.label :email, class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.email_field :email, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-        </div>
-      </div>
-
-      <div>
-        <%= f.label :mobile_number, class: "block text-sm font-medium leading-6 text-gray-900" %>
-        <div class="mt-2">
-          <%= f.text_field :mobile_number, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex items-center justify-end gap-4 pt-4 border-t border-gray-200">
-      <%= link_to "Cancel", admin_units_path(organization_id: (organization || unit.organization)&.id), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
-      <%= f.submit class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
-    </div>
-  </div>
+  <% cancel_path = admin_units_path(organization_id: (organization || unit.organization)&.id) %>
+  <%= render "shared/forms/unit_fields", f: f, organization: organization, cancel_path: cancel_path %>
 <% end %>

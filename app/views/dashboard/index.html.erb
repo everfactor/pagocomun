@@ -1,7 +1,13 @@
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Welcome, <%= @user.first_name %></h1>
-    <p class="mt-2 text-sm text-gray-600">Unit: <%= @unit ? "#{@unit.number} - #{@unit.tower}" : "No Unit Assigned" %></p>
+    <h1 class="text-3xl font-bold text-gray-900"><%= t('dashboard.index.welcome', name: @user.first_name) %></h1>
+    <p class="mt-2 text-sm text-gray-600">
+      <% if @unit %>
+        <%= t('dashboard.index.unit', unit: "#{@unit.number} - #{@unit.tower}") %>
+      <% else %>
+        <%= t('dashboard.index.no_unit') %>
+      <% end %>
+    </p>
   </div>
 
   <% if @user.payment_methods.any? %>
@@ -13,9 +19,9 @@
           </svg>
         </div>
         <div class="ml-3">
-          <h3 class="text-sm font-medium text-green-800">Auto-Pay Active</h3>
+          <h3 class="text-sm font-medium text-green-800"><%= t('dashboard.index.autopay_active') %></h3>
           <div class="mt-2 text-sm text-green-700">
-            <p>Your default payment method is set up.</p>
+            <p><%= t('dashboard.index.autopay_success_detail') %></p>
           </div>
         </div>
       </div>
@@ -24,45 +30,11 @@
     <div class="mb-8 overflow-hidden rounded-lg bg-white shadow p-6 border-l-4 border-blue-500">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="text-xl font-bold text-gray-900">Auto-Pay Not Enabled</h2>
-          <p class="mt-1 text-sm text-gray-600">Enroll your credit card to pay bills automatically.</p>
+          <h2 class="text-xl font-bold text-gray-900"><%= t('dashboard.index.autopay_not_enabled') %></h2>
+          <p class="mt-1 text-sm text-gray-600"><%= t('dashboard.index.autopay_not_enabled_detail') %></p>
         </div>
-        <%= button_to "Enroll Card", payment_methods_path(user_id: @user.to_gid_param), method: :post, data: { turbo: false }, class: "rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" %>
+        <%= button_to t('dashboard.index.enroll_card'), payment_methods_path(user_id: @user.to_gid_param, id: @user.to_gid_param), method: :post, data: { turbo: false }, class: "rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" %>
       </div>
     </div>
-  <% end %>
-
-  <% if @bills.present? %>
-  <div class="mt-8 overflow-hidden rounded-lg bg-white shadow">
-    <div class="p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Bills</h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Period</th>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Amount</th>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Status</th>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Due Date</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% @bills.each do |bill| %>
-              <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= bill.period %></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= number_to_currency(bill.amount, unit: "$", separator: ".", delimiter: ".") %></td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                   <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= bill.status == 'paid' ? 'bg-green-100 text-green-800' : (bill.status == 'failed' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') %>">
-                    <%= bill.status.titleize %>
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= bill.due_date&.strftime("%b %d, %Y") %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
   <% end %>
 </div>

@@ -1,0 +1,17 @@
+<%= form_with model: [:manage, unit], local: true, data: { turbo: true } do |f| %>
+  <% if unit.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4 mb-6">
+      <div class="text-sm font-medium text-red-800">
+        <p class="mb-2"><%= t('activerecord.errors.template.header', model: t('activerecord.models.unit'), count: unit.errors.count, default: "Por favor corrija los siguientes errores:") %></p>
+        <ul class="list-disc list-inside space-y-1">
+          <% unit.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <% cancel_path = manage_units_path(organization_id: (organization || unit.organization)&.id) %>
+  <%= render "shared/forms/unit_fields", f: f, organization: organization, cancel_path: cancel_path %>
+<% end %>

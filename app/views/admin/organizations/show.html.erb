@@ -63,15 +63,9 @@
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Transbank Information</h2>
         <dl class="space-y-4">
           <div>
-            <dt class="text-sm font-medium text-gray-500">Transbank ID</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @organization.transbank_id %></dd>
+            <dt class="text-sm font-medium text-gray-500">Child Commerce Code</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @organization.tbk_child_commerce_code || "N/A" %></dd>
           </div>
-          <% if @organization.org_type_community? %>
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Child Commerce Code</dt>
-              <dd class="mt-1 text-sm text-gray-900"><%= @organization.tbk_child_commerce_code || "N/A" %></dd>
-            </div>
-          <% end %>
           <div>
             <dt class="text-sm font-medium text-gray-500">Slug</dt>
             <dd class="mt-1 text-sm text-gray-900"><%= @organization.slug || "N/A" %></dd>

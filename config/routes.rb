@@ -23,6 +23,18 @@ Rails.application.routes.draw do
     end
   end
 
+  # Manage namespace
+  namespace :manage do
+    root "dashboard#index"
+    resources :dashboard, only: [:index]
+    resources :organizations
+    resources :users
+    resources :units
+    resources :unit_imports, only: [:new, :create]
+    resources :bills, only: [:index, :show]
+    resources :payments, only: [:index, :show]
+  end
+
   # Admin namespace
   namespace :admin do
     root "dashboard#index"
@@ -37,7 +49,7 @@ Rails.application.routes.draw do
     resources :unit_assignments, path: "unit-assignments"
   end
 
-  # Resident Dashboard
+  get "enroll/:token", to: "dashboard#index", as: :public_enrollment
   resources :dashboard, only: [:index]
 
   # Defines the root path route ("/")

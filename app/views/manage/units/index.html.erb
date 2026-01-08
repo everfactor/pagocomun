@@ -1,0 +1,81 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Unidades</h1>
+      <p class="mt-2 text-sm text-gray-600">
+        <% if @organization %>
+          Unidades para <%= @organization.name %>
+        <% else %>
+          Todas las unidades
+        <% end %>
+      </p>
+    </div>
+    <div class="flex gap-2">
+      <% if @organization %>
+        <%= link_to "Nueva Unidad", new_manage_unit_path(organization_id: @organization.id), class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+      <% else %>
+        <%= link_to "Nueva Unidad", new_manage_unit_path, class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+      <% end %>
+
+      <% if @organization %>
+        <%= link_to "Importar (CSV)", new_manage_unit_import_path(organization_id: @organization.id), class: "rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <% unless @organization %>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Organización</th>
+            <% end %>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Número</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Torre</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Prorrateo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Teléfono</th>
+            <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="units" class="bg-white divide-y divide-gray-200">
+          <% if @units.any? %>
+            <% @units.each do |unit| %>
+              <tr id="<%= dom_id unit %>">
+                <% unless @organization %>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= unit.organization.name %>
+                  </td>
+                <% end %>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <%= link_to unit.number, manage_unit_path(unit), class: "text-blue-600 hover:text-blue-900" %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= unit.tower %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= number_to_percentage(unit.proration * 100, precision: 4) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= unit.email %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= unit.mobile_number %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <%= link_to "Ver", manage_unit_path(unit), class: "text-blue-600 hover:text-blue-900 mr-4" %>
+                  <%= link_to "Editar", edit_manage_unit_path(unit), class: "text-indigo-600 hover:text-indigo-900" %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="<%= @organization ? 6 : 7 %>" class="px-6 py-4 text-center text-sm text-gray-500">No se encontraron unidades</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

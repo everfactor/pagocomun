@@ -1,7 +1,7 @@
 one:
   name: MyOrganization
   rut: 12.345.678-9
-  transbank_id: "597012345678"
+  tbk_child_commerce_code: "597012345678"
   org_type: community
   status: approved
   slug: my-org
@@ -9,7 +9,7 @@ one:
 two:
   name: AnotherOrganization
   rut: 98.765.432-1
-  transbank_id: "597087654321"
+  tbk_child_commerce_code: "597087654321"
   org_type: community
   status: approved
   slug: another-org

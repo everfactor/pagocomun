@@ -1,0 +1,16 @@
+<%= form_with model: [:manage, user], local: true, data: { turbo: true } do |f| %>
+  <% if user.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4 mb-6">
+      <div class="text-sm font-medium text-red-800">
+        <p class="mb-2"><%= t('activerecord.errors.template.header', model: t('activerecord.models.user'), count: user.errors.count, default: "Por favor corrija los siguientes errores:") %></p>
+        <ul class="list-disc list-inside space-y-1">
+          <% user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render "shared/forms/user_fields", f: f, cancel_path: manage_users_path %>
+<% end %>
