@@ -26,7 +26,7 @@ class SessionsController < ApplicationController
       Current.user = user
       if user.role_super_admin?
         redirect_to admin_dashboard_index_path, notice: "¡Bienvenido de nuevo, #{user.first_name || user.email_address}!"
-      elsif user.role_org_admin? || user.role_manager?
+      elsif user.role_org_admin? || user.role_org_manager?
         redirect_to manage_dashboard_index_path, notice: "¡Bienvenido de nuevo, #{user.first_name || user.email_address}!"
       else
         redirect_to root_path, notice: "¡Bienvenido de nuevo, #{user.first_name || user.email_address}!"

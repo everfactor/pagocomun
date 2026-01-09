@@ -11,12 +11,7 @@ class User < ApplicationRecord
   has_many :payments, foreign_key: :payer_user_id
   belongs_to :unit, primary_key: :email, foreign_key: :email_address, optional: true
 
-  # super_admin toti, pedro
-  # org_admin
-  # manager
-  # resident this user doen't need login to enroll credit/debit card
-
-  enum :role, %w[super_admin org_admin manager resident].index_by(&:itself), prefix: :role
+  enum :role, %w[super_admin org_admin org_manager resident].index_by(&:itself), prefix: :role
   enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status
 
   validates :email_address, presence: true, uniqueness: true
@@ -53,8 +48,8 @@ class User < ApplicationRecord
     return unless new_record?
     return if role.nil?
 
-    unless %w[org_admin manager resident].include?(role)
-      errors.add(:role, "must be one of: org_admin, manager, or resident")
+    unless %w[org_admin org_manager resident].include?(role)
+      errors.add(:role, "must be one of: org_admin, org_manager, or resident")
     end
   end
 end

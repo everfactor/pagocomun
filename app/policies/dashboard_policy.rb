@@ -2,7 +2,7 @@ class DashboardPolicy < ApplicationPolicy
   # Residents can access the main dashboard
   def index?
     # Ensure user is logged in (handled by controller usually)
-    # But explicitly: any resident, manager, or admin can view their respective dashboard logic
+    # But explicitly: any resident, org_manager, or admin can view their respective dashboard logic
     # Here we are focusing on the Resident Dashboard
     user.present?
   end

@@ -58,7 +58,7 @@ es:
       role:
         super_admin: "Super Administrador"
         org_admin: "Administrador de Organización"
-        manager: "Administrador / Gestor"
+        org_manager: "Gestor de Organización"
         resident: "Residente"
       status:
         pending: "Pendiente"

@@ -12,7 +12,7 @@ module Manage
     end
 
     def manage_access?
-      Current.user&.role_org_admin? || Current.user&.role_manager? || Current.user&.role_super_admin?
+      Current.user&.role_org_admin? || Current.user&.role_org_manager? || Current.user&.role_super_admin?
     end
 
     def set_current_user

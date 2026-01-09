@@ -10,13 +10,6 @@ class RegistrationsController < ApplicationController
     @user = User.new(user_params)
     @user.status = "pending" # Ensure status is pending for new signups
 
-    # Validate role is one of the allowed signup roles
-    unless %w[org_admin manager resident].include?(@user.role)
-      @user.errors.add(:role, "is not a valid selection")
-      render :new, status: :unprocessable_entity
-      return
-    end
-
     if @user.save
       redirect_to login_path, notice: "Account created successfully! Your account is pending approval. You will be able to sign in once an administrator approves your account."
     else

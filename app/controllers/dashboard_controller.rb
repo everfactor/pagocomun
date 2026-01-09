@@ -2,7 +2,7 @@ class DashboardController < ApplicationController
   def index
     if Current.user&.role_super_admin?
       redirect_to admin_dashboard_index_path and return
-    elsif Current.user&.role_org_admin? || Current.user&.role_manager?
+    elsif Current.user&.role_org_admin? || Current.user&.role_org_manager?
       redirect_to manage_dashboard_index_path and return
     end
 

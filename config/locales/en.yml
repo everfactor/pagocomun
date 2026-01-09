@@ -87,7 +87,7 @@ en:
       role:
         super_admin: "Super Admin"
         org_admin: "Organization Admin"
-        manager: "Manager"
+        org_manager: "Organization Manager"
         resident: "Resident"
       status:
         pending: "Pending"
