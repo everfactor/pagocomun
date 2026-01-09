@@ -27,10 +27,11 @@ Rails.application.routes.draw do
   namespace :manage do
     root "dashboard#index"
     resources :dashboard, only: [:index]
-    resources :organizations
+    resources :organizations do
+      resources :units
+      resources :unit_imports, only: [:new, :create]
+    end
     resources :users
-    resources :units
-    resources :unit_imports, only: [:new, :create]
     resources :bills, only: [:index, :show]
     resources :payments, only: [:index, :show]
   end

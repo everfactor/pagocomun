@@ -70,3 +70,6 @@ end
 gem "transbank-sdk"
 
 gem "pundit", "~> 2.5"
+
+gem "csv"
+

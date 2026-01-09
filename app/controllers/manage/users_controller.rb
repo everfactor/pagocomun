@@ -1,10 +1,12 @@
 module Manage
   class UsersController < BaseController
+    before_action :require_org_admin_access!
     before_action :set_user, only: [:show, :edit, :update, :destroy]
 
     def index
       @users = User.joins(:member_organizations)
                    .where(organization_memberships: { organization_id: Current.user.member_organizations.pluck(:id) })
+                   .where.not(role: :resident)
                    .distinct
                    .order(created_at: :desc)
     end
@@ -18,28 +20,19 @@ module Manage
 
     def create
       @user = User.new(user_params)
-      @user.status = "pending"
+      @user.status = "approved" # Admins creating users approve them immediately
 
       if @user.save
-        # If an organization_id was provided, link them
-        if params[:user][:organization_id].present?
-           OrganizationMembership.create!(
-             user: @user,
-             organization_id: params[:user][:organization_id],
-             role: "member", # Default for new users created by org admins
-             active: true
-           )
+        # If an organization_id was provided (e.g. from index link), link them
+        organization_id = user_params[:organization_id]
+        role = user_params[:role]
+        if organization_id.present?
+          OrganizationMembership.create!(user: @user, organization_id:, role:, active: true)
         end
 
-        respond_to do |format|
-          format.html { redirect_to manage_users_path, notice: "El usuario fue creado exitosamente." }
-          format.turbo_stream
-        end
+        redirect_to manage_users_path, notice: "El usuario fue creado exitosamente."
       else
-        respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
-          format.turbo_stream { render :new, status: :unprocessable_entity }
-        end
+        render :new, status: :unprocessable_entity
       end
     end
 
@@ -54,27 +47,24 @@ module Manage
       end
 
       if @user.update(params_to_update)
-        respond_to do |format|
-          format.html { redirect_to manage_user_path(@user), notice: "El usuario fue actualizado exitosamente." }
-          format.turbo_stream
-        end
+        redirect_to manage_user_path(@user), notice: "El usuario fue actualizado exitosamente."
       else
-        respond_to do |format|
-          format.html { render :edit, status: :unprocessable_entity }
-          format.turbo_stream { render :edit, status: :unprocessable_entity }
-        end
+        render :edit, status: :unprocessable_entity
       end
     end
 
     def destroy
       @user.destroy
-      respond_to do |format|
-        format.html { redirect_to manage_users_path, notice: "El usuario fue eliminado exitosamente." }
-        format.turbo_stream
-      end
+      redirect_to manage_users_path, notice: "El usuario fue eliminado exitosamente."
     end
 
     private
+
+    def require_org_admin_access!
+      unless Current.user.role_org_admin? || Current.user.role_super_admin?
+        redirect_to manage_dashboard_index_path, alert: "Acceso denegado. Solo administradores pueden gestionar usuarios."
+      end
+    end
 
     def set_user
       @user = User.joins(:member_organizations)
@@ -86,7 +76,7 @@ module Manage
     end
 
     def user_params
-      params.require(:user).permit(:email_address, :password, :password_confirmation, :first_name, :last_name, :role, :status, :note, :organization_id)
+      params.require(:user).permit(:email_address, :password, :password_confirmation, :first_name, :last_name, :status, :note, :organization_id, :role)
     end
   end
 end

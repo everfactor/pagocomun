@@ -10,20 +10,7 @@
     <div>
       <%= f.label :role, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <% roles = if Current.user.role_super_admin?
-             [
-               [t('enums.user.role.super_admin'), 'super_admin'],
-               [t('enums.user.role.org_admin'), 'org_admin'],
-               [t('enums.user.role.org_manager'), 'org_manager'],
-               [t('enums.user.role.resident'), 'resident']
-             ]
-           else
-             [
-               [t('enums.user.role.org_manager'), 'org_manager'],
-               [t('enums.user.role.resident'), 'resident']
-             ]
-           end %>
-        <%= f.select :role, options_for_select(roles, f.object.role), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+        <%= f.select :role, options_for_select(available_roles_for_select, f.object.role), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
       </div>
     </div>
   </div>

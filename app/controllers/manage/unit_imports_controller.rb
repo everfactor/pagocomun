@@ -9,7 +9,7 @@ module Manage
     def create
       @importer = Unit::Importer.new(@organization, params[:file])
       if @importer.import
-        redirect_to manage_units_path(organization_id: @organization.id), notice: "Unidades importadas exitosamente."
+        redirect_to manage_organization_units_path(@organization), notice: "Unidades importadas exitosamente."
       else
         render :new, status: :unprocessable_entity
       end
@@ -18,11 +18,11 @@ module Manage
     private
 
     def set_organization
-      return redirect_to manage_units_path, alert: "Se requiere una organización" if params[:organization_id].blank?
-
-      @organization = Current.user.member_organizations.find(params[:organization_id])
-    rescue ActiveRecord::RecordNotFound
-      redirect_to manage_units_path, alert: "Organización no encontrada"
+      begin
+        @organization = Current.user.member_organizations.find(params[:organization_id])
+      rescue ActiveRecord::RecordNotFound, ActionController::ParameterMissing
+        redirect_to manage_organizations_path, alert: "Organización no encontrada o acceso denegado."
+      end
     end
   end
 end

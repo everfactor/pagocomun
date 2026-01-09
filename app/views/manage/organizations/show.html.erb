@@ -13,7 +13,12 @@
       <h1 class="text-3xl font-bold text-gray-900"><%= @organization.name %></h1>
     </div>
     <div class="flex gap-4">
-      <%= link_to "Editar", edit_manage_organization_path(@organization), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= link_to "Gestionar Unidades", manage_organization_units_path(@organization), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <% if Current.user.role_org_admin? || Current.user.role_super_admin? %>
+        <%= link_to "Gestionar Usuarios", manage_users_path(organization_id: @organization.id), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+        <%= link_to "Importar Unidades", new_manage_organization_unit_import_path(@organization), class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+        <%= link_to "Editar", edit_manage_organization_path(@organization), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <% end %>
     </div>
   </div>
 

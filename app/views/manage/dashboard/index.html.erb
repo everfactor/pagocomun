@@ -52,23 +52,25 @@
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-lg bg-white shadow">
-      <div class="p-5">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="flex h-10 w-10 items-center justify-center rounded-md bg-teal-500 text-white">
-              <%= icon(:users, classes: "h-6 w-6") %>
+    <% if Current.user.role_org_admin? %>
+      <div class="overflow-hidden rounded-lg bg-white shadow">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="flex h-10 w-10 items-center justify-center rounded-md bg-teal-500 text-white">
+                <%= icon(:users, classes: "h-6 w-6") %>
+              </div>
             </div>
-          </div>
-          <div class="ml-5 w-0 flex-1">
-            <dl>
-              <dt class="truncate text-sm font-medium text-gray-500">Usuarios</dt>
-              <dd class="text-lg font-semibold text-gray-900"><%= @users_count %></dd>
-            </dl>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="truncate text-sm font-medium text-gray-500">Usuarios</dt>
+                <dd class="text-lg font-semibold text-gray-900"><%= @users_count %></dd>
+              </dl>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    <% end %>
 
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="p-5">

@@ -1,99 +1,62 @@
 module Manage
   class UnitsController < BaseController
+    before_action :set_organization
     before_action :set_unit, only: [:show, :edit, :update, :destroy]
 
     def index
-      if params[:organization_id].present?
-        @organization = find_organization(params[:organization_id])
-        @units = @organization.units.order(:tower, :number)
-      else
-        @units = Unit.joins(:organization)
-                    .where(organizations: { id: Current.user.member_organizations.pluck(:id) })
-                    .order(created_at: :desc)
-      end
+      @units = @organization.units.order(:tower, :number)
     end
 
     def show
-      @organization = @unit.organization
     end
 
     def new
-      if params[:organization_id].present?
-        @organization = find_organization(params[:organization_id])
-        @unit = @organization.units.build
-      else
-        @unit = Unit.new
-        @organizations = Current.user.member_organizations
-      end
+      @unit = @organization.units.build
     end
 
     def create
-      if params[:organization_id].present?
-        @organization = find_organization(params[:organization_id])
-        @unit = @organization.units.build(unit_params)
-      else
-        @unit = Unit.new(unit_params)
-        @organization = @unit.organization
-      end
+      @unit = @organization.units.build(unit_params)
 
       if @unit.save
-        respond_to do |format|
-          format.html { redirect_to manage_units_path(organization_id: @unit.organization_id), notice: "La unidad fue creada exitosamente." }
-          format.turbo_stream
-        end
+        redirect_to manage_organization_units_path(@organization), notice: "La unidad fue creada exitosamente."
       else
-        @organizations = Current.user.member_organizations unless @organization
-        respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
-          format.turbo_stream { render :new, status: :unprocessable_entity }
-        end
+        render :new, status: :unprocessable_entity
       end
     end
 
     def edit
-      @organization = @unit.organization
     end
 
     def update
       if @unit.update(unit_params)
-        respond_to do |format|
-          format.html { redirect_to manage_unit_path(@unit), notice: "La unidad fue actualizada exitosamente." }
-          format.turbo_stream
-        end
+        redirect_to manage_organization_unit_path(@organization, @unit), notice: "La unidad fue actualizada exitosamente."
       else
-        @organization = @unit.organization
-        respond_to do |format|
-          format.html { render :edit, status: :unprocessable_entity }
-          format.turbo_stream { render :edit, status: :unprocessable_entity }
-        end
+        render :edit, status: :unprocessable_entity
       end
     end
 
     def destroy
-      organization_id = @unit.organization_id
       @unit.destroy
-      respond_to do |format|
-        format.html { redirect_to manage_units_path(organization_id: organization_id), notice: "La unidad fue eliminada exitosamente." }
-        format.turbo_stream
-      end
+      redirect_to manage_organization_units_path(@organization), notice: "La unidad fue eliminada exitosamente."
     end
 
     private
 
-    def find_organization(org_id)
-      Current.user.member_organizations.find(org_id)
+    def set_organization
+      @organization = Current.user.member_organizations.find(params[:organization_id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to manage_organizations_path, alert: "Organización no encontrada o acceso denegado."
     end
 
     def set_unit
-      @unit = Unit.joins(:organization)
-                  .where(id: params[:id])
-                  .where(organizations: { id: Current.user.member_organizations.pluck(:id) })
-                  .first
-      redirect_to manage_units_path, alert: "Unidad no encontrada" unless @unit
+      @unit = @organization.units.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to manage_organization_units_path(@organization), alert: "Unidad no encontrada."
     end
 
     def unit_params
-      params.require(:unit).permit(:number, :tower, :proration, :organization_id, :email, :mobile_number)
+      params.require(:unit).permit(:number, :tower, :proration, :email, :mobile_number)
     end
   end
 end
+

@@ -1,4 +1,4 @@
-<%= form_with model: [:manage, unit], local: true, data: { turbo: true } do |f| %>
+<%= form_with model: [:manage, @organization, unit], local: true, data: { turbo: true } do |f| %>
   <% if unit.errors.any? %>
     <div class="rounded-md bg-red-50 p-4 mb-6">
       <div class="text-sm font-medium text-red-800">
@@ -12,6 +12,6 @@
     </div>
   <% end %>
 
-  <% cancel_path = manage_units_path(organization_id: (organization || unit.organization)&.id) %>
-  <%= render "shared/forms/unit_fields", f: f, organization: organization, cancel_path: cancel_path %>
+  <% cancel_path = manage_organization_units_path(@organization) %>
+  <%= render "shared/forms/unit_fields", f: f, organization: @organization, cancel_path: cancel_path %>
 <% end %>

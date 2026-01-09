@@ -77,8 +77,14 @@
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <%= link_to "Unidades", manage_organization_units_path(organization), class: "text-blue-600 hover:text-blue-900 mr-4" %>
+                  <% if Current.user.role_org_admin? || Current.user.role_super_admin? %>
+                    <%= link_to "Usuarios", manage_users_path(organization_id: organization.id), class: "text-blue-600 hover:text-blue-900 mr-4" %>
+                  <% end %>
                   <%= link_to "Ver", manage_organization_path(organization), class: "text-blue-600 hover:text-blue-900 mr-4" %>
-                  <%= link_to "Editar", edit_manage_organization_path(organization), class: "text-indigo-600 hover:text-indigo-900 mr-4" %>
+                  <% if Current.user.role_org_admin? || Current.user.role_super_admin? %>
+                    <%= link_to "Editar", edit_manage_organization_path(organization), class: "text-indigo-600 hover:text-indigo-900" %>
+                  <% end %>
                 </td>
               </tr>
             <% end %>

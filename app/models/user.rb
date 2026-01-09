@@ -14,6 +14,8 @@ class User < ApplicationRecord
   enum :role, %w[super_admin org_admin org_manager resident].index_by(&:itself), prefix: :role
   enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status
 
+  normalizes :email_address, with: ->(email) { email.strip.downcase }
+
   validates :email_address, presence: true, uniqueness: true
   validates :password_digest, presence: true, length: { minimum: 8 }, if: -> { new_record? || !password_digest.nil? }
   validate :role_allowed_for_signup, on: :create

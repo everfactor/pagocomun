@@ -40,56 +40,79 @@ class Unit::Importer
   end
 
   def process_row(row)
-    unit_number = row["unit_number"]&.strip
-    tower = row["tower"]&.strip
-    email = row["user_email"]&.strip&.downcase
-    first_name = row["user_first_name"]&.strip
-    last_name = row["user_last_name"]&.strip
+    return if row_invalid?(row)
 
-    if unit_number.blank?
+    user = find_or_create_user(row)
+    return unless user
+
+    ensure_membership(user)
+
+    unit = find_or_create_unit(row)
+    return unless unit
+
+    assign_user_to_unit(user, unit)
+  end
+
+  private
+
+  def row_invalid?(row)
+    if row["unit_number"].blank?
       @errors << "Row #{$.}: Unit number is missing"
-      return
+      return true
     end
 
-    if email.blank?
+    if row["user_email"].blank?
       @errors << "Row #{$.}: User email is missing"
-      return
+      return true
     end
 
-    # Find or Create User
-    user = User.find_or_initialize_by(email_address: email)
-    if user.new_record?
-      user.first_name = first_name
-      user.last_name = last_name
-      user.password = SecureRandom.hex(8) # Temporary password
-      user.status = "approved"
-      # User belongs to the organization if they are created in this context?
-      # Schema says users have organization_id.
-      user.organization = organization
+    false
+  end
 
-      unless user.save
-        @errors << "Row #{$.}: User could not be created: #{user.errors.full_messages.join(', ')}"
-        return
+  def find_or_create_user(row)
+    User.find_or_initialize_by(email_address: row["user_email"]).tap do |u|
+      if u.new_record?
+        u.first_name = row["user_first_name"]&.strip
+        u.last_name = row["user_last_name"]&.strip
+        u.password = SecureRandom.hex(8)
+        u.status = "approved"
+        u.save!
       end
     end
+  rescue ActiveRecord::RecordInvalid => e
+    @errors << "Row #{$.}: User could not be created: #{e.message}"
+    nil
+  end
 
-    # Find or Create Unit
-    unit = organization.units.find_or_initialize_by(number: unit_number, tower: tower)
-    if unit.new_record?
-      unit.proration = 0
-      unless unit.save
-        @errors << "Row #{$.}: Unit could not be created: #{unit.errors.full_messages.join(', ')}"
-        return
+  def ensure_membership(user)
+    OrganizationMembership.find_or_initialize_by(user: user, organization: organization).tap do |m|
+      m.role = :resident if m.new_record?
+      m.save!
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    @errors << "Row #{$.}: Membership could not be ensured: #{e.message}"
+  end
+
+  def find_or_create_unit(row)
+    organization.units.find_or_initialize_by(number: row["unit_number"]&.strip, tower: row["tower"]&.strip).tap do |u|
+      u.email = row["user_email"]
+      u.mobile_number = row["mobile_number"]&.strip
+      u.proration = row["proration"]&.to_f || 0
+      u.save!
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    @errors << "Row #{$.}: Unit could not be created: #{e.message}"
+    nil
+  end
+
+  def assign_user_to_unit(user, unit)
+    UnitUserAssignment.find_or_initialize_by(unit: unit, user: user, active: true).tap do |a|
+      if a.new_record?
+        a.starts_on = Date.current
+        a.save!
       end
     end
-
-    # Assign User to Unit
-    assignment = UnitUserAssignment.find_or_initialize_by(unit: unit, user: user, active: true)
-    if assignment.new_record?
-      assignment.starts_on = Date.current
-      unless assignment.save
-        @errors << "Row #{$.}: Could not assign user to unit: #{assignment.errors.full_messages.join(', ')}"
-      end
-    end
+  rescue ActiveRecord::RecordInvalid => e
+    @errors << "Row #{$.}: Could not assign user to unit: #{e.message}"
   end
 end

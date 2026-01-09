@@ -1,12 +1,14 @@
 module Manage
   class OrganizationsController < BaseController
     before_action :set_organization, only: [:show, :edit, :update, :destroy]
-    before_action :require_org_admin!, only: [:new, :create]
+    before_action :require_org_admin!, only: [:new, :create, :edit, :update, :destroy]
 
     private
 
     def require_org_admin!
-      redirect_to manage_organizations_path, alert: "Solo los administradores de organizaciones pueden crear nuevas organizaciones." unless Current.user.role_org_admin?
+      unless Current.user.role_org_admin? || Current.user.role_super_admin?
+        redirect_to manage_organizations_path, alert: "Acceso denegado. Solo administradores pueden realizar esta acción."
+      end
     end
 
     public
@@ -33,14 +35,9 @@ module Manage
         # Also set the organization_id on the user for the has_one :owner association
         Current.user.update!(organization: @organization) if Current.user.organization_id.nil?
 
-
-        respond_to do |format|
-          format.html { redirect_to manage_organizations_path, notice: "La organización fue creada exitosamente." }
-        end
+        redirect_to manage_organizations_path, notice: "La organización fue creada exitosamente."
       else
-        respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
-        end
+        render :new, status: :unprocessable_entity
       end
     end
 
@@ -49,21 +46,15 @@ module Manage
 
     def update
       if @organization.update(organization_params)
-        respond_to do |format|
-          format.html { redirect_to manage_organization_path(@organization), notice: "La organización fue actualizada exitosamente." }
-        end
+        redirect_to manage_organization_path(@organization), notice: "La organización fue actualizada exitosamente."
       else
-        respond_to do |format|
-          format.html { render :edit, status: :unprocessable_entity }
-        end
+        render :edit, status: :unprocessable_entity
       end
     end
 
     def destroy
       @organization.destroy
-      respond_to do |format|
-        format.html { redirect_to manage_organizations_path, notice: "La organización fue eliminada exitosamente." }
-      end
+      redirect_to manage_organizations_path, notice: "La organización fue eliminada exitosamente."
     end
 
     private

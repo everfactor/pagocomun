@@ -56,16 +56,7 @@ module NavigationHelper
         path: manage_organizations_path,
         icon: :organizations
       },
-      {
-        name: "Usuarios",
-        path: manage_users_path,
-        icon: :users
-      },
-      {
-        name: "Unidades",
-        path: manage_units_path,
-        icon: :units
-      },
+      manage_users_nav_item,
       {
         name: "Cobros",
         path: manage_bills_path,
@@ -76,8 +67,22 @@ module NavigationHelper
         path: manage_payments_path,
         icon: :payments
       }
-    ]
+    ].compact
   end
+
+  private
+
+  def manage_users_nav_item
+    return unless Current.user.role_org_admin? || Current.user.role_super_admin?
+
+    {
+      name: "Usuarios",
+      path: manage_users_path,
+      icon: :users
+    }
+  end
+
+  public
 
   def current_nav_item?(path)
     request.path == path || request.path.start_with?(path + "/")
@@ -108,6 +113,16 @@ module NavigationHelper
       "#{base_classes} text-blue-600"
     else
       "#{base_classes} text-gray-400 group-hover:text-blue-600"
+    end
+  end
+
+  def units_path
+    if @organization
+      manage_organization_units_path(@organization)
+    elsif Current.user.member_organizations.count == 1
+      manage_organization_units_path(Current.user.member_organizations.first)
+    else
+      manage_organizations_path
     end
   end
 end

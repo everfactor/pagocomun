@@ -10,6 +10,8 @@ class Unit < ApplicationRecord
   validates :email, presence: true
   validates :number, uniqueness: { scope: [:organization_id, :tower] }
 
+  normalizes :email, with: ->(email) { email.strip.downcase }
+
   has_one :active_assignment, -> {
     where(active: true)
     .where("starts_on <= ?", Date.current)

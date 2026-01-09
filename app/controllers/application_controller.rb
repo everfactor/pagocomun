@@ -29,9 +29,9 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     flash[:alert] = "Access denied."
     if Current.user
-        redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_path)
     else
-        redirect_to login_path
+      redirect_to login_path
     end
   end
 

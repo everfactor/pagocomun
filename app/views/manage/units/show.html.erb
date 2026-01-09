@@ -3,7 +3,7 @@
     <div>
       <nav class="flex mb-2" aria-label="Breadcrumb">
         <ol class="flex items-center space-x-2">
-          <li><%= link_to "Unidades", manage_units_path(organization_id: @unit.organization_id), class: "text-sm font-medium text-gray-500 hover:text-gray-700" %></li>
+          <li><%= link_to "Unidades", manage_organization_units_path(@organization), class: "text-sm font-medium text-gray-500 hover:text-gray-700" %></li>
           <li class="flex items-center space-x-2">
              <svg class="h-5 w-5 flex-shrink-0 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" /></svg>
              <span class="text-sm font-medium text-gray-500">Unidad <%= @unit.number %></span>
@@ -13,7 +13,7 @@
       <h1 class="text-3xl font-bold text-gray-900">Unidad <%= @unit.number %></h1>
     </div>
     <div class="flex gap-4">
-      <%= link_to "Editar", edit_manage_unit_path(@unit), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= link_to "Editar", edit_manage_organization_unit_path(@organization, @unit), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
     </div>
   </div>
 
