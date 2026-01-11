@@ -16,7 +16,7 @@
     <div>
       <%= f.label :user_id, "User", class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.collection_select :user_id, users, :id, :email_address, { prompt: "Select a user" }, { required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+        <%= f.collection_select :user_id, users, :id, :email_address, { prompt: "Select a user" }, { required: true, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
       </div>
     </div>
 
@@ -24,14 +24,14 @@
       <div>
         <%= f.label :tbk_username, "Transbank Username", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <div class="mt-2">
-          <%= f.text_field :tbk_username, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+          <%= f.text_field :tbk_username, required: true, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
         </div>
       </div>
 
       <div>
         <%= f.label :tbk_token, "Transbank Token", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <div class="mt-2">
-          <%= f.text_field :tbk_token, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm font-mono text-xs" %>
+          <%= f.text_field :tbk_token, required: true, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm font-mono text-xs" %>
         </div>
       </div>
     </div>
@@ -40,14 +40,14 @@
       <div>
         <%= f.label :card_type, "Card Type", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <div class="mt-2">
-          <%= f.text_field :card_type, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+          <%= f.text_field :card_type, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
         </div>
       </div>
 
       <div>
         <%= f.label :card_last_4, "Last 4 Digits", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <div class="mt-2">
-          <%= f.text_field :card_last_4, maxlength: 4, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+          <%= f.text_field :card_last_4, maxlength: 4, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
         </div>
       </div>
     </div>

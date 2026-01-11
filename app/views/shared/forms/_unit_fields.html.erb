@@ -3,14 +3,14 @@
     <div>
       <%= f.label :number, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :number, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.text_field :number, required: true, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
 
     <div>
       <%= f.label :tower, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :tower, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.text_field :tower, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@
     <div>
       <%= f.label :proration, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.number_field :proration, step: :any, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.number_field :proration, step: :any, required: true, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
 
@@ -33,7 +33,7 @@
           </div>
         <% else %>
           <% organizations = Current.user.role_super_admin? ? Organization.all : Current.user.member_organizations %>
-          <%= f.collection_select :organization_id, organizations, :id, :name, { prompt: t('helpers.select.prompt') }, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+          <%= f.collection_select :organization_id, organizations, :id, :name, { prompt: t('helpers.select.prompt') }, { class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
         <% end %>
       </div>
     </div>
@@ -43,14 +43,14 @@
     <div>
       <%= f.label :email, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.email_field :email, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.email_field :email, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
 
     <div>
       <%= f.label :mobile_number, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :mobile_number, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.text_field :mobile_number, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
   </div>

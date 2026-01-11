@@ -3,14 +3,14 @@
     <div>
       <%= f.label :email_address, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.email_field :email_address, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.email_field :email_address, required: true, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
 
     <div>
       <%= f.label :role, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.select :role, options_for_select(available_roles_for_select, f.object.role), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+        <%= f.select :role, options_for_select(available_roles_for_select, f.object.role), {}, { class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@
     <div>
       <%= f.label :password, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.password_field :password, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.password_field :password, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
         <% if f.object.persisted? %>
           <p class="mt-1 text-xs text-gray-500"><%= t('activerecord.attributes.user.password_hint_edit', default: "Leave blank to keep current") %></p>
         <% end %>
@@ -29,7 +29,7 @@
     <div>
       <%= f.label :password_confirmation, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.password_field :password_confirmation, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.password_field :password_confirmation, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
   </div>
@@ -38,14 +38,14 @@
     <div>
       <%= f.label :first_name, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :first_name, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.text_field :first_name, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
 
     <div>
       <%= f.label :last_name, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :last_name, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.text_field :last_name, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
   </div>
@@ -68,7 +68,7 @@
           [t('enums.user.status.pending'), 'pending'],
           [t('enums.user.status.approved'), 'approved'],
           [t('enums.user.status.rejected'), 'rejected']
-        ], f.object.status), {}, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+        ], f.object.status), {}, { class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
       </div>
     </div>
   <% end %>
@@ -76,7 +76,7 @@
   <div>
     <%= f.label :note, class: "block text-sm font-medium leading-6 text-gray-900" %>
     <div class="mt-2">
-      <%= f.text_area :note, rows: 4, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+      <%= f.text_area :note, rows: 4, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
     </div>
   </div>
 

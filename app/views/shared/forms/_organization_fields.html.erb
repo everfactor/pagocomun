@@ -3,14 +3,14 @@
     <div>
       <%= f.label :name, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :name, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.text_field :name, required: true, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
 
     <div>
       <%= f.label :rut, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :rut, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.text_field :rut, required: true, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
 
@@ -22,7 +22,7 @@
             [t('enums.organization.org_type.community'), 'community'],
             [t('enums.organization.org_type.rental_space'), 'rental_space']
           ], f.object.org_type || params[:org_type]), {}, {
-            class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm"
+            class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm"
           } %>
         </div>
       </div>
@@ -31,7 +31,7 @@
         <div>
           <%= f.label :owner_id, "Dueño (Org Admin)", class: "block text-sm font-medium leading-6 text-gray-900" %>
           <div class="mt-2">
-            <%= f.collection_select :owner_id, User.where(role: 'org_admin'), :id, :email_address, { prompt: "Seleccione un administrador" }, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+            <%= f.collection_select :owner_id, User.where(role: 'org_admin'), :id, :email_address, { prompt: "Seleccione un administrador" }, { class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
           </div>
         </div>
       <% end %>
@@ -42,21 +42,21 @@
     <div class="sm:col-span-2">
       <%= f.label :address, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :address, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.text_field :address, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
 
     <div>
       <%= f.label :tbk_child_commerce_code, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :tbk_child_commerce_code, required: true, disabled: !Current.user.role_super_admin?, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200" %>
+        <%= f.text_field :tbk_child_commerce_code, required: true, disabled: !Current.user.role_super_admin?, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200" %>
       </div>
     </div>
 
     <div class="sm:col-span-2">
       <%= f.label :note, class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_area :note, rows: 4, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
+        <%= f.text_area :note, rows: 4, class: "block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" %>
       </div>
     </div>
   </div>
