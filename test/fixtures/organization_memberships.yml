@@ -1,0 +1,29 @@
+org_admin_membership:
+  user: org_admin
+  organization: one
+  role: admin
+  active: true
+
+org_manager_membership:
+  user: org_manager
+  organization: one
+  role: org_manager
+  active: true
+
+resident_membership:
+  user: resident
+  organization: one
+  role: resident
+  active: true
+
+one_membership:
+  user: one
+  organization: one
+  role: admin
+  active: true
+
+two_membership:
+  user: two
+  organization: two
+  role: admin
+  active: true

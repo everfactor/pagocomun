@@ -20,14 +20,18 @@ puts "✓ Organization created: #{organization.name}"
 puts "\nCreating super admin user..."
 
 # Create super admin user
-admin_user = User.find_or_create_by!(email_address: "admin@pagocomun.com") do |user|
-  user.first_name = "Admin"
-  user.last_name = "User"
-  user.password = "password123"
-  user.password_confirmation = "password123"
-  user.role = :super_admin
-  user.organization = organization
-  user.status = :approved
+admin_user = User.find_or_initialize_by(email_address: "admin@pagocomun.com")
+if admin_user.new_record?
+  admin_user.assign_attributes(
+    first_name: "Admin",
+    last_name: "User",
+    password: "password123",
+    password_confirmation: "password123",
+    role: :super_admin,
+    organization: organization,
+    status: :approved
+  )
+  admin_user.save!
 end
 
 puts "✓ Super admin created: #{admin_user.email_address}"
@@ -43,12 +47,15 @@ units_data = [
 ]
 
 units_data.each do |unit_data|
-  unit = Unit.find_or_create_by!(
+  unit = Unit.find_or_initialize_by(
     organization: organization,
     number: unit_data[:number],
     tower: unit_data[:tower]
-  ) do |u|
-    u.proration = unit_data[:proration]
+  )
+  if unit.new_record?
+    unit.proration = unit_data[:proration]
+    unit.email = "unit#{unit_data[:number]}@example.com"
+    unit.save!
   end
   puts "  ✓ Unit created: #{unit_data[:tower]}-#{unit_data[:number]}"
 end

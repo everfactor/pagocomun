@@ -8,7 +8,10 @@ module Admin
     private
 
     def require_admin!
-      redirect_to root_path, alert: "Access denied. Admin privileges required." unless admin?
+      unless Current.user&.role_super_admin?
+        redirect_to root_path, alert: "Access denied. Admin privileges required."
+        return
+      end
     end
 
     def admin?

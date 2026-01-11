@@ -9,7 +9,7 @@ module Admin
         Bill.joins(:unit)
             .joins("INNER JOIN organizations ON units.organization_id = organizations.id")
             .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
-            .where(organization_memberships: { user_id: Current.user.id })
+            .where(organization_memberships: { user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id) })
             .distinct
             .includes(:unit, :organization)
             .order(created_at: :desc)
@@ -23,17 +23,19 @@ module Admin
 
     def set_bill
       @bill = if Current.user.role_super_admin?
-        Bill.find(params[:id])
+        Bill.find_by(id: params[:id])
       else
         Bill.joins(:unit)
             .joins("INNER JOIN organizations ON units.organization_id = organizations.id")
             .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
             .where(id: params[:id])
-            .where(organization_memberships: { user_id: Current.user.id })
+            .where(organization_memberships: { user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id) })
             .distinct
             .first
       end
-      redirect_to admin_bills_path, alert: "Bill not found" unless @bill
+      unless @bill
+        redirect_to admin_bills_path, alert: "Bill not found or access denied"
+      end
     end
   end
 end

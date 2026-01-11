@@ -8,7 +8,7 @@ module Admin
       else
         Payment.joins(:organization)
                .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
-               .where(organization_memberships: { user_id: Current.user.id })
+               .where(organization_memberships: { user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id) })
                .distinct
                .includes(:organization, :unit, :bill, :payer_user, :payment_method)
                .order(created_at: :desc)
@@ -22,16 +22,18 @@ module Admin
 
     def set_payment
       @payment = if Current.user.role_super_admin?
-        Payment.find(params[:id])
+        Payment.find_by(id: params[:id])
       else
         Payment.joins(:organization)
                .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
                .where(id: params[:id])
-               .where(organization_memberships: { user_id: Current.user.id })
+               .where(organization_memberships: { user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id) })
                .distinct
                .first
       end
-      redirect_to admin_payments_path, alert: "Payment not found" unless @payment
+      unless @payment
+        redirect_to admin_payments_path, alert: "Payment not found or access denied"
+      end
     end
   end
 end

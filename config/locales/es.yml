@@ -1,5 +1,15 @@
 es:
   activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email_address:
+              taken: "ya está en uso"
+            password:
+              too_short: "es demasiado corta (mínimo %{count} caracteres)"
+      messages:
+        record_invalid: "La validación falló: %{errors}"
     models:
       organization: "Organización"
       user: "Usuario"

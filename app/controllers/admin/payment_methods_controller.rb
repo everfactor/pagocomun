@@ -8,7 +8,7 @@ module Admin
       else
         PaymentMethod.joins(:user)
                      .joins("INNER JOIN organization_memberships ON users.id = organization_memberships.user_id")
-                     .where(organization_memberships: { organization_id: Current.user.member_organizations.pluck(:id) })
+                     .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
                      .distinct
                      .includes(:user)
                      .order(created_at: :desc)
@@ -24,7 +24,7 @@ module Admin
         User.all.order(:email_address)
       else
         User.joins(:member_organizations)
-            .where(organization_memberships: { organization_id: Current.user.member_organizations.pluck(:id) })
+            .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
             .distinct
             .order(:email_address)
       end
@@ -32,6 +32,35 @@ module Admin
 
     def create
       @payment_method = PaymentMethod.new(payment_method_params)
+
+      # Validate user_id belongs to accessible organizations
+      if payment_method_params[:user_id].present?
+        user = if Current.user.role_super_admin?
+          User.find_by(id: payment_method_params[:user_id])
+        else
+          User.joins(:member_organizations)
+              .where(id: payment_method_params[:user_id])
+              .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
+              .distinct
+              .first
+        end
+        unless user
+          @payment_method.errors.add(:user_id, "is not accessible")
+          @users = if Current.user.role_super_admin?
+            User.all.order(:email_address)
+          else
+            User.joins(:member_organizations)
+                .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
+                .distinct
+                .order(:email_address)
+          end
+          respond_to do |format|
+            format.html { render :new, status: :unprocessable_entity }
+            format.turbo_stream { render :new, status: :unprocessable_entity }
+          end
+          return
+        end
+      end
 
       if @payment_method.save
         respond_to do |format|
@@ -43,7 +72,7 @@ module Admin
           User.all.order(:email_address)
         else
           User.joins(:member_organizations)
-              .where(organization_memberships: { organization_id: Current.user.member_organizations.pluck(:id) })
+              .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
               .distinct
               .order(:email_address)
         end
@@ -59,13 +88,42 @@ module Admin
         User.all.order(:email_address)
       else
         User.joins(:member_organizations)
-            .where(organization_memberships: { organization_id: Current.user.member_organizations.pluck(:id) })
+            .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
             .distinct
             .order(:email_address)
       end
     end
 
     def update
+      # Validate user_id changes if provided
+      if payment_method_params[:user_id].present? && payment_method_params[:user_id].to_i != @payment_method.user_id
+        user = if Current.user.role_super_admin?
+          User.find_by(id: payment_method_params[:user_id])
+        else
+          User.joins(:member_organizations)
+              .where(id: payment_method_params[:user_id])
+              .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
+              .distinct
+              .first
+        end
+        unless user
+          @payment_method.errors.add(:user_id, "is not accessible")
+          @users = if Current.user.role_super_admin?
+            User.all.order(:email_address)
+          else
+            User.joins(:member_organizations)
+                .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
+                .distinct
+                .order(:email_address)
+          end
+          respond_to do |format|
+            format.html { render :edit, status: :unprocessable_entity }
+            format.turbo_stream { render :edit, status: :unprocessable_entity }
+          end
+          return
+        end
+      end
+
       if @payment_method.update(payment_method_params)
         respond_to do |format|
           format.html { redirect_to admin_payment_method_path(@payment_method), notice: "Payment method was successfully updated." }
@@ -76,7 +134,7 @@ module Admin
           User.all.order(:email_address)
         else
           User.joins(:member_organizations)
-              .where(organization_memberships: { organization_id: Current.user.member_organizations.pluck(:id) })
+              .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
               .distinct
               .order(:email_address)
         end
@@ -99,16 +157,18 @@ module Admin
 
     def set_payment_method
       @payment_method = if Current.user.role_super_admin?
-        PaymentMethod.find(params[:id])
+        PaymentMethod.find_by(id: params[:id])
       else
         PaymentMethod.joins(:user)
                      .joins("INNER JOIN organization_memberships ON users.id = organization_memberships.user_id")
                      .where(id: params[:id])
-                     .where(organization_memberships: { organization_id: Current.user.member_organizations.pluck(:id) })
+                     .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
                      .distinct
                      .first
       end
-      redirect_to admin_payment_methods_path, alert: "Payment method not found" unless @payment_method
+      unless @payment_method
+        redirect_to admin_payment_methods_path, alert: "Payment method not found or access denied"
+      end
     end
 
     def payment_method_params

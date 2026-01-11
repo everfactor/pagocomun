@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include Permissions
+
   has_secure_password
 
   belongs_to :organization, optional: true # legacy/initial org context
@@ -17,27 +19,32 @@ class User < ApplicationRecord
   normalizes :email_address, with: ->(email) { email.strip.downcase }
 
   validates :email_address, presence: true, uniqueness: true
-  validates :password_digest, presence: true, length: { minimum: 8 }, if: -> { new_record? || !password_digest.nil? }
+  validates :password_digest, presence: true, length: {minimum: 8}, if: -> { new_record? || !password_digest.nil? }
   validate :role_allowed_for_signup, on: :create
 
   after_create_commit :send_enrollment_email, if: :role_resident?
 
   def enrollment_token
-    to_sgid(expires_in: 30.days, for: 'enrollment').to_s
+    to_sgid(expires_in: 30.days, for: "enrollment").to_s
   end
 
   has_one :active_assignment, -> {
     where(active: true)
-    .where("starts_on <= ?", Date.current)
-    .where("ends_on IS NULL OR ends_on >= ?", Date.current)
+      .where("starts_on <= ?", Date.current)
+      .where("ends_on IS NULL OR ends_on >= ?", Date.current)
   }, class_name: "UnitUserAssignment"
 
   def self.locate_signed(token)
-    GlobalID::Locator.locate_signed(token, for: 'enrollment')
+    GlobalID::Locator.locate_signed(token, for: "enrollment")
   end
 
   def signed_token
-    to_sgid(expires_in: 30.days, for: 'enrollment').to_s
+    to_sgid(expires_in: 30.days, for: "enrollment").to_s
+  end
+
+  # Allow skipping signup role validation for admin-created users
+  def skip_signup_role_validation!
+    @skip_signup_role_validation = true
   end
 
   private
@@ -49,6 +56,9 @@ class User < ApplicationRecord
   def role_allowed_for_signup
     return unless new_record?
     return if role.nil?
+    # Skip validation if role is being set by an admin (super_admin can set any role)
+    # This validation only applies to user signups, not admin-created users
+    return if @skip_signup_role_validation
 
     unless %w[org_admin org_manager resident].include?(role)
       errors.add(:role, "must be one of: org_admin, org_manager, or resident")

@@ -61,6 +61,8 @@ module Manage
 
     def set_organization
       @organization = Current.user.member_organizations.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to manage_organizations_path, alert: "Organización no encontrada o acceso denegado."
     end
 
     def organization_params

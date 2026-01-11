@@ -1,9 +1,45 @@
+super_admin:
+  email_address: super@example.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  first_name: Super
+  last_name: Admin
+  role: super_admin
+  status: approved
+
+org_admin:
+  email_address: admin@example.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  first_name: Org
+  last_name: Admin
+  role: org_admin
+  status: approved
+  organization: one
+
+org_manager:
+  email_address: manager@example.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  first_name: Org
+  last_name: Manager
+  role: org_manager
+  status: approved
+  organization: one
+
+resident:
+  email_address: resident@example.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  first_name: Resident
+  last_name: User
+  role: resident
+  status: approved
+  organization: one
+
 one:
   email_address: one@example.com
   password_digest: <%= BCrypt::Password.create('password') %>
   first_name: One
   last_name: User
   role: org_admin
+  status: approved
   organization: one
 
 two:
@@ -12,4 +48,5 @@ two:
   first_name: Two
   last_name: User
   role: org_admin
+  status: approved
   organization: two

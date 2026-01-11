@@ -76,6 +76,8 @@ class Unit::Importer
         u.last_name = row["user_last_name"]&.strip
         u.password = SecureRandom.hex(8)
         u.status = "approved"
+        # Skip signup role validation - importer creates users programmatically
+        u.skip_signup_role_validation!
         u.save!
       end
     end
@@ -95,9 +97,9 @@ class Unit::Importer
 
   def find_or_create_unit(row)
     organization.units.find_or_initialize_by(number: row["unit_number"]&.strip, tower: row["tower"]&.strip).tap do |u|
-      u.email = row["user_email"]
+      u.email = row["user_email"] || "#{row["unit_number"]}@example.com"
       u.mobile_number = row["mobile_number"]&.strip
-      u.proration = row["proration"]&.to_f || 0
+      u.proration = row["proration"]&.to_f || 1.0
       u.save!
     end
   rescue ActiveRecord::RecordInvalid => e

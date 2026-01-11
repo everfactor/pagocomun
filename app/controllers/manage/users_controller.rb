@@ -21,13 +21,34 @@ module Manage
     def create
       @user = User.new(user_params)
       @user.status = "approved" # Admins creating users approve them immediately
+      # Skip signup role validation for admin-created users
+      @user.skip_signup_role_validation!
+
+      # Validate role - org_admins can only create org_manager and resident roles
+      if user_params[:role].present?
+        allowed_roles = %w[org_manager resident]
+        unless allowed_roles.include?(user_params[:role])
+          @user.errors.add(:role, "no es válido para creación")
+          render :new, status: :unprocessable_entity
+          return
+        end
+      end
+
+      # Validate organization_id belongs to accessible organizations
+      if user_params[:organization_id].present?
+        organization = Current.user.member_organizations.find_by(id: user_params[:organization_id])
+        unless organization
+          @user.errors.add(:organization_id, "no es accesible")
+          render :new, status: :unprocessable_entity
+          return
+        end
+      end
 
       if @user.save
         # If an organization_id was provided (e.g. from index link), link them
         organization_id = user_params[:organization_id]
-        role = user_params[:role]
         if organization_id.present?
-          OrganizationMembership.create!(user: @user, organization_id:, role:, active: true)
+          OrganizationMembership.create!(user: @user, organization_id:, role: user_params[:role], active: true)
         end
 
         redirect_to manage_users_path, notice: "El usuario fue creado exitosamente."
@@ -76,6 +97,8 @@ module Manage
     end
 
     def user_params
+      # Brakeman warning: :role and :status are validated in controller actions
+      # Only org_admin can create users, and organization_id is validated to belong to user's orgs
       params.require(:user).permit(:email_address, :password, :password_confirmation, :first_name, :last_name, :status, :note, :organization_id, :role)
     end
   end

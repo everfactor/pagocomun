@@ -3,11 +3,7 @@ module Admin
     before_action :set_organization, only: [:show, :edit, :update, :destroy]
 
     def index
-      @organizations = if Current.user.role_super_admin?
-        Organization.all.order(created_at: :desc)
-      else
-        Current.user.member_organizations.order(created_at: :desc)
-      end
+      @organizations = scoped_organizations.order(created_at: :desc)
     end
 
     def show
@@ -21,6 +17,18 @@ module Admin
       @organization = Organization.new(organization_params)
       @organization.status = "approved"
 
+      # Validate owner_id belongs to accessible organizations if provided
+      if @organization.owner_id.present?
+        owner = User.find_by(id: @organization.owner_id)
+        unless owner && (Current.user.role_super_admin? || scoped_organizations.any? { |org| org.members.include?(owner) })
+          @organization.errors.add(:owner_id, "is not accessible")
+          respond_to do |format|
+            format.html { render :new, status: :unprocessable_entity }
+          end
+          return
+        end
+      end
+
       if @organization.save
         # Associate the owner if provided (usually by super_admin)
         if @organization.owner_id.present?
@@ -28,10 +36,6 @@ module Admin
           @organization.organization_memberships.create!(user: owner, role: "admin", active: true)
           # Also set the organization_id on the user for the has_one :owner association
           owner.update!(organization: @organization) if owner.organization_id.nil?
-        elsif !Current.user.role_super_admin?
-          # Automatically associate the creator if they are not a super_admin
-          @organization.organization_memberships.create!(user: Current.user, role: "admin", active: true)
-          Current.user.update!(organization: @organization) if Current.user.organization_id.nil?
         end
 
         respond_to do |format|
@@ -48,6 +52,18 @@ module Admin
     end
 
     def update
+      # Validate owner_id changes if provided
+      if organization_params[:owner_id].present? && organization_params[:owner_id] != @organization.owner&.id.to_s
+        new_owner = User.find_by(id: organization_params[:owner_id])
+        unless new_owner && (Current.user.role_super_admin? || scoped_organizations.any? { |org| org.members.include?(new_owner) })
+          @organization.errors.add(:owner_id, "is not accessible")
+          respond_to do |format|
+            format.html { render :edit, status: :unprocessable_entity }
+          end
+          return
+        end
+      end
+
       if @organization.update(organization_params)
         respond_to do |format|
           format.html { redirect_to admin_organization_path(@organization), notice: "Organization was successfully updated." }
@@ -69,10 +85,9 @@ module Admin
     private
 
     def set_organization
-      @organization = if Current.user.role_super_admin?
-        Organization.find(params[:id])
-      else
-        Current.user.member_organizations.find(params[:id])
+      @organization = scoped_organizations.find_by(id: params[:id])
+      unless @organization
+        redirect_to admin_organizations_path, alert: "Organization not found or access denied"
       end
     end
 
