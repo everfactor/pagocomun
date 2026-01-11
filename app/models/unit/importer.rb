@@ -76,8 +76,6 @@ class Unit::Importer
         u.last_name = row["user_last_name"]&.strip
         u.password = SecureRandom.hex(8)
         u.status = "approved"
-        # Skip signup role validation - importer creates users programmatically
-        u.skip_signup_role_validation!
         u.save!
       end
     end

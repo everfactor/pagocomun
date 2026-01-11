@@ -20,7 +20,6 @@ class User < ApplicationRecord
 
   validates :email_address, presence: true, uniqueness: true
   validates :password_digest, presence: true, length: {minimum: 8}, if: -> { new_record? || !password_digest.nil? }
-  validate :role_allowed_for_signup, on: :create
 
   after_create_commit :send_enrollment_email, if: :role_resident?
 
@@ -42,26 +41,9 @@ class User < ApplicationRecord
     to_sgid(expires_in: 30.days, for: "enrollment").to_s
   end
 
-  # Allow skipping signup role validation for admin-created users
-  def skip_signup_role_validation!
-    @skip_signup_role_validation = true
-  end
-
   private
 
   def send_enrollment_email
     ResidentMailer.with(user: self).enrollment_email.deliver_later
-  end
-
-  def role_allowed_for_signup
-    return unless new_record?
-    return if role.nil?
-    # Skip validation if role is being set by an admin (super_admin can set any role)
-    # This validation only applies to user signups, not admin-created users
-    return if @skip_signup_role_validation
-
-    unless %w[org_admin org_manager resident].include?(role)
-      errors.add(:role, "must be one of: org_admin, org_manager, or resident")
-    end
   end
 end

@@ -9,9 +9,9 @@ module Admin
       else
         # Org admins see users from their organizations
         User.joins(:member_organizations)
-            .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
-            .distinct
-            .order(created_at: :desc)
+          .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+          .distinct
+          .order(created_at: :desc)
       end
     end
 
@@ -25,8 +25,6 @@ module Admin
     def create
       @user = User.new(user_params)
       @user.status = "pending" unless Current.user.role_super_admin?
-      # Skip signup role validation for admin-created users
-      @user.skip_signup_role_validation! if Current.user.role_super_admin?
 
       # Validate role - only super_admin can set role
       if user_params[:role].present? && !Current.user.role_super_admin?
@@ -144,10 +142,10 @@ module Admin
         User.find_by(id: params[:id])
       else
         User.joins(:member_organizations)
-            .where(id: params[:id])
-            .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
-            .distinct
-            .first
+          .where(id: params[:id])
+          .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+          .distinct
+          .first
       end
       unless @user
         redirect_to admin_users_path, alert: "User not found or access denied"

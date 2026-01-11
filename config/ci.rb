@@ -1,7 +1,7 @@
 # Run using bin/ci
 
 CI.run do
-  step "Setup", "bin/rails db:create db:schema:load"
+  step "Setup", "RAILS_ENV=test bin/rails db:create db:schema:load"
 
   step "Security: Importmap vulnerability audit", "bin/importmap audit"
   step "Security: Brakeman", "brakeman --no-exit-on-warn"

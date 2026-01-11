@@ -30,7 +30,7 @@ module Manage
 
       if @organization.save
         # The creator (org_admin) is automatically associated as the admin member
-        @organization.organization_memberships.create!(user: Current.user, role: "admin", active: true)
+        @organization.organization_memberships.create!(user: Current.user, role: "org_admin", active: true)
 
         # Also set the organization_id on the user for the has_one :owner association
         Current.user.update!(organization: @organization) if Current.user.organization_id.nil?

@@ -8,16 +8,16 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(email_address: params[:email_address])
 
-      if user&.authenticate(params[:password])
+    if user&.authenticate(params[:password])
       unless user.status_approved?
         flash.now[:alert] = case user.status
-                            when "pending"
-                              "Su cuenta está pendiente de aprobación. Por favor, espere a que un administrador la apruebe."
-                            when "rejected"
-                              "Su cuenta ha sido rechazada. Por favor, contacte con soporte para más información."
-                            else
-                              "Su cuenta no está activa. Por favor, contacte con soporte."
-                            end
+        when "pending"
+          "Su cuenta está pendiente de aprobación. Por favor, espere a que un administrador la apruebe."
+        when "rejected"
+          "Su cuenta ha sido rechazada. Por favor, contacte con soporte para más información."
+        else
+          "Su cuenta no está activa. Por favor, contacte con soporte."
+        end
         render :new, status: :unprocessable_entity
         return
       end

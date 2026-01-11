@@ -12,5 +12,5 @@
     </div>
   <% end %>
 
-  <%= render "shared/forms/user_fields", f: f, cancel_path: manage_users_path %>
+  <%= render "shared/forms/user_fields", f: f, cancel_path: manage_users_path, require_organization: true %>
 <% end %>

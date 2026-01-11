@@ -30,10 +30,10 @@ module Admin
       end
 
       if @organization.save
-        # Associate the owner if provided (usually by super_admin)
+        # Associate the owner if provided (usually by org_admin)
         if @organization.owner_id.present?
           owner = User.find(@organization.owner_id)
-          @organization.organization_memberships.create!(user: owner, role: "admin", active: true)
+          @organization.organization_memberships.create!(user: owner, role: "org_admin", active: true)
           # Also set the organization_id on the user for the has_one :owner association
           owner.update!(organization: @organization) if owner.organization_id.nil?
         end

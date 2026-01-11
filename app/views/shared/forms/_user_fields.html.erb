@@ -51,10 +51,12 @@
   </div>
 
   <div>
-    <%= f.label :organization_id, class: "block text-sm font-medium leading-6 text-gray-900" %>
+    <% org_config = organization_select_config(require_organization: local_assigns.fetch(:require_organization, false)) %>
+    <%= f.label :organization_id, class: "block text-sm font-medium leading-6 text-gray-900" do %>
+      Organización <%= content_tag(:span, "*", class: "text-red-500") if org_config[:required] %>
+    <% end %>
     <div class="mt-2">
-      <% organizations = Current.user.role_super_admin? ? Organization.all : Current.user.member_organizations %>
-      <%= f.collection_select :organization_id, organizations, :id, :name, { prompt: t('helpers.select.prompt') }, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm" } %>
+      <%= f.collection_select :organization_id, org_config[:organizations], :id, :name, org_config[:select_options], org_config[:select_attributes] %>
     </div>
   </div>
 

@@ -21,8 +21,21 @@ module Manage
     def create
       @user = User.new(user_params)
       @user.status = "approved" # Admins creating users approve them immediately
-      # Skip signup role validation for admin-created users
-      @user.skip_signup_role_validation!
+
+      # In manage context, organization_id is required
+      if user_params[:organization_id].blank?
+        @user.errors.add(:organization_id, "es requerido")
+        render :new, status: :unprocessable_entity
+        return
+      end
+
+      # Validate organization_id belongs to accessible organizations
+      organization = Current.user.member_organizations.find_by(id: user_params[:organization_id])
+      unless organization
+        @user.errors.add(:organization_id, "no es accesible o no pertenece a sus organizaciones")
+        render :new, status: :unprocessable_entity
+        return
+      end
 
       # Validate role - org_admins can only create org_manager and resident roles
       if user_params[:role].present?
@@ -34,22 +47,15 @@ module Manage
         end
       end
 
-      # Validate organization_id belongs to accessible organizations
-      if user_params[:organization_id].present?
-        organization = Current.user.member_organizations.find_by(id: user_params[:organization_id])
-        unless organization
-          @user.errors.add(:organization_id, "no es accesible")
-          render :new, status: :unprocessable_entity
-          return
-        end
-      end
-
       if @user.save
-        # If an organization_id was provided (e.g. from index link), link them
-        organization_id = user_params[:organization_id]
-        if organization_id.present?
-          OrganizationMembership.create!(user: @user, organization_id:, role: user_params[:role], active: true)
-        end
+        # In manage context, organization_id is always required and validated above
+        # Create organization membership with the validated organization
+        OrganizationMembership.create!(
+          user: @user,
+          organization_id: organization.id,
+          role: user_params[:role] || "resident",
+          active: true
+        )
 
         redirect_to manage_users_path, notice: "El usuario fue creado exitosamente."
       else
