@@ -40,10 +40,10 @@ puts "\nCreating units..."
 
 # Create units for the organization
 units_data = [
-  { number: "101", tower: "A", proration: 1.0 },
-  { number: "102", tower: "A", proration: 1.0 },
-  { number: "201", tower: "B", proration: 1.2 },
-  { number: "202", tower: "B", proration: 1.2 }
+  {number: "101", tower: "A", proration: 1.0},
+  {number: "102", tower: "A", proration: 1.0},
+  {number: "201", tower: "B", proration: 1.2},
+  {number: "202", tower: "B", proration: 1.2}
 ]
 
 units_data.each do |unit_data|
@@ -60,7 +60,121 @@ units_data.each do |unit_data|
   puts "  ✓ Unit created: #{unit_data[:tower]}-#{unit_data[:number]}"
 end
 
+puts "\nCreating org_admin user..."
+
+# Create org_admin user
+org_admin = User.find_or_initialize_by(email_address: "orgadmin@pagocomun.com")
+if org_admin.new_record?
+  org_admin.assign_attributes(
+    first_name: "Org",
+    last_name: "Admin",
+    password: "password123",
+    password_confirmation: "password123",
+    role: :org_admin,
+    status: :approved
+  )
+  org_admin.save!
+end
+
+puts "✓ Org admin created: #{org_admin.email_address}"
+
+puts "\nCreating 3 organizations..."
+
+# Create 3 organizations
+organizations = []
+org_data = [
+  {name: "Organization Alpha", rut: "76.111.111-1", slug: "org-alpha", tbk_child_commerce_code: "597055555533"},
+  {name: "Organization Beta", rut: "76.222.222-2", slug: "org-beta", tbk_child_commerce_code: "597055555534"},
+  {name: "Organization Gamma", rut: "76.333.333-3", slug: "org-gamma", tbk_child_commerce_code: "597055555535"}
+]
+
+org_data.each do |data|
+  org = Organization.find_or_create_by!(tbk_child_commerce_code: data[:tbk_child_commerce_code]) do |o|
+    o.name = data[:name]
+    o.rut = data[:rut]
+    o.slug = data[:slug]
+    o.active = true
+    o.org_type = :community
+    o.address = "Sample Address"
+  end
+  organizations << org
+  puts "  ✓ Organization created: #{org.name}"
+end
+
+puts "\nCreating 2 org_manager users..."
+
+# Create 2 org_manager users
+manager1 = User.find_or_initialize_by(email_address: "manager1@pagocomun.com")
+if manager1.new_record?
+  manager1.assign_attributes(
+    first_name: "Manager",
+    last_name: "One",
+    password: "password123",
+    password_confirmation: "password123",
+    role: :org_manager,
+    status: :approved
+  )
+  manager1.save!
+end
+
+manager2 = User.find_or_initialize_by(email_address: "manager2@pagocomun.com")
+if manager2.new_record?
+  manager2.assign_attributes(
+    first_name: "Manager",
+    last_name: "Two",
+    password: "password123",
+    password_confirmation: "password123",
+    role: :org_manager,
+    status: :approved
+  )
+  manager2.save!
+end
+
+puts "  ✓ Manager 1 created: #{manager1.email_address}"
+puts "  ✓ Manager 2 created: #{manager2.email_address}"
+
+puts "\nCreating organization memberships..."
+
+# Associate org_admin with all 3 organizations
+organizations.each do |org|
+  OrganizationMembership.find_or_create_by!(
+    organization: org,
+    user: org_admin
+  ) do |m|
+    m.role = :org_admin
+    m.active = true
+  end
+  puts "  ✓ Org admin associated with: #{org.name}"
+end
+
+# Associate first manager with first 2 organizations
+[organizations[0], organizations[1]].each do |org|
+  OrganizationMembership.find_or_create_by!(
+    organization: org,
+    user: manager1
+  ) do |m|
+    m.role = :org_manager
+    m.active = true
+  end
+  puts "  ✓ Manager 1 associated with: #{org.name}"
+end
+
+# Associate second manager with last organization
+OrganizationMembership.find_or_create_by!(
+  organization: organizations[2],
+  user: manager2
+) do |m|
+  m.role = :org_manager
+  m.active = true
+end
+puts "  ✓ Manager 2 associated with: #{organizations[2].name}"
+
 puts "\n✓ Seed data created successfully!"
 puts "\nYou can now log in with:"
 puts "  Email: admin@pagocomun.com"
 puts "  Password: password123"
+puts "\nOr with:"
+puts "  Email: orgadmin@pagocomun.com (Org Admin)"
+puts "  Email: manager1@pagocomun.com (Org Manager - 2 orgs)"
+puts "  Email: manager2@pagocomun.com (Org Manager - 1 org)"
+puts "  Password: password123 (for all)"
