@@ -5,11 +5,14 @@
       <p class="mt-2 text-sm text-gray-600">User details</p>
     </div>
     <div class="flex gap-2">
+      <% if @user.status_pending? %>
+        <%= link_to "Approve", approve_admin_user_path(@user), data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to approve this user?" }, class: "rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
+        <%= link_to "Reject", reject_admin_user_path(@user), data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reject this user?" }, class: "rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500" %>
+      <% end %>
       <%= link_to "Edit", edit_admin_user_path(@user), class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
       <%= link_to "Back to List", admin_users_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
     </div>
   </div>
-
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="p-6">
@@ -53,7 +56,6 @@
         </dl>
       </div>
     </div>
-
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Additional Information</h2>

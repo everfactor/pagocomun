@@ -1,18 +1,25 @@
 module Admin
   class UsersController < BaseController
-    before_action :set_user, only: [:show, :edit, :update, :destroy]
+    before_action :set_user, only: [:show, :edit, :update, :destroy, :approve, :reject]
     before_action :require_user_creation_access!, only: [:new, :create]
 
     def index
       @users = if Current.user.role_super_admin?
-        User.all.order(created_at: :desc)
+        User.all
       else
         # Org admins see users from their organizations
         User.joins(:member_organizations)
           .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
           .distinct
-          .order(created_at: :desc)
       end
+
+      @users = @users.search_by_name(params[:name]) if params[:name].present?
+      @users = @users.search_by_email(params[:email]) if params[:email].present?
+      @users = @users.search_by_domain(params[:domain]) if params[:domain].present?
+      @users = @users.where(status: params[:status]) if params[:status].present?
+      @users = @users.filter_by_organization(params[:organization_id]) if params[:organization_id].present?
+
+      @users = @users.order(created_at: :desc)
     end
 
     def show
@@ -124,6 +131,30 @@ module Admin
       respond_to do |format|
         format.html { redirect_to admin_users_path, notice: "User was successfully deleted." }
         format.turbo_stream
+      end
+    end
+
+    def approve
+      if @user.status_approved!
+        flash.now[:notice] = "User was approved."
+        respond_to do |format|
+          format.html { redirect_to admin_users_path, notice: "User was approved." }
+          format.turbo_stream { render :update }
+        end
+      else
+        redirect_to admin_users_path, alert: "Failed to approve user."
+      end
+    end
+
+    def reject
+      if @user.status_rejected!
+        flash.now[:notice] = "User was rejected."
+        respond_to do |format|
+          format.html { redirect_to admin_users_path, notice: "User was rejected." }
+          format.turbo_stream { render :update }
+        end
+      else
+        redirect_to admin_users_path, alert: "Failed to reject user."
       end
     end
 

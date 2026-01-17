@@ -27,6 +27,10 @@
     </span>
   </td>
   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+    <% if user.status_pending? %>
+      <%= link_to "Approve", approve_admin_user_path(user), data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to approve this user?" }, class: "text-green-600 hover:text-green-900 mr-4" %>
+      <%= link_to "Reject", reject_admin_user_path(user), data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reject this user?" }, class: "text-orange-600 hover:text-orange-900 mr-4" %>
+    <% end %>
     <%= link_to "View", admin_user_path(user), class: "text-blue-600 hover:text-blue-900 mr-4" %>
     <%= link_to "Edit", edit_admin_user_path(user), class: "text-indigo-600 hover:text-indigo-900 mr-4" %>
     <%= link_to "Delete", admin_user_path(user), method: :delete,

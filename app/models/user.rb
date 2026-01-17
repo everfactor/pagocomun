@@ -16,6 +16,24 @@ class User < ApplicationRecord
   enum :role, %w[super_admin org_admin org_manager resident].index_by(&:itself), prefix: :role
   enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status
 
+  scope :search_by_name, ->(name) {
+    where("first_name ILIKE :term OR last_name ILIKE :term", term: "%#{name}%")
+  }
+
+  scope :search_by_email, ->(email) {
+    where("email_address ILIKE :term", term: "%#{email}%")
+  }
+
+  scope :search_by_domain, ->(domain) {
+    where("email_address ILIKE :term", term: "%@#{domain}")
+  }
+
+  scope :filter_by_organization, ->(org_id) {
+    joins(:organization_memberships)
+      .where(organization_memberships: {organization_id: org_id})
+      .distinct
+  }
+
   normalizes :email_address, with: ->(email) { email.strip.downcase }
 
   validates :email_address, presence: true, uniqueness: true
