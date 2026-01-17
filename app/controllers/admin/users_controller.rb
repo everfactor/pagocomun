@@ -1,7 +1,7 @@
 module Admin
   class UsersController < BaseController
-    before_action :set_user, only: [:show, :edit, :update, :destroy, :approve, :reject]
-    before_action :require_user_creation_access!, only: [:new, :create]
+    before_action :set_user, only: [ :show, :edit, :update, :destroy, :approve, :reject ]
+    before_action :require_user_creation_access!, only: [ :new, :create ]
 
     def index
       @users = if Current.user.role_super_admin?
@@ -9,7 +9,7 @@ module Admin
       else
         # Org admins see users from their organizations
         User.joins(:member_organizations)
-          .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+          .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
           .distinct
       end
 
@@ -36,6 +36,7 @@ module Admin
       # Validate role - only super_admin can set role
       if user_params[:role].present? && !Current.user.role_super_admin?
         @user.errors.add(:role, "cannot be set")
+        flash.now[:alert] = "Please fix the errors below."
         respond_to do |format|
           format.html { render :new, status: :unprocessable_entity }
           format.turbo_stream { render :new, status: :unprocessable_entity }
@@ -48,6 +49,7 @@ module Admin
         organization = scoped_organizations.find_by(id: user_params[:organization_id])
         unless organization
           @user.errors.add(:organization_id, "is not accessible")
+          flash.now[:alert] = "Please fix the errors below."
           respond_to do |format|
             format.html { render :new, status: :unprocessable_entity }
             format.turbo_stream { render :new, status: :unprocessable_entity }
@@ -69,9 +71,10 @@ module Admin
 
         respond_to do |format|
           format.html { redirect_to admin_users_path, notice: "User was successfully created." }
-          format.turbo_stream
+          format.turbo_stream { flash.now[:notice] = "User was successfully created." }
         end
       else
+        flash.now[:alert] = "Please fix the errors below."
         respond_to do |format|
           format.html { render :new, status: :unprocessable_entity }
           format.turbo_stream { render :new, status: :unprocessable_entity }
@@ -93,6 +96,7 @@ module Admin
       # Validate role changes - only super_admin can change role
       if update_params[:role].present? && update_params[:role] != @user.role && !Current.user.role_super_admin?
         @user.errors.add(:role, "cannot be changed")
+        flash.now[:alert] = "Please fix the errors below."
         respond_to do |format|
           format.html { render :edit, status: :unprocessable_entity }
           format.turbo_stream { render :edit, status: :unprocessable_entity }
@@ -105,6 +109,7 @@ module Admin
         new_organization = scoped_organizations.find_by(id: update_params[:organization_id])
         unless new_organization
           @user.errors.add(:organization_id, "is not accessible")
+          flash.now[:alert] = "Please fix the errors below."
           respond_to do |format|
             format.html { render :edit, status: :unprocessable_entity }
             format.turbo_stream { render :edit, status: :unprocessable_entity }
@@ -116,9 +121,10 @@ module Admin
       if @user.update(update_params)
         respond_to do |format|
           format.html { redirect_to admin_user_path(@user), notice: "User was successfully updated." }
-          format.turbo_stream
+          format.turbo_stream { flash.now[:notice] = "User was successfully updated." }
         end
       else
+        flash.now[:alert] = "Please fix the errors below."
         respond_to do |format|
           format.html { render :edit, status: :unprocessable_entity }
           format.turbo_stream { render :edit, status: :unprocessable_entity }
@@ -130,7 +136,7 @@ module Admin
       @user.destroy
       respond_to do |format|
         format.html { redirect_to admin_users_path, notice: "User was successfully deleted." }
-        format.turbo_stream
+        format.turbo_stream { flash.now[:notice] = "User was successfully deleted." }
       end
     end
 
@@ -174,7 +180,7 @@ module Admin
       else
         User.joins(:member_organizations)
           .where(id: params[:id])
-          .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+          .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
           .distinct
           .first
       end

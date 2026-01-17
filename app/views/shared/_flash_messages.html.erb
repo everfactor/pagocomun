@@ -1,13 +1,11 @@
 <div id="flash-messages" class="flash-container">
-  <% if notice %>
-    <div class="flash-message flash-notice rounded-md bg-blue-50 p-4 mb-4">
-      <p class="text-sm font-medium text-blue-800"><%= notice %></p>
-    </div>
-  <% end %>
-
-  <% if alert %>
-    <div class="flash-message flash-alert rounded-md bg-red-50 p-4 mb-4">
-      <p class="text-sm font-medium text-red-800"><%= alert %></p>
+  <% flash.each do |type, message| %>
+    <% 
+      bg_color = type == "notice" ? "bg-green-50" : "bg-red-50"
+      text_color = type == "notice" ? "text-green-800" : "text-red-800"
+    %>
+    <div class="flash-message rounded-md <%= bg_color %> p-4 mb-4">
+      <p class="text-sm font-medium <%= text_color %>"><%= message %></p>
     </div>
   <% end %>
 </div>
