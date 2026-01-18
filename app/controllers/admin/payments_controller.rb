@@ -3,15 +3,24 @@ module Admin
     before_action :set_payment, only: [:show]
 
     def index
+      @organizations = scoped_organizations
       @payments = if Current.user.role_super_admin?
-        Payment.includes(:organization, :unit, :bill, :payer_user, :payment_method).order(created_at: :desc)
+        Payment.all
       else
         Payment.joins(:organization)
           .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
           .where(organization_memberships: {user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id)})
           .distinct
-          .includes(:organization, :unit, :bill, :payer_user, :payment_method)
-          .order(created_at: :desc)
+      end
+
+      @payments = @payments.includes(:organization, :unit, :bill, :payer_user, :payment_method).order(created_at: :desc)
+
+      if params[:organization_id].present?
+        @payments = @payments.where(organization_id: params[:organization_id])
+      end
+
+      if params[:period].present?
+        @payments = @payments.where(period: params[:period])
       end
     end
 

@@ -36,15 +36,17 @@ end
 
 puts "✓ Super admin created: #{admin_user.email_address}"
 
-puts "\nCreating units..."
+puts "\nCreating units and bills..."
 
 # Create units for the organization
 units_data = [
-  {number: "101", tower: "A", proration: 1.0},
-  {number: "102", tower: "A", proration: 1.0},
-  {number: "201", tower: "B", proration: 1.2},
-  {number: "202", tower: "B", proration: 1.2}
+  {number: "101", tower: "A", proration: 1.0, pay_day: 5},
+  {number: "102", tower: "A", proration: 1.0, pay_day: 5},
+  {number: "201", tower: "B", proration: 1.2, pay_day: 10},
+  {number: "202", tower: "B", proration: 1.2, pay_day: 10}
 ]
+
+current_period = Time.current.strftime("%Y-%m")
 
 units_data.each do |unit_data|
   unit = Unit.find_or_initialize_by(
@@ -54,11 +56,22 @@ units_data.each do |unit_data|
   )
   if unit.new_record?
     unit.proration = unit_data[:proration]
+    unit.pay_day = unit_data[:pay_day]
     unit.email = "unit#{unit_data[:number]}@example.com"
     unit.save!
   end
   puts "  ✓ Unit created: #{unit_data[:tower]}-#{unit_data[:number]}"
+
+  # Create a bill for each unit
+  bill = unit.bills.find_or_create_by!(period: current_period) do |b|
+    b.amount = 50000 * unit.proration
+    b.status = :pending
+    b.due_date = Date.new(Time.current.year, Time.current.month, unit.pay_day)
+  end
+  puts "    ✓ Bill created for #{current_period}: $#{bill.amount}"
 end
+
+organization.update(last_bill_upload_period: current_period)
 
 puts "\nCreating org_admin user..."
 

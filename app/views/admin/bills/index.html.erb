@@ -1,7 +1,27 @@
 <div class="mx-auto max-w-7xl">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Bills</h1>
-    <p class="mt-2 text-sm text-gray-600">View all bills</p>
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Bills</h1>
+      <p class="mt-2 text-sm text-gray-600">View all bills</p>
+    </div>
+  </div>
+
+  <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="rounded-lg bg-white p-6 shadow">
+      <%= form_tag admin_bills_path, method: :get, class: "flex flex-col gap-4" do %>
+        <div>
+          <label for="organization_id" class="block text-sm font-medium text-gray-700">Organization</label>
+          <%= select_tag :organization_id, options_from_collection_for_select(@organizations, :id, :name, params[:organization_id]), prompt: "All organizations", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", onchange: "this.form.submit()" %>
+        </div>
+        <div>
+          <label for="period" class="block text-sm font-medium text-gray-700">Period</label>
+          <%= select_tag :period, options_for_select(Bill.period_options, params[:period]), prompt: "All periods", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", onchange: "this.form.submit()" %>
+        </div>
+        <div class="flex justify-end">
+          <%= submit_tag "Filter", class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
   </div>
 
   <div class="overflow-hidden rounded-lg bg-white shadow">

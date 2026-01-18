@@ -3,16 +3,25 @@ module Admin
     before_action :set_bill, only: [:show]
 
     def index
+      @organizations = scoped_organizations
       @bills = if Current.user.role_super_admin?
-        Bill.includes(:unit, :organization).order(created_at: :desc)
+        Bill.all
       else
         Bill.joins(:unit)
           .joins("INNER JOIN organizations ON units.organization_id = organizations.id")
           .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
           .where(organization_memberships: {user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id)})
           .distinct
-          .includes(:unit, :organization)
-          .order(created_at: :desc)
+      end
+
+      @bills = @bills.includes(:unit, :organization).order(created_at: :desc)
+
+      if params[:organization_id].present?
+        @bills = @bills.joins(:unit).where(units: {organization_id: params[:organization_id]})
+      end
+
+      if params[:period].present?
+        @bills = @bills.where(period: params[:period])
       end
     end
 

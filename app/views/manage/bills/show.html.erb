@@ -24,7 +24,7 @@
           <div>
             <dt class="text-sm font-medium text-gray-500">Unidad</dt>
             <dd class="mt-1 text-sm text-gray-900">
-              <%= link_to "#{@bill.unit.number} (#{@bill.unit.organization.name})", manage_unit_path(@bill.unit), class: "text-blue-600 hover:text-blue-900" %>
+              <%= link_to "#{@bill.unit.number} (#{@bill.unit.organization.name})", manage_organization_unit_path(@bill.unit.organization, @bill.unit), class: "text-blue-600 hover:text-blue-900" %>
             </dd>
           </div>
           <div>

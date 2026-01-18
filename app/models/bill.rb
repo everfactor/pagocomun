@@ -7,4 +7,8 @@ class Bill < ApplicationRecord
 
   validates :amount, presence: true, numericality: {greater_than: 0}
   validates :period, presence: true
+
+  def self.period_options
+    pluck(:period).uniq.sort.reverse
+  end
 end
