@@ -5,6 +5,6 @@ class Bill < ApplicationRecord
 
   enum :status, %w[pending paid failed].index_by(&:itself), prefix: :status
 
-  validates :amount, presence: true, numericality: { greater_than: 0 }
+  validates :amount, presence: true, numericality: {greater_than: 0}
   validates :period, presence: true
 end

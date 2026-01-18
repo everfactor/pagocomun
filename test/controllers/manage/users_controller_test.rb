@@ -19,7 +19,7 @@ module Manage
       sign_in_as(@org_manager)
       get manage_users_path
       assert_redirected_to manage_dashboard_index_path
-      assert_match /Solo administradores/, flash[:alert]
+      assert_match(/Solo administradores/, flash[:alert])
     end
 
     test "org_admin can create user for their organization" do
@@ -66,6 +66,5 @@ module Manage
       get manage_users_path
       assert_redirected_to root_path
     end
-
   end
 end

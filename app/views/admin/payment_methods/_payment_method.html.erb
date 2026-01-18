@@ -1,8 +1,14 @@
 <tr id="<%= dom_id payment_method %>">
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+    #<%= payment_method.unit_user_assignment_id %>
+  </td>
   <td class="px-6 py-4 whitespace-nowrap">
     <div class="text-sm font-medium text-gray-900">
       <%= link_to payment_method.user.email_address, admin_user_path(payment_method.user), class: "text-blue-600 hover:text-blue-900" %>
     </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+    <%= payment_method.unit.number %> <%= payment_method.unit.tower %>
   </td>
   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
     <%= payment_method.card_type || "N/A" %>

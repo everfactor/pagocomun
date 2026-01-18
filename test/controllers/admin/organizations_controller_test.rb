@@ -41,6 +41,5 @@ module Admin
       get admin_organizations_path
       assert_redirected_to root_path
     end
-
   end
 end

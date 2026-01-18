@@ -3,7 +3,7 @@ require "transbank/sdk"
 
 module TransbankTestHelper
   def mock_oneclick_inscription_start(token: "mock_token", url: "http://mock.url")
-    response = Transbank::Webpay::Oneclick::MallInscription::Response.new({ "token" => token, "url" => url })
+    response = Transbank::Webpay::Oneclick::MallInscription::Response.new({"token" => token, "url" => url})
     Transbank::Webpay::Oneclick::MallInscription.stub(:create, response) do
       yield
     end

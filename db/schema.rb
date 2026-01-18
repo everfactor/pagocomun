@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_08_010636) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_17_225042) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,10 +60,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_010636) do
     t.datetime "created_at", null: false
     t.string "tbk_token", null: false
     t.string "tbk_username", null: false
+    t.bigint "unit_user_assignment_id", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["user_id", "tbk_token"], name: "index_payment_methods_on_user_id_and_tbk_token", unique: true
-    t.index ["user_id"], name: "index_payment_methods_on_user_id"
+    t.index ["unit_user_assignment_id", "tbk_token"], name: "idx_pm_assignment_token", unique: true
+    t.index ["unit_user_assignment_id"], name: "index_payment_methods_on_unit_user_assignment_id"
   end
 
   create_table "payments", force: :cascade do |t|
@@ -137,7 +137,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_010636) do
   add_foreign_key "bills", "units"
   add_foreign_key "organization_memberships", "organizations"
   add_foreign_key "organization_memberships", "users"
-  add_foreign_key "payment_methods", "users"
+  add_foreign_key "payment_methods", "unit_user_assignments"
   add_foreign_key "payments", "bills"
   add_foreign_key "payments", "organizations"
   add_foreign_key "payments", "payment_methods"

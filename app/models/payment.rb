@@ -6,7 +6,7 @@ class Payment < ApplicationRecord
   belongs_to :payer_user, class_name: "User"
 
   validates :period, presence: true
-  validates :amount, presence: true, numericality: { greater_than: 0 }
+  validates :amount, presence: true, numericality: {greater_than: 0}
   validates :parent_buy_order, presence: true, uniqueness: true
   validates :child_buy_order, presence: true, uniqueness: true
   validates :status, presence: true

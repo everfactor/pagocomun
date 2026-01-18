@@ -7,12 +7,12 @@ module Admin
         UnitUserAssignment.includes(:unit, :user, unit: :organization).order(created_at: :desc)
       else
         UnitUserAssignment.joins(:unit)
-                          .joins("INNER JOIN organizations ON units.organization_id = organizations.id")
-                          .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
-                          .where(organization_memberships: { user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id) })
-                          .distinct
-                          .includes(:unit, :user, unit: :organization)
-                          .order(created_at: :desc)
+          .joins("INNER JOIN organizations ON units.organization_id = organizations.id")
+          .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
+          .where(organization_memberships: {user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id)})
+          .distinct
+          .includes(:unit, :user, unit: :organization)
+          .order(created_at: :desc)
       end
     end
 
@@ -25,16 +25,16 @@ module Admin
         Unit.all.order(:number)
       else
         Unit.joins(:organization)
-            .where(organizations: { id: scoped_organizations.pluck(:id) })
-            .order(:number)
+          .where(organizations: {id: scoped_organizations.pluck(:id)})
+          .order(:number)
       end
       @users = if Current.user.role_super_admin?
         User.all.order(:email_address)
       else
         User.joins(:member_organizations)
-            .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
-            .distinct
-            .order(:email_address)
+          .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+          .distinct
+          .order(:email_address)
       end
     end
 
@@ -47,9 +47,9 @@ module Admin
           Unit.find_by(id: unit_assignment_params[:unit_id])
         else
           Unit.joins(:organization)
-              .where(id: unit_assignment_params[:unit_id])
-              .where(organizations: { id: scoped_organizations.pluck(:id) })
-              .first
+            .where(id: unit_assignment_params[:unit_id])
+            .where(organizations: {id: scoped_organizations.pluck(:id)})
+            .first
         end
         unless unit
           @unit_assignment.errors.add(:unit_id, "is not accessible")
@@ -61,10 +61,10 @@ module Admin
           User.find_by(id: unit_assignment_params[:user_id])
         else
           User.joins(:member_organizations)
-              .where(id: unit_assignment_params[:user_id])
-              .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
-              .distinct
-              .first
+            .where(id: unit_assignment_params[:user_id])
+            .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+            .distinct
+            .first
         end
         unless user
           @unit_assignment.errors.add(:user_id, "is not accessible")
@@ -76,16 +76,16 @@ module Admin
           Unit.all.order(:number)
         else
           Unit.joins(:organization)
-              .where(organizations: { id: scoped_organizations.pluck(:id) })
-              .order(:number)
+            .where(organizations: {id: scoped_organizations.pluck(:id)})
+            .order(:number)
         end
         @users = if Current.user.role_super_admin?
           User.all.order(:email_address)
         else
           User.joins(:member_organizations)
-              .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
-              .distinct
-              .order(:email_address)
+            .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+            .distinct
+            .order(:email_address)
         end
         respond_to do |format|
           format.html { render :new, status: :unprocessable_entity }
@@ -105,16 +105,16 @@ module Admin
         Unit.all.order(:number)
       else
         Unit.joins(:organization)
-            .where(organizations: { id: scoped_organizations.pluck(:id) })
-            .order(:number)
+          .where(organizations: {id: scoped_organizations.pluck(:id)})
+          .order(:number)
       end
       @users = if Current.user.role_super_admin?
         User.all.order(:email_address)
       else
         User.joins(:member_organizations)
-            .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
-            .distinct
-            .order(:email_address)
+          .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+          .distinct
+          .order(:email_address)
       end
     end
 
@@ -125,9 +125,9 @@ module Admin
           Unit.find_by(id: unit_assignment_params[:unit_id])
         else
           Unit.joins(:organization)
-              .where(id: unit_assignment_params[:unit_id])
-              .where(organizations: { id: scoped_organizations.pluck(:id) })
-              .first
+            .where(id: unit_assignment_params[:unit_id])
+            .where(organizations: {id: scoped_organizations.pluck(:id)})
+            .first
         end
         unless unit
           @unit_assignment.errors.add(:unit_id, "is not accessible")
@@ -139,10 +139,10 @@ module Admin
           User.find_by(id: unit_assignment_params[:user_id])
         else
           User.joins(:member_organizations)
-              .where(id: unit_assignment_params[:user_id])
-              .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
-              .distinct
-              .first
+            .where(id: unit_assignment_params[:user_id])
+            .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+            .distinct
+            .first
         end
         unless user
           @unit_assignment.errors.add(:user_id, "is not accessible")
@@ -154,16 +154,16 @@ module Admin
           Unit.all.order(:number)
         else
           Unit.joins(:organization)
-              .where(organizations: { id: scoped_organizations.pluck(:id) })
-              .order(:number)
+            .where(organizations: {id: scoped_organizations.pluck(:id)})
+            .order(:number)
         end
         @users = if Current.user.role_super_admin?
           User.all.order(:email_address)
         else
           User.joins(:member_organizations)
-              .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
-              .distinct
-              .order(:email_address)
+            .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
+            .distinct
+            .order(:email_address)
         end
         respond_to do |format|
           format.html { render :edit, status: :unprocessable_entity }
@@ -193,12 +193,12 @@ module Admin
         UnitUserAssignment.find_by(id: params[:id])
       else
         UnitUserAssignment.joins(:unit)
-                          .joins("INNER JOIN organizations ON units.organization_id = organizations.id")
-                          .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
-                          .where(id: params[:id])
-                          .where(organization_memberships: { user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id) })
-                          .distinct
-                          .first
+          .joins("INNER JOIN organizations ON units.organization_id = organizations.id")
+          .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
+          .where(id: params[:id])
+          .where(organization_memberships: {user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id)})
+          .distinct
+          .first
       end
       unless @unit_assignment
         redirect_to admin_unit_assignments_path, alert: "Unit assignment not found or access denied"

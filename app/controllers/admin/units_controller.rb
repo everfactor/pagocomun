@@ -9,9 +9,9 @@ module Admin
       else
         # Show all units for super_admin, or units from user's organizations
         @units = Unit.joins(:organization)
-                     .where(organizations: { id: scoped_organizations.pluck(:id) })
-                     .includes(:organization)
-                     .order(created_at: :desc)
+          .where(organizations: {id: scoped_organizations.pluck(:id)})
+          .includes(:organization)
+          .order(created_at: :desc)
       end
     end
 
@@ -121,9 +121,9 @@ module Admin
 
     def set_unit
       @unit = Unit.joins(:organization)
-                  .where(id: params[:id])
-                  .where(organizations: { id: scoped_organizations.pluck(:id) })
-                  .first
+        .where(id: params[:id])
+        .where(organizations: {id: scoped_organizations.pluck(:id)})
+        .first
       unless @unit
         redirect_to admin_units_path, alert: "Unit not found or access denied"
       end
@@ -134,4 +134,3 @@ module Admin
     end
   end
 end
-

@@ -17,7 +17,7 @@ end
 module ActionDispatch
   class IntegrationTest
     def sign_in_as(user)
-      post login_path, params: { email_address: user.email_address, password: "password" }
+      post login_path, params: {email_address: user.email_address, password: "password"}
     end
   end
 end

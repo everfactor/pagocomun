@@ -92,7 +92,7 @@ class PaymentService < ApplicationService
 
   def extract_auth_code(response)
     response.details&.first&.authorization_code
-  rescue StandardError
+  rescue
     nil
   end
 
@@ -101,7 +101,7 @@ class PaymentService < ApplicationService
   end
 
   def determine_status(response)
-    response.response_code == 0 ? "authorized" : "failed"
+    (response.response_code == 0) ? "authorized" : "failed"
   end
 
   def update_bill_status(response)

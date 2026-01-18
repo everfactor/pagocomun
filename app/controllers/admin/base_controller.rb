@@ -10,7 +10,7 @@ module Admin
     def require_admin!
       unless Current.user&.role_super_admin?
         redirect_to root_path, alert: "Access denied. Admin privileges required."
-        return
+        nil
       end
     end
 

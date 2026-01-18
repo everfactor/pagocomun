@@ -5,10 +5,10 @@ module Manage
 
     def index
       @users = User.joins(:member_organizations)
-                   .where(organization_memberships: { organization_id: Current.user.member_organizations.pluck(:id) })
-                   .where.not(role: :resident)
-                   .distinct
-                   .order(created_at: :desc)
+        .where(organization_memberships: {organization_id: Current.user.member_organizations.pluck(:id)})
+        .where.not(role: :resident)
+        .distinct
+        .order(created_at: :desc)
     end
 
     def show
@@ -95,10 +95,10 @@ module Manage
 
     def set_user
       @user = User.joins(:member_organizations)
-                  .where(id: params[:id])
-                  .where(organization_memberships: { organization_id: Current.user.member_organizations.pluck(:id) })
-                  .distinct
-                  .first
+        .where(id: params[:id])
+        .where(organization_memberships: {organization_id: Current.user.member_organizations.pluck(:id)})
+        .distinct
+        .first
       redirect_to manage_users_path, alert: "Usuario no encontrado" unless @user
     end
 

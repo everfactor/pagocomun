@@ -34,14 +34,14 @@ module Manage
       # Try to access organization they're not a member of
       get manage_organization_path(@other_organization)
       assert_redirected_to manage_organizations_path
-      assert_match /no encontrada o acceso denegado/, flash[:alert]
+      assert_match(/no encontrada o acceso denegado/, flash[:alert])
     end
 
     test "org_manager cannot create organization" do
       sign_in_as(@org_manager)
       get new_manage_organization_path
       assert_redirected_to manage_organizations_path
-      assert_match /Solo administradores/, flash[:alert]
+      assert_match(/Solo administradores/, flash[:alert])
     end
 
     test "resident cannot access manage organizations" do
@@ -50,6 +50,5 @@ module Manage
       assert_redirected_to root_path
       assert_equal "Access denied.", flash[:alert]
     end
-
   end
 end

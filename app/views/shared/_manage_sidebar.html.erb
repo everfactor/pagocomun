@@ -26,24 +26,6 @@
         </ul>
       </li>
 
-      <% if admin_organizations.any? %>
-        <li>
-          <div data-sidebar-target="orgText" class="text-xs/6 font-semibold text-gray-400 px-2">Sus Organizaciones</div>
-          <ul role="list" class="-mx-2 mt-2 space-y-1">
-            <% admin_organizations.each do |org| %>
-              <li>
-                <%= link_to manage_organization_path(org), class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-blue-600 sidebar-org-link", title: org.name do %>
-                  <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-[0.625rem] font-medium text-gray-400 group-hover:border-blue-600 group-hover:text-blue-600">
-                    <%= org.name.first.upcase %>
-                  </span>
-                  <span data-sidebar-target="orgText" class="truncate"><%= org.name %></span>
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
-        </li>
-      <% end %>
-
       <li class="-mx-6 mt-auto sidebar-footer">
         <div class="flex items-center gap-x-4 px-6 py-3 sidebar-footer-content">
           <% if Current.user %>

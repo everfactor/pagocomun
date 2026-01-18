@@ -8,7 +8,20 @@ class DashboardController < ApplicationController
 
     @token = params[:token]
     @user = User.locate_signed(@token) || GlobalID::Locator.locate(params[:user_id])
-    @unit = @user.active_assignment&.unit
+
+    @unit = if params[:unit_id]
+      GlobalID::Locator.locate(params[:unit_id])
+    else
+      @user.active_assignment&.unit
+    end
+
+    # Ensure the user is actually assigned to this unit
+    if @unit && !@user.assigned_units.include?(@unit)
+      @unit = @user.active_assignment&.unit
+    end
+
+    @assignment = @user.unit_user_assignments.active.find_by(unit: @unit) if @unit
+    @active_assignments = @user.unit_user_assignments.active.includes(unit: :organization)
     @bills = @unit&.bills&.order(created_at: :desc)
     @payments = @user.payments.order(created_at: :desc).limit(5)
   end

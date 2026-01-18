@@ -22,7 +22,7 @@ class Unit::ImporterTest < ActiveSupport::TestCase
     @organization.units.where(number: ["101", "102"]).destroy_all
 
     importer = Unit::Importer.new(@organization, @file)
-    assert importer.import, "Import failed with errors: #{importer.errors.join(', ')}"
+    assert importer.import, "Import failed with errors: #{importer.errors.join(", ")}"
 
     assert_equal 2, @organization.units.where(number: ["101", "102"]).count
 

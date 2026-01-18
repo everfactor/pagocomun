@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   # Payment Methods (non-admin)
   resources :payment_methods, only: [:create] do
     collection do
-      get "finish_enrollment", to: "payment_methods#finish", as: :finish_enrollment
+      get "finish_enrollment/:user_id/:unit_id", to: "payment_methods#finish", as: :finish_enrollment
     end
   end
 

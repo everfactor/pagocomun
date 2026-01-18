@@ -42,6 +42,5 @@ module Admin
       assert_redirected_to root_path
       assert_equal "Access denied. Admin privileges required.", flash[:alert]
     end
-
   end
 end

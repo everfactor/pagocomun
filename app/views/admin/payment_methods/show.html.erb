@@ -16,9 +16,22 @@
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Payment Method Information</h2>
         <dl class="space-y-4">
           <div>
+            <dt class="text-sm font-medium text-gray-500">Assignment</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              #<%= @payment_method.unit_user_assignment_id %>
+              (<%= @payment_method.unit_user_assignment.starts_on %> - <%= @payment_method.unit_user_assignment.ends_on || 'Present' %>)
+            </dd>
+          </div>
+          <div>
             <dt class="text-sm font-medium text-gray-500">User</dt>
             <dd class="mt-1 text-sm text-gray-900">
               <%= link_to @payment_method.user.email_address, admin_user_path(@payment_method.user), class: "text-blue-600 hover:text-blue-900" %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Unit</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <%= @payment_method.unit.number %> <%= @payment_method.unit.tower %> (<%= @payment_method.unit.organization.name %>)
             </dd>
           </div>
           <div>

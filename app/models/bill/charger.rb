@@ -13,8 +13,8 @@ class Bill::Charger
     return false unless assignment&.user
 
     user = assignment.user
-    payment_method = user.payment_methods.active.first
-    return false unless payment_method
+    payment_method = assignment.payment_method
+    return false unless payment_method&.active?
 
     bill.update(status: "pending")
 
@@ -23,11 +23,12 @@ class Bill::Charger
     buy_order = "BILL-#{bill.id}-#{Time.now.to_i}"
 
     begin
+      # The Transbank SDK MallTransaction#authorize method takes 4 positional arguments: (username, tbk_user, parent_buy_order, details)
       response = TransbankClient.mall_transaction.authorize(
-        username: payment_method.tbk_username,
-        tbk_user: payment_method.tbk_token,
-        parent_buy_order: "P-#{buy_order}",
-        details: [
+        payment_method.tbk_username,
+        payment_method.tbk_token,
+        "P-#{buy_order}",
+        [
           {
             commerce_code: organization.tbk_child_commerce_code,
             buy_order: buy_order,
@@ -39,7 +40,7 @@ class Bill::Charger
 
       detail = response.details.first
 
-      if detail["response_code"] == 0
+      if detail.response_code == 0
         ActiveRecord::Base.transaction do
           Payment.create!(
             bill: bill,
@@ -53,8 +54,8 @@ class Bill::Charger
             parent_buy_order: "P-#{buy_order}",
             child_buy_order: buy_order,
             gateway_payload: response.as_json,
-            response_code: detail["response_code"],
-            tbk_auth_code: detail["authorization_code"]
+            response_code: detail.response_code,
+            tbk_auth_code: detail.authorization_code
           )
           bill.update!(status: "paid")
         end

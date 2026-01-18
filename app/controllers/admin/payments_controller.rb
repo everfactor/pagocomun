@@ -7,11 +7,11 @@ module Admin
         Payment.includes(:organization, :unit, :bill, :payer_user, :payment_method).order(created_at: :desc)
       else
         Payment.joins(:organization)
-               .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
-               .where(organization_memberships: { user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id) })
-               .distinct
-               .includes(:organization, :unit, :bill, :payer_user, :payment_method)
-               .order(created_at: :desc)
+          .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
+          .where(organization_memberships: {user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id)})
+          .distinct
+          .includes(:organization, :unit, :bill, :payer_user, :payment_method)
+          .order(created_at: :desc)
       end
     end
 
@@ -25,11 +25,11 @@ module Admin
         Payment.find_by(id: params[:id])
       else
         Payment.joins(:organization)
-               .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
-               .where(id: params[:id])
-               .where(organization_memberships: { user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id) })
-               .distinct
-               .first
+          .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
+          .where(id: params[:id])
+          .where(organization_memberships: {user_id: Current.user.id, organization_id: scoped_organizations.pluck(:id)})
+          .distinct
+          .first
       end
       unless @payment
         redirect_to admin_payments_path, alert: "Payment not found or access denied"

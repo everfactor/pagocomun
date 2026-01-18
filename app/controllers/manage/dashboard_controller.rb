@@ -2,7 +2,7 @@ module Manage
   class DashboardController < BaseController
     def index
       @organizations = Current.user.role_super_admin? ? Organization.all : Current.user.member_organizations
-      @users = User.joins(:member_organizations).where.not(role: "resident").where(organization_memberships: { organization_id: @organizations.pluck(:id) }).distinct
+      @users = User.joins(:member_organizations).where.not(role: "resident").where(organization_memberships: {organization_id: @organizations.pluck(:id)}).distinct
       @units = Unit.where(organization_id: @organizations.pluck(:id))
       @bills = Bill.where(unit_id: @units.pluck(:id))
       @payments = Payment.where(organization_id: @organizations.pluck(:id))

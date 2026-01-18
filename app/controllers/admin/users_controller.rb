@@ -1,7 +1,7 @@
 module Admin
   class UsersController < BaseController
-    before_action :set_user, only: [ :show, :edit, :update, :destroy, :approve, :reject ]
-    before_action :require_user_creation_access!, only: [ :new, :create ]
+    before_action :set_user, only: [:show, :edit, :update, :destroy, :approve, :reject]
+    before_action :require_user_creation_access!, only: [:new, :create]
 
     def index
       @users = if Current.user.role_super_admin?
@@ -9,7 +9,7 @@ module Admin
       else
         # Org admins see users from their organizations
         User.joins(:member_organizations)
-          .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
+          .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
           .distinct
       end
 
@@ -180,7 +180,7 @@ module Admin
       else
         User.joins(:member_organizations)
           .where(id: params[:id])
-          .where(organization_memberships: { organization_id: scoped_organizations.pluck(:id) })
+          .where(organization_memberships: {organization_id: scoped_organizations.pluck(:id)})
           .distinct
           .first
       end

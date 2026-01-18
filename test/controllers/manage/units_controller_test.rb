@@ -27,7 +27,7 @@ module Manage
       sign_in_as(@org_admin)
       get manage_organization_units_path(@other_organization)
       assert_redirected_to manage_organizations_path
-      assert_match /no encontrada o acceso denegado/, flash[:alert]
+      assert_match(/no encontrada o acceso denegado/, flash[:alert])
     end
 
     test "org_manager can view units in their organization" do
@@ -51,4 +51,3 @@ module Manage
     end
   end
 end
-

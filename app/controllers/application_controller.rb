@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
 
   def set_current_user
     if params[:token].present?
-      user = GlobalID::Locator.locate_signed(params[:token], for: 'enrollment')
+      user = GlobalID::Locator.locate_signed(params[:token], for: "enrollment")
       Current.user = user if user
     end
     Current.user ||= session[:user_id] ? User.find_by(id: session[:user_id]) : nil

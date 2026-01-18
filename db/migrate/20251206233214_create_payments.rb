@@ -6,7 +6,7 @@ class CreatePayments < ActiveRecord::Migration[8.1]
       t.references :bill, null: false, foreign_key: true
       t.references :payment_method, null: true, foreign_key: true
 
-      t.references :payer_user, null: false, foreign_key: { to_table: :users }
+      t.references :payer_user, null: false, foreign_key: {to_table: :users}
 
       t.string :period, null: false
       t.integer :amount, null: false

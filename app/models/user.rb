@@ -7,11 +7,12 @@ class User < ApplicationRecord
   has_many :organization_memberships, dependent: :destroy
   has_many :member_organizations, through: :organization_memberships, source: :organization
 
-  has_many :payment_methods, dependent: :destroy
   has_many :unit_user_assignments, dependent: :destroy
+  has_many :payment_methods, through: :unit_user_assignments
   has_many :assigned_units, through: :unit_user_assignments, source: :unit
   has_many :payments, foreign_key: :payer_user_id
   belongs_to :unit, primary_key: :email, foreign_key: :email_address, optional: true
+  has_many :units, through: :unit_user_assignments
 
   enum :role, %w[super_admin org_admin org_manager resident].index_by(&:itself), prefix: :role
   enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status
