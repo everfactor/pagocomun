@@ -55,7 +55,7 @@ module Manage
     end
 
     def unit_params
-      params.require(:unit).permit(:number, :tower, :proration, :email, :mobile_number)
+      params.require(:unit).permit(:number, :tower, :proration, :email, :mobile_number, :pay_day, :name)
     end
   end
 end

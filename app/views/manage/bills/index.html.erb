@@ -1,7 +1,38 @@
 <div class="mx-auto max-w-7xl">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Cobros</h1>
-    <p class="mt-2 text-sm text-gray-600">Ver todos los cobros</p>
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Cobros</h1>
+      <p class="mt-2 text-sm text-gray-600">
+        <% if @organization %>
+          Gestionando cobros para <strong><%= @organization.name %></strong>
+        <% else %>
+          Ver todos los cobros de sus comunidades
+        <% end %>
+      </p>
+    </div>
+    <div class="flex gap-4">
+      <% if @organization %>
+        <%= link_to "Importar Cobros (CSV)", new_manage_organization_bill_import_path(@organization), class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="rounded-lg bg-white p-6 shadow">
+      <%= form_tag manage_bills_path, method: :get, class: "flex flex-col gap-4" do %>
+        <div>
+          <label for="organization_id" class="block text-sm font-medium text-gray-700">Comunidad</label>
+          <%= select_tag :organization_id, options_from_collection_for_select(@organizations, :id, :name, params[:organization_id]), prompt: "Todas las comunidades", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", onchange: "this.form.submit()" %>
+        </div>
+        <div>
+          <label for="period" class="block text-sm font-medium text-gray-700">Periodo</label>
+          <%= text_field_tag :period, params[:period], placeholder: "YYYY-MM", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+        </div>
+        <div class="flex justify-end">
+          <%= submit_tag "Filtrar", class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
   </div>
 
   <div class="overflow-hidden rounded-lg bg-white shadow">
@@ -23,7 +54,8 @@
               <tr>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">
-                    <%= link_to "#{bill.unit.number} (#{bill.unit.organization.name})", manage_unit_path(bill.unit), class: "text-blue-600 hover:text-blue-900" %>
+                    <%= link_to "#{bill.unit.number} (#{bill.unit.tower})", manage_organization_unit_path(bill.unit.organization, bill.unit), class: "text-blue-600 hover:text-blue-900" %>
+                    <div class="text-xs text-gray-500"><%= bill.unit.organization.name %></div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

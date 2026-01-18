@@ -1,6 +1,25 @@
 es:
+  errors:
+    messages:
+      blank: "no puede estar en blanco"
+      taken: "ya ha sido tomado"
+      invalid: "es inválido"
+      not_a_number: "no es un número"
+      greater_than_or_equal_to: "debe ser mayor o igual a %{count}"
+      less_than_or_equal_to: "debe ser menor o igual a %{count}"
+      only_integer: "debe ser un número entero"
+
   activerecord:
     errors:
+      messages:
+        blank: "no puede estar en blanco"
+        taken: "ya ha sido tomado"
+        invalid: "es inválido"
+        not_a_number: "no es un número"
+        greater_than_or_equal_to: "debe ser mayor o igual a %{count}"
+        less_than_or_equal_to: "debe ser menor o igual a %{count}"
+        only_integer: "debe ser un número entero"
+        record_invalid: "La validación falló: %{errors}"
       models:
         user:
           attributes:
@@ -8,8 +27,6 @@ es:
               taken: "ya está en uso"
             password:
               too_short: "es demasiado corta (mínimo %{count} caracteres)"
-      messages:
-        record_invalid: "La validación falló: %{errors}"
     models:
       organization: "Organización"
       user: "Usuario"
@@ -25,6 +42,7 @@ es:
         active: "Activo"
         note: "Notas"
         org_type: "Tipo de Organización"
+        last_bill_upload_period: "Último periodo de cobro subido"
       user:
         email_address: "Correo Electrónico"
         password: "Contraseña"
@@ -42,6 +60,8 @@ es:
         organization_id: "Organización"
         email: "Email"
         mobile_number: "Teléfono"
+        name: "Nombre/Descripción"
+        pay_day: "Día de pago"
 
   helpers:
     submit:

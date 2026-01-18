@@ -42,27 +42,32 @@ class Unit::Importer
   def process_row(row)
     return if row_invalid?(row)
 
-    user = find_or_create_user(row)
-    return unless user
-
-    ensure_membership(user)
+    user = nil
+    if row["email_usuario"].present?
+      user = find_or_create_user(row)
+      return unless user # If user creation fails, we stop for this row
+      ensure_membership(user)
+    end
 
     unit = find_or_create_unit(row)
     return unless unit
 
-    assign_user_to_unit(user, unit)
+    assign_user_to_unit(user, unit) if user
   end
 
-  private
-
   def row_invalid?(row)
-    if row["unit_number"].blank?
-      @errors << "Row #{$.}: Unit number is missing"
+    if row["numero_unidad"].blank?
+      @errors << "Row #{$.}: Unit number (numero_unidad) is missing"
       return true
     end
 
-    if row["user_email"].blank?
-      @errors << "Row #{$.}: User email is missing"
+    if row["torre"].blank?
+      @errors << "Row #{$.}: Tower (torre) is missing"
+      return true
+    end
+
+    if row["dia_pago"].blank?
+      @errors << "Row #{$.}: Pay day (dia_pago) is missing"
       return true
     end
 
@@ -70,17 +75,19 @@ class Unit::Importer
   end
 
   def find_or_create_user(row)
-    User.find_or_initialize_by(email_address: row["user_email"]).tap do |u|
+    User.find_or_initialize_by(email_address: row["email_usuario"]&.strip&.downcase).tap do |u|
+      u.first_name = row["nombre_usuario"]&.strip if row["nombre_usuario"].present?
+      u.last_name = row["apellido_usuario"]&.strip if row["apellido_usuario"].present?
+
       if u.new_record?
-        u.first_name = row["user_first_name"]&.strip
-        u.last_name = row["user_last_name"]&.strip
         u.password = SecureRandom.hex(8)
         u.status = "approved"
-        u.save!
       end
+
+      u.save!
     end
   rescue ActiveRecord::RecordInvalid => e
-    @errors << "Row #{$.}: User could not be created: #{e.message}"
+    @errors << "Row #{$.}: User could not be created/updated: #{e.message}"
     nil
   end
 
@@ -94,14 +101,15 @@ class Unit::Importer
   end
 
   def find_or_create_unit(row)
-    organization.units.find_or_initialize_by(number: row["unit_number"]&.strip, tower: row["tower"]&.strip).tap do |u|
-      u.email = row["user_email"] || "#{row["unit_number"]}@example.com"
-      u.mobile_number = row["mobile_number"]&.strip
-      u.proration = row["proration"]&.to_f || 1.0
+    organization.units.find_or_initialize_by(number: row["numero_unidad"]&.strip, tower: row["torre"]&.strip).tap do |u|
+      u.email = row["email_usuario"]&.strip&.downcase if row["email_usuario"].present?
+      u.mobile_number = row["celular"]&.strip if row["celular"].present?
+      u.proration = row["prorrateo"]&.to_f if row["prorrateo"].present?
+      u.pay_day = row["dia_pago"]&.to_i if row["dia_pago"].present?
       u.save!
     end
   rescue ActiveRecord::RecordInvalid => e
-    @errors << "Row #{$.}: Unit could not be created: #{e.message}"
+    @errors << "Row #{$.}: Unit could not be created/updated: #{e.message}"
     nil
   end
 

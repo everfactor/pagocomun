@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_17_225042) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_18_191611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_17_225042) do
     t.boolean "active", default: true
     t.string "address"
     t.datetime "created_at", null: false
+    t.string "last_bill_upload_period"
     t.string "name", null: false
     t.text "note", comment: "Note for approval/rejection tracking"
     t.string "org_type", default: "community", null: false
@@ -106,10 +107,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_17_225042) do
 
   create_table "units", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "email", null: false
+    t.string "email"
     t.string "mobile_number"
+    t.string "name"
     t.string "number", null: false
     t.bigint "organization_id", null: false
+    t.integer "pay_day"
     t.float "proration"
     t.string "tower"
     t.datetime "updated_at", null: false

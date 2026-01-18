@@ -6,8 +6,8 @@ module Manage
     private
 
     def require_org_admin!
-      unless Current.user.role_org_admin? || Current.user.role_super_admin?
-        redirect_to manage_organizations_path, alert: "Acceso denegado. Solo administradores pueden realizar esta acción."
+      unless Current.user.can_manage_organization?(@organization)
+        redirect_to manage_organizations_path, alert: "Acceso denegado."
       end
     end
 

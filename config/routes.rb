@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     resources :organizations do
       resources :units
       resources :unit_imports, only: [:new, :create]
+      resources :bill_imports, only: [:new, :create]
     end
     resources :users
     resources :bills, only: [:index, :show]

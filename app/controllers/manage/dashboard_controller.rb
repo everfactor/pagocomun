@@ -14,6 +14,15 @@ module Manage
       @paid_bills_count = @bills.where(status: "paid").count
       @total_payments = @payments.sum(:amount)
       @recent_payments = @payments.order(created_at: :desc).limit(5)
+
+      # Alerts
+      @current_period = Time.current.strftime("%Y-%m")
+      @missing_bill_uploads = @organizations.where.not(last_bill_upload_period: @current_period)
+
+      @overdue_bills = @bills.where(status: "pending").where("due_date < ?", Date.current).includes(:unit, :organization)
+
+      # Units without active user assignment
+      @units_missing_assignment = @units.where.not(id: UnitUserAssignment.active.select(:unit_id))
     end
   end
 end

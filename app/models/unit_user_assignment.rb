@@ -7,4 +7,13 @@ class UnitUserAssignment < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   validates :starts_on, presence: true
+
+  after_create_commit :send_enrollment_invitation
+  after_update_commit :send_enrollment_invitation, if: :saved_change_to_user_id?
+
+  private
+
+  def send_enrollment_invitation
+    ResidentMailer.with(user: user).enrollment_email.deliver_later
+  end
 end

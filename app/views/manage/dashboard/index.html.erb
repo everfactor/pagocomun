@@ -33,6 +33,69 @@
     </div>
   </div>
 <% else %>
+  <%# Alerts Section %>
+  <div class="mb-8 space-y-4">
+    <% if @missing_bill_uploads.any? %>
+      <div class="rounded-md bg-yellow-50 p-4 border border-yellow-200">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">Gasto Común no subido para <%= @current_period %></h3>
+            <div class="mt-2 text-sm text-yellow-700">
+              <p>Las siguientes comunidades no han subido su planilla de este mes:</p>
+              <ul class="list-disc pl-5 mt-1">
+                <% @missing_bill_uploads.each do |org| %>
+                  <li><%= link_to org.name, manage_bills_path(organization_id: org.id), class: "underline font-semibold" %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @overdue_bills.any? %>
+      <div class="rounded-md bg-red-50 p-4 border border-red-200">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">Hay <%= @overdue_bills.count %> cobros atrasados</h3>
+            <div class="mt-2 text-sm text-red-700">
+              <%= link_to "Ver cobros pendientes", manage_bills_path(status: 'pending'), class: "underline" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @units_missing_assignment.any? %>
+      <div class="rounded-md bg-blue-50 p-4 border border-blue-200">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.25v2.75a.75.75 0 001.5 0v-3.5A.75.75 0 0010 9H9z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-blue-800">Hay <%= @units_missing_assignment.count %> unidades sin pagador asignado</h3>
+            <div class="mt-2 text-sm text-blue-700">
+              <p>Asigne un usuario a estas unidades para habilitar el cobro automático.</p>
+              <%= link_to "Ver comunidades", manage_organizations_path, class: "underline" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="p-5">

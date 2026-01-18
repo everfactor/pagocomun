@@ -9,6 +9,8 @@ module Admin
       @unit = Unit.create!(
         organization: @organization,
         number: "101",
+        tower: "A",
+        pay_day: 5,
         email: "unit101@example.com"
       )
       @bill = Bill.create!(

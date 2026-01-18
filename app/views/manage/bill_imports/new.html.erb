@@ -1,6 +1,6 @@
 <div class="mx-auto max-w-7xl">
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Importar Unidades</h1>
+    <h1 class="text-3xl font-bold text-gray-900">Importar Cobros (Gasto Común)</h1>
     <p class="mt-2 text-sm text-gray-600">Importando para <%= @organization.name %></p>
   </div>
 
@@ -27,12 +27,12 @@
       </div>
     <% end %>
 
-    <%= form_with url: manage_organization_unit_imports_path(@organization), multipart: true, class: "space-y-6" do |f| %>
+    <%= form_with url: manage_organization_bill_imports_path(@organization), multipart: true, class: "space-y-6" do |f| %>
       <div>
         <%= f.label :file, "Archivo CSV", class: "block text-sm font-medium leading-6 text-gray-900" %>
         <p class="mt-1 text-sm text-gray-500">
-          Columnas requeridas: <code>numero_unidad</code>, <code>torre</code>, <code>dia_pago</code>.<br>
-          Columnas opcionales: <code>email_usuario</code>, <code>nombre_usuario</code>, <code>apellido_usuario</code>, <code>celular</code>, <code>prorrateo</code>
+          Columnas requeridas: <code>edificio_torre</code>, <code>depto</code>, <code>monto</code>, <code>periodo</code> (formato YYYY-MM). <br>
+          Opcional: <code>email_telefono</code>
         </p>
         <div class="mt-2">
           <%= f.file_field :file, accept: ".csv", class: "block w-full text-sm text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
@@ -40,8 +40,8 @@
       </div>
 
       <div class="flex items-center justify-end gap-x-6">
-        <%= link_to "Cancelar", manage_organization_units_path(@organization), class: "text-sm font-semibold leading-6 text-gray-900" %>
-        <%= f.submit "Importar", class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" %>
+        <%= link_to "Cancelar", manage_bills_path(organization_id: @organization.id), class: "text-sm font-semibold leading-6 text-gray-900" %>
+        <%= f.submit "Importar Cobros", class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" %>
       </div>
     <% end %>
   </div>

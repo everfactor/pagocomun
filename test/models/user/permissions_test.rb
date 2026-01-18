@@ -103,17 +103,17 @@ class User::PermissionsTest < ActiveSupport::TestCase
 
   # Unit permissions
   test "super_admin can manage any unit" do
-    unit = Unit.create!(organization: @organization, number: "101", email: "unit@example.com")
+    unit = Unit.create!(organization: @organization, number: "101", tower: "A", pay_day: 5, email: "unit@example.com")
     assert @super_admin.can_manage_unit?(unit)
   end
 
   test "org_admin can manage units in their organization" do
-    unit = Unit.create!(organization: @organization, number: "101", email: "unit@example.com")
+    unit = Unit.create!(organization: @organization, number: "101", tower: "A", pay_day: 5, email: "unit@example.com")
     assert @org_admin.can_manage_unit?(unit)
   end
 
   test "org_admin cannot manage units in other organization" do
-    unit = Unit.create!(organization: @other_organization, number: "101", email: "unit@example.com")
+    unit = Unit.create!(organization: @other_organization, number: "101", tower: "A", pay_day: 5, email: "unit@example.com")
     refute @org_admin.can_manage_unit?(unit)
   end
 

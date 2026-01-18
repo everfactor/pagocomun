@@ -5,9 +5,9 @@ class Unit::ImporterTest < ActiveSupport::TestCase
   setup do
     @organization = organizations(:one)
     @file = Tempfile.new(["units", ".csv"])
-    @file.write("unit_number,tower,user_email,user_first_name,user_last_name\n")
-    @file.write("101,A,resident@example.com,John,Doe\n")
-    @file.write("102,B,newuser@example.com,Jane,Smith\n")
+    @file.write("numero_unidad,torre,dia_pago,email_usuario,nombre_usuario,apellido_usuario\n")
+    @file.write("101,A,5,resident@example.com,John,Doe\n")
+    @file.write("102,B,5,newuser@example.com,Jane,Smith\n")
     @file.rewind
   end
 
@@ -36,5 +36,29 @@ class Unit::ImporterTest < ActiveSupport::TestCase
 
     assert UnitUserAssignment.exists?(unit: @organization.units.find_by(number: "101"), user: user1)
     assert UnitUserAssignment.exists?(unit: @organization.units.find_by(number: "102"), user: user2)
+  end
+
+  test "fails when tower is missing" do
+    @file.rewind
+    @file.truncate(0)
+    @file.write("numero_unidad,torre,email_usuario\n")
+    @file.write("103,,resident3@example.com\n")
+    @file.rewind
+
+    importer = Unit::Importer.new(@organization, @file)
+    refute importer.import
+    assert_includes importer.errors.first, "Tower (torre) is missing"
+  end
+
+  test "fails when pay_day is missing" do
+    @file.rewind
+    @file.truncate(0)
+    @file.write("numero_unidad,torre,dia_pago,email_usuario\n")
+    @file.write("104,A,,resident4@example.com\n")
+    @file.rewind
+
+    importer = Unit::Importer.new(@organization, @file)
+    refute importer.import
+    assert_includes importer.errors.first, "Pay day (dia_pago) is missing"
   end
 end

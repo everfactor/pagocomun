@@ -30,6 +30,14 @@
               <dd class="mt-1 text-sm text-gray-900"><%= @unit.organization.name %></dd>
             </div>
             <div>
+              <dt class="text-sm font-medium text-gray-500">Nombre</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.name.presence || 'N/A' %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Día de pago</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.pay_day.presence || 'N/A' %></dd>
+            </div>
+            <div>
               <dt class="text-sm font-medium text-gray-500">Número</dt>
               <dd class="mt-1 text-sm text-gray-900"><%= @unit.number %></dd>
             </div>

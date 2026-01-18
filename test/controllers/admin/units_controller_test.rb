@@ -10,6 +10,8 @@ module Admin
       @unit = Unit.create!(
         organization: @organization,
         number: "101",
+        tower: "A",
+        pay_day: 5,
         email: "unit101@example.com"
       )
     end
@@ -26,6 +28,8 @@ module Admin
         post admin_units_path, params: {
           unit: {
             number: "102",
+            tower: "A",
+            pay_day: 5,
             email: "unit102@example.com",
             organization_id: @organization.id
           }

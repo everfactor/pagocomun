@@ -10,6 +10,8 @@ module Manage
       @unit = Unit.create!(
         organization: @organization,
         number: "101",
+        tower: "A",
+        pay_day: 5,
         email: "unit101@example.com",
         proration: 1.0
       )
@@ -44,6 +46,8 @@ module Manage
         post manage_organization_units_path(@organization), params: {
           unit: {
             number: "102",
+            tower: "A",
+            pay_day: 5,
             email: "unit102@example.com"
           }
         }
