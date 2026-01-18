@@ -19,7 +19,7 @@ module Admin
       @users = @users.where(status: params[:status]) if params[:status].present?
       @users = @users.filter_by_organization(params[:organization_id]) if params[:organization_id].present?
 
-      @users = @users.order(created_at: :desc)
+      @pagy, @users = pagy(:offset, @users.order(created_at: :desc))
     end
 
     def show

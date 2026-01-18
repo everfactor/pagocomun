@@ -23,6 +23,8 @@ module Admin
       if params[:period].present?
         @bills = @bills.where(period: params[:period])
       end
+
+      @pagy, @bills = pagy(:offset, @bills)
     end
 
     def show

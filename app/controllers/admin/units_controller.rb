@@ -13,6 +13,8 @@ module Admin
           .includes(:organization)
           .order(created_at: :desc)
       end
+
+      @pagy, @units = pagy(:offset, @units)
     end
 
     def show

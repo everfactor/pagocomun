@@ -7,14 +7,14 @@ module Manage
 
     def require_org_admin!
       unless Current.user.can_manage_organization?(@organization)
-        redirect_to manage_organizations_path, alert: "Acceso denegado."
+        redirect_to manage_organizations_path, alert: "Acceso denegado. Solo administradores pueden realizar esta acción."
       end
     end
 
     public
 
     def index
-      @organizations = Current.user.member_organizations.order(created_at: :desc)
+      @pagy, @organizations = pagy(:offset, Current.user.member_organizations.order(created_at: :desc))
     end
 
     def show

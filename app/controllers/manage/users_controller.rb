@@ -4,11 +4,11 @@ module Manage
     before_action :set_user, only: [:show, :edit, :update, :destroy]
 
     def index
-      @users = User.joins(:member_organizations)
+      @pagy, @users = pagy(:offset, User.joins(:member_organizations)
         .where(organization_memberships: {organization_id: Current.user.member_organizations.pluck(:id)})
         .where.not(role: :resident)
         .distinct
-        .order(created_at: :desc)
+        .order(created_at: :desc))
     end
 
     def show

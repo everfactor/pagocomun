@@ -1,5 +1,7 @@
 module Admin
   class BaseController < ActionController::Base
+    include Pagy::Method
+
     layout "admin"
     include SetTenant
 

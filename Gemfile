@@ -68,3 +68,5 @@ end
 gem "transbank-sdk"
 
 gem "csv"
+
+gem "pagy", "~> 43.2"

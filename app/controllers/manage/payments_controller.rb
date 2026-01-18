@@ -3,12 +3,12 @@ module Manage
     before_action :set_payment, only: [:show]
 
     def index
-      @payments = Payment.joins(:organization)
+      @pagy, @payments = pagy(:offset, Payment.joins(:organization)
         .joins("INNER JOIN organization_memberships ON organizations.id = organization_memberships.organization_id")
         .where(organization_memberships: {user_id: Current.user.id})
         .distinct
         .includes(:organization, :unit, :bill, :payer_user, :payment_method)
-        .order(created_at: :desc)
+        .order(created_at: :desc))
     end
 
     def show

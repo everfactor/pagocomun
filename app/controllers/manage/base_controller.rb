@@ -1,5 +1,6 @@
 module Manage
   class BaseController < ActionController::Base
+    include Pagy::Method
     layout "manage"
     include SetTenant
 

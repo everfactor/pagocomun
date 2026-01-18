@@ -3,7 +3,7 @@ module Admin
     before_action :set_organization, only: [:show, :edit, :update, :destroy]
 
     def index
-      @organizations = scoped_organizations.order(created_at: :desc)
+      @pagy, @organizations = pagy(:offset, scoped_organizations.order(created_at: :desc))
     end
 
     def show

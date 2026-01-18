@@ -11,6 +11,8 @@ module Admin
           .includes(unit_user_assignment: [:user, :unit])
           .order(created_at: :desc)
       end
+
+      @pagy, @payment_methods = pagy(:offset, @payment_methods)
     end
 
     def show

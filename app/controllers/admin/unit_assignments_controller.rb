@@ -14,6 +14,8 @@ module Admin
           .includes(:unit, :user, unit: :organization)
           .order(created_at: :desc)
       end
+
+      @pagy, @unit_assignments = pagy(:offset, @unit_assignments)
     end
 
     def show

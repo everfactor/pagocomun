@@ -1,0 +1,29 @@
+@layer components {
+  .pagy {
+    @apply flex items-center justify-center gap-1 font-medium text-sm;
+
+    a:not([role="separator"]) {
+      @apply flex items-center justify-center min-w-[2.25rem] h-9 px-2 rounded-md border border-gray-300 transition-all duration-200;
+    }
+
+    /* Inactive buttons and arrows with links */
+    a[href] {
+      @apply bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900;
+    }
+
+    /* Active page button */
+    a[aria-current="page"] {
+      @apply bg-blue-600 text-white border-blue-600 cursor-default shadow-sm z-10;
+    }
+
+    /* Disabled buttons (e.g., arrows on first/last page) */
+    a:not([href]):not([aria-current="page"]) {
+      @apply bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed;
+    }
+
+    /* Gaps (...) */
+    a[role="separator"] {
+      @apply flex min-w-[2.25rem] h-9 items-center justify-center text-gray-400 border-transparent cursor-default;
+    }
+  }
+}

@@ -4,7 +4,7 @@ module Manage
     before_action :set_unit, only: [:show, :edit, :update, :destroy]
 
     def index
-      @units = @organization.units.order(:tower, :number)
+      @pagy, @units = pagy(:offset, @organization.units.order(:tower, :number))
     end
 
     def show
