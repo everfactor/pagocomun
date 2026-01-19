@@ -54,7 +54,7 @@
       </div>
     <% end %>
 
-    <% if !@latest_uf || @latest_uf.date < Date.current %>
+    <% if !@indicators[:uf_value] || @indicators[:indicator_date] < Date.current %>
       <div class="rounded-md bg-yellow-50 p-4 border border-yellow-200">
         <div class="flex">
           <div class="flex-shrink-0">
@@ -189,6 +189,8 @@
         </div>
       </div>
     </div>
+
+    <%= render "shared/economic_indicators", indicators: @indicators %>
   </div>
 
   <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">

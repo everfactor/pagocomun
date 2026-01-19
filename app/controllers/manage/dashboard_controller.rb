@@ -25,8 +25,7 @@ module Manage
       @units_missing_assignment = @units.where.not(id: UnitUserAssignment.active.select(:unit_id))
 
       # Economic Indicators status
-      @latest_uf = EconomicIndicator.latest_uf
-      @latest_ipc = EconomicIndicator.latest_ipc
+      @indicators = EconomicIndicator.snapshot
       @uf_sync_error = Rails.cache.read("cmf_sync_error_uf")
       @ipc_sync_error = Rails.cache.read("cmf_sync_error_ipc")
     end

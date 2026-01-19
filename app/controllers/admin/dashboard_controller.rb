@@ -8,6 +8,9 @@ module Admin
       @paid_bills_count = Bill.where(status: "paid").count
       @total_payments = Payment.sum(:amount)
       @recent_payments = Payment.order(created_at: :desc).limit(5)
+
+      # Economic Indicators
+      @indicators = EconomicIndicator.snapshot
     end
   end
 end

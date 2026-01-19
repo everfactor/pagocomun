@@ -87,6 +87,7 @@ bundle exec bundle-audit
 *   **CSS:** Use Tailwind utility classes directly in markup. Avoid custom CSS files.
 *   **JavaScript:** Use Stimulus controllers in `app/javascript/controllers`. Follow naming convention: `search_controller.js` maps to `data-controller="search"`.
 *   **Turbo:** Use `Turbo.visit` for navigation and `turbo_stream` for partial updates. Prefer standard HTML responses unless a dynamic update is required.
+*   **Partials & Reusability:** Extract common UI components (like cards, tables, indicators) into partials in `app/views/shared/`. For example, use `shared/economic_indicators` for displaying UF and IPC values.
 
 ### Testing
 *   **Framework:** Minitest.
