@@ -132,7 +132,7 @@ module Admin
     end
 
     def unit_params
-      params.require(:unit).permit(:number, :tower, :proration, :organization_id, :email, :mobile_number, :pay_day, :name)
+      params.require(:unit).permit(:number, :tower, :proration, :organization_id, :email, :mobile_number, :pay_day, :name, :contract_start_on, :charge_mode, :rent_amount, :ipc_adjustment, :daily_interest_rate)
     end
   end
 end

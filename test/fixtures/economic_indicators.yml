@@ -1,0 +1,11 @@
+uf_today:
+  kind: uf
+  value: 39739.42
+  date: <%= Date.current %>
+  source: CMF
+
+ipc_last_month:
+  kind: ipc
+  value: -0.2
+  date: <%= Date.current.beginning_of_month - 1.month %>
+  source: CMF

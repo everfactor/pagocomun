@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_18_191611) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_18_232860) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,6 +24,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_18_191611) do
     t.bigint "unit_id", null: false
     t.datetime "updated_at", null: false
     t.index ["unit_id"], name: "index_bills_on_unit_id"
+  end
+
+  create_table "economic_indicators", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "date", null: false
+    t.string "kind", null: false
+    t.jsonb "raw_payload"
+    t.string "source"
+    t.datetime "updated_at", null: false
+    t.decimal "value", precision: 15, scale: 2, null: false
+    t.index ["date"], name: "index_economic_indicators_on_date"
+    t.index ["kind", "date"], name: "index_economic_indicators_on_kind_and_date", unique: true
+    t.index ["kind"], name: "index_economic_indicators_on_kind"
   end
 
   create_table "organization_memberships", force: :cascade do |t|
@@ -72,6 +85,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_18_191611) do
     t.bigint "bill_id", null: false
     t.string "child_buy_order", null: false
     t.datetime "created_at", null: false
+    t.jsonb "economic_snapshot", default: {}
     t.jsonb "gateway_payload"
     t.bigint "organization_id", null: false
     t.string "parent_buy_order", null: false
@@ -106,14 +120,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_18_191611) do
   end
 
   create_table "units", force: :cascade do |t|
+    t.string "charge_mode", default: "clp"
+    t.date "contract_start_on"
     t.datetime "created_at", null: false
+    t.decimal "daily_interest_rate", precision: 5, scale: 2, default: "0.0"
     t.string "email"
+    t.string "ipc_adjustment", default: "annual"
     t.string "mobile_number"
     t.string "name"
     t.string "number", null: false
     t.bigint "organization_id", null: false
     t.integer "pay_day"
     t.float "proration"
+    t.decimal "rent_amount", precision: 15, scale: 2
     t.string "tower"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_units_on_email"

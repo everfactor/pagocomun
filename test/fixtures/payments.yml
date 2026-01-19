@@ -1,0 +1,29 @@
+one:
+  organization: one
+  unit: one
+  bill: one
+  payer_user: one
+  amount: 50000
+  period: "2026-01"
+  status: authorized
+  parent_buy_order: "P-ONE"
+  child_buy_order: "C-ONE"
+  economic_snapshot:
+    uf_value: 39739.42
+    ipc_value: -0.2
+    indicator_date: 2026-01-18
+
+two:
+  organization: two
+  unit: two
+  bill: two
+  payer_user: two
+  amount: 60000
+  period: "2026-02"
+  status: authorized
+  parent_buy_order: "P-TWO"
+  child_buy_order: "C-TWO"
+  economic_snapshot:
+    uf_value: 40000.00
+    ipc_value: 0.5
+    indicator_date: 2026-02-18

@@ -33,6 +33,28 @@
               <%= link_to @unit.organization.name, admin_organization_path(@unit.organization), class: "text-blue-600 hover:text-blue-900" %>
             </dd>
           </div>
+          <% if @unit.organization.org_type_rental_space? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Contract Start</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.contract_start_on || "N/A" %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Charge Mode</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.charge_mode&.upcase || "N/A" %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Rent Amount</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.rent_amount %> <%= @unit.charge_mode&.upcase %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">IPC Adjustment</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.ipc_adjustment&.humanize || "N/A" %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Daily Interest Rate</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.daily_interest_rate %>%</dd>
+            </div>
+          <% end %>
         </dl>
       </div>
     </div>

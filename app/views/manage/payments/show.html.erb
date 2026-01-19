@@ -58,10 +58,38 @@
           </div>
           <div>
             <dt class="text-sm font-medium text-gray-500">ID Transacción</dt>
-            <dd class="mt-1 text-sm text-gray-900 underline"><%= @payment.buy_order || 'N/A' %></dd>
+            <dd class="mt-1 text-sm text-gray-900 underline"><%= @payment.parent_buy_order %></dd>
           </div>
         </dl>
       </div>
     </div>
+
+    <% if @payment.economic_snapshot.present? %>
+      <div class="overflow-hidden rounded-lg bg-white shadow">
+        <div class="px-6 py-5 border-b border-gray-200">
+          <h3 class="text-base font-semibold leading-6 text-gray-900">Indicadores Económicos (al momento del pago)</h3>
+        </div>
+        <div class="px-6 py-5">
+          <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+            <% if @payment.economic_snapshot["uf_value"] %>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Valor UF</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= number_to_currency(@payment.economic_snapshot["uf_value"], unit: "$", separator: ",", delimiter: ".") %></dd>
+              </div>
+            <% end %>
+            <% if @payment.economic_snapshot["ipc_value"] %>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">IPC</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @payment.economic_snapshot["ipc_value"] %>%</dd>
+              </div>
+            <% end %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Fecha Indicadores</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @payment.economic_snapshot["indicator_date"]&.to_date&.strftime("%d/%m/%Y") || 'N/A' %></dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

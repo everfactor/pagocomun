@@ -6,7 +6,7 @@ class Bill::Charger
   end
 
   def call
-    return false if bill.paid? || bill.status == "failed" || bill.status == "processing"
+    return false if bill.status_paid? || bill.status == "failed" || bill.status == "processing"
 
     organization = bill.unit.organization
     assignment = bill.unit.active_assignment
@@ -55,7 +55,8 @@ class Bill::Charger
             child_buy_order: buy_order,
             gateway_payload: response.as_json,
             response_code: detail.response_code,
-            tbk_auth_code: detail.authorization_code
+            tbk_auth_code: detail.authorization_code,
+            economic_snapshot: EconomicIndicator.snapshot
           )
           bill.update!(status: "paid")
         end

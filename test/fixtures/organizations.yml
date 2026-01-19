@@ -13,3 +13,10 @@ two:
   org_type: community
   status: approved
   slug: another-org
+
+rental:
+  name: RentalOrganization
+  rut: 1-1
+  org_type: rental_space
+  status: approved
+  slug: rental-org

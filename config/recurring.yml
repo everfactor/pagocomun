@@ -2,3 +2,6 @@
 generate_monthly_bills:
   class: GenerateMonthlyBillsJob
   schedule: "0 0 1 * *" # Run at midnight on the 1st of every month
+fetch_economic_indicators:
+  command: "CMF::IndicatorFetcher.call"
+  schedule: "0 6 * * *" # Run every day at 6:00 AM

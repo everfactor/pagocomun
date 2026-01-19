@@ -13,6 +13,14 @@
       <h1 class="text-3xl font-bold text-gray-900">Unidad <%= @unit.number %></h1>
     </div>
     <div class="flex gap-4">
+      <% if @unit.email.present? %>
+        <% invite_url = signup_url(token: @unit.user&.enrollment_token) if @unit.user %>
+        <% if invite_url %>
+          <%= link_to "https://wa.me/#{@unit.mobile_number&.delete('+')}?text=#{CGI.escape("Hola! Te invito a registrarte en Pagocomun para gestionar tus pagos: #{invite_url}")}", class: "rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500", target: "_blank" do %>
+            Invitar por WhatsApp
+          <% end %>
+        <% end %>
+      <% end %>
       <%= link_to "Editar", edit_manage_organization_unit_path(@organization, @unit), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
     </div>
   </div>
@@ -47,11 +55,43 @@
             </div>
             <div>
               <dt class="text-sm font-medium text-gray-500">Prorrateo</dt>
-              <dd class="mt-1 text-sm text-gray-900"><%= number_to_percentage(@unit.proration * 100, precision: 4) %></dd>
+              <dd class="mt-1 text-sm text-gray-900"><%= @unit.proration ? number_to_percentage(@unit.proration * 100, precision: 4) : 'N/A' %></dd>
             </div>
           </dl>
         </div>
       </div>
+
+      <% if @unit.organization.org_type_rental_space? %>
+        <div class="overflow-hidden rounded-lg bg-white shadow">
+          <div class="px-6 py-5 border-b border-gray-200">
+            <h3 class="text-base font-semibold leading-6 text-gray-900">Datos de Arriendo</h3>
+          </div>
+          <div class="px-6 py-5">
+            <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Fecha Inicio Contrato</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @unit.contract_start_on.presence || 'N/A' %></dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Modalidad de Cobro</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @unit.charge_mode&.upcase || 'N/A' %></dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Monto Arriendo</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @unit.rent_amount.presence || 'N/A' %> <%= @unit.charge_mode&.upcase %></dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Reajuste IPC</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @unit.ipc_adjustment&.humanize || 'N/A' %></dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Interés diario atraso</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @unit.daily_interest_rate %>%</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      <% end %>
 
       <div class="overflow-hidden rounded-lg bg-white shadow">
         <div class="px-6 py-5 border-b border-gray-200">

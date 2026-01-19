@@ -14,7 +14,15 @@ class TransbankClient
   end
 
   def client
-    Transbank::Webpay::Oneclick::MallInscription.new(options)
+    @client ||= Transbank::Webpay::Oneclick::MallInscription.new(options)
+  end
+
+  def self.mall_transaction
+    @mall_transaction ||= new.mall_transaction
+  end
+
+  def mall_transaction
+    @mall_transaction_inst ||= Transbank::Webpay::Oneclick::MallTransaction.new(options)
   end
 
   private

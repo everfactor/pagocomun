@@ -1,0 +1,28 @@
+one:
+  organization: one
+  number: "101"
+  tower: "A"
+  pay_day: 5
+  proration: 0.1
+
+two:
+  organization: two
+  number: "202"
+  tower: "B"
+  pay_day: 5
+  proration: 0.2
+
+rental_unit:
+  organization: rental
+  number: "303"
+  tower: "C"
+  pay_day: 5
+  proration: 0.3
+  contract_start_on: 2026-01-01
+  charge_mode: clp
+  ipc_adjustment: annual
+  rent_amount: 500000
+  daily_interest_rate: 0
+  email: rental@example.com
+  mobile_number: "+56982672160"
+  name: "Rental Tenant"

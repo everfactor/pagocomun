@@ -1,0 +1,7 @@
+one:
+  unit_user_assignment: one
+  card_type: Visa
+  card_last_4: "1234"
+  active: true
+  tbk_username: "user1"
+  tbk_token: "token1"

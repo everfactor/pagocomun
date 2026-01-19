@@ -53,6 +53,29 @@
             <dt class="text-sm font-medium text-gray-500">Transbank Auth Code</dt>
             <dd class="mt-1 text-sm text-gray-900 font-mono text-xs"><%= @payment.tbk_auth_code || "N/A" %></dd>
           </div>
+          <% if @payment.economic_snapshot.present? %>
+            <div class="border-t border-gray-100 pt-4 mt-4">
+              <h3 class="text-sm font-semibold text-gray-900 mb-2">Economic Indicators (at time of payment)</h3>
+              <div class="grid grid-cols-2 gap-4">
+                <% if @payment.economic_snapshot["uf_value"] %>
+                  <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase">UF Value</dt>
+                    <dd class="mt-1 text-sm text-gray-900"><%= number_to_currency(@payment.economic_snapshot["uf_value"], unit: "$", separator: ",", delimiter: ".") %></dd>
+                  </div>
+                <% end %>
+                <% if @payment.economic_snapshot["ipc_value"] %>
+                  <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase">IPC</dt>
+                    <dd class="mt-1 text-sm text-gray-900"><%= @payment.economic_snapshot["ipc_value"] %>%</dd>
+                  </div>
+                <% end %>
+                <div class="col-span-2">
+                  <dt class="text-xs font-medium text-gray-500 uppercase">Indicator Date</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><%= @payment.economic_snapshot["indicator_date"]&.to_date&.strftime("%d/%m/%Y") || 'N/A' %></dd>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </dl>
       </div>
     </div>

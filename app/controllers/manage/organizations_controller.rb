@@ -6,8 +6,14 @@ module Manage
     private
 
     def require_org_admin!
-      unless Current.user.can_manage_organization?(@organization)
-        redirect_to manage_organizations_path, alert: "Acceso denegado. Solo administradores pueden realizar esta acción."
+      if %w[new create].include?(action_name)
+        unless Current.user.can_create_organization?
+          redirect_to manage_organizations_path, alert: "Acceso denegado. Solo administradores pueden realizar esta acción."
+        end
+      else
+        unless Current.user.can_manage_organization?(@organization)
+          redirect_to manage_organizations_path, alert: "Acceso denegado. Solo administradores pueden realizar esta acción."
+        end
       end
     end
 

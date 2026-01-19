@@ -4,10 +4,10 @@ require "csv"
 class Unit::BillsImporterTest < ActiveSupport::TestCase
   setup do
     @organization = organizations(:one)
-    @unit = @organization.units.create!(number: "101", tower: "A", pay_day: 5, email: "unit101@example.com")
+    @unit = @organization.units.create!(number: "999", tower: "Z", pay_day: 5, email: "unit999@example.com")
     @file = Tempfile.new(["bills", ".csv"])
     @file.write("edificio_torre,depto,monto,periodo\n")
-    @file.write("A,101,50000,2026-01\n")
+    @file.write("Z,999,50000,2026-01\n")
     @file.rewind
   end
 
@@ -28,8 +28,9 @@ class Unit::BillsImporterTest < ActiveSupport::TestCase
 
   test "updates unit contact info during import" do
     @file.rewind
+    @file.truncate(0)
     @file.write("edificio_torre,depto,monto,periodo,email_telefono\n")
-    @file.write("A,101,50000,2026-01,newemail@example.com\n")
+    @file.write("Z,999,50000,2026-01,newemail@example.com\n")
     @file.rewind
 
     importer = Unit::BillsImporter.new(@organization, @file)
@@ -42,7 +43,7 @@ class Unit::BillsImporterTest < ActiveSupport::TestCase
     @file.rewind
     @file.truncate(0)
     @file.write("edificio_torre,depto,monto,periodo\n")
-    @file.write(",101,50000,2026-01\n")
+    @file.write(",999,50000,2026-01\n")
     @file.rewind
 
     importer = Unit::BillsImporter.new(@organization, @file)

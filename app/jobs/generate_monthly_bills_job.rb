@@ -6,22 +6,33 @@ class GenerateMonthlyBillsJob < ApplicationJob
     period = Date.current.strftime("%Y-%m")
     due_date = Date.current.end_of_month
 
+    # Fetch latest economic indicators once per job run
+    latest_uf = EconomicIndicator.latest_uf
+    latest_ipc = EconomicIndicator.latest_ipc
+
     Unit.find_each do |unit|
       next unless unit.active_assignment
 
       # Check if bill already exists for this unit and period
       next if unit.bills.exists?(period: period)
 
-      # Fixed amount for now as requested (e.g., 50000 CLP).
-      # Later we can add 'amount' to Unit or Organization config.
-      amount = 50000
+      # Determine amount: use rent_amount for rental_space or default 50000 for communities
+      amount = if unit.organization.org_type_rental_space? && unit.rent_amount.present?
+        if unit.charge_mode_uf? && latest_uf
+          (unit.rent_amount * latest_uf.value).round
+        else
+          unit.rent_amount.to_i
+        end
+      else
+        50000 # Fixed amount for community units for now
+      end
 
       bill = unit.bills.create!(
         amount: amount,
         period: period,
         due_date: due_date,
         status: "pending",
-        auto_charge: true # Default to true for now to attempt charge? or depends on user pref?
+        auto_charge: true
       )
 
       # Trigger charge if user has payment method

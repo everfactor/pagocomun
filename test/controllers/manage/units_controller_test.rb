@@ -9,10 +9,10 @@ module Manage
       @other_organization = organizations(:two)
       @unit = Unit.create!(
         organization: @organization,
-        number: "101",
-        tower: "A",
+        number: "904",
+        tower: "X",
         pay_day: 5,
-        email: "unit101@example.com",
+        email: "unit904@example.com",
         proration: 1.0
       )
     end

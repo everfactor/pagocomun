@@ -8,10 +8,10 @@ module Admin
       @organization = organizations(:one)
       @unit = Unit.create!(
         organization: @organization,
-        number: "101",
-        tower: "A",
+        number: "902",
+        tower: "X",
         pay_day: 5,
-        email: "unit101@example.com"
+        email: "unit902@example.com"
       )
       @bill = Bill.create!(
         unit: @unit,

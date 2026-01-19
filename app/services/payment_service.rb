@@ -86,7 +86,8 @@ class PaymentService < ApplicationService
       tbk_auth_code: extract_auth_code(response),
       response_code: extract_response_code(response),
       status: determine_status(response),
-      gateway_payload: response.as_json
+      gateway_payload: response.as_json,
+      economic_snapshot: EconomicIndicator.snapshot
     )
   end
 

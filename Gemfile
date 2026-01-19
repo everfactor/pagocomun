@@ -65,8 +65,14 @@ group :test do
   gem "selenium-webdriver"
 end
 
+group :development, :test do
+  gem "pry-rails"
+end
+
 gem "transbank-sdk"
 
 gem "csv"
+
+gem "faraday"
 
 gem "pagy", "~> 43.2"

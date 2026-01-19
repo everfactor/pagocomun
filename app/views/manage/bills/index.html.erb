@@ -26,7 +26,11 @@
         </div>
         <div>
           <label for="period" class="block text-sm font-medium text-gray-700">Periodo</label>
-          <%= select_tag :period, options_for_select(Bill.period_options, params[:period]), prompt: "Todos los periodos", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+          <%= select_tag :period, options_for_select(Bill.period_options, params[:period]), prompt: "Todos los periodos", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", onchange: "this.form.submit()" %>
+        </div>
+        <div>
+          <label for="status" class="block text-sm font-medium text-gray-700">Estado</label>
+          <%= select_tag :status, options_for_select(Bill.statuses.keys.map { |s| [s.humanize, s] }, params[:status]), prompt: "Todos los estados", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", onchange: "this.form.submit()" %>
         </div>
         <div class="flex justify-end">
           <%= submit_tag "Filtrar", class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 cursor-pointer" %>

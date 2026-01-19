@@ -1,0 +1,13 @@
+one:
+  unit: one
+  amount: 50000
+  period: "2026-01"
+  status: pending
+  due_date: 2026-01-05
+
+two:
+  unit: two
+  amount: 60000
+  period: "2026-02"
+  status: pending
+  due_date: 2026-02-05

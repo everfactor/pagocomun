@@ -22,6 +22,10 @@ module Manage
         @bills = @bills.where(period: params[:period])
       end
 
+      if params[:status].present?
+        @bills = @bills.where(status: params[:status])
+      end
+
       @pagy, @bills = pagy(:offset, @bills)
     end
 

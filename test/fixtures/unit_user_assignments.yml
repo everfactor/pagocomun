@@ -1,0 +1,5 @@
+one:
+  unit: one
+  user: resident
+  active: true
+  starts_on: 2025-01-01
