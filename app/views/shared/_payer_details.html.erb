@@ -1,0 +1,21 @@
+<div class="px-6 py-5 border-t border-gray-200">
+  <h3 class="text-base font-semibold leading-6 text-gray-900"><%= t('.payer_information', default: 'Información del Pagador') %></h3>
+  <dl class="mt-4 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+    <div>
+      <dt class="text-sm font-medium text-gray-500"><%= t('.name', default: 'Nombre/Descripción') %></dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= bill.unit.name.presence || "N/A" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-gray-500"><%= t('.email', default: 'Email') %></dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= bill.unit.email.presence || "N/A" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-gray-500"><%= t('.phone', default: 'Teléfono') %></dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= bill.unit.mobile_number.presence || "N/A" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-gray-500"><%= t('.tower', default: 'Torre') %></dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= bill.unit.tower %></dd>
+    </div>
+  </dl>
+</div>

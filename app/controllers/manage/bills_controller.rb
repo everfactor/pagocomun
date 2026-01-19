@@ -16,7 +16,7 @@ module Manage
           .distinct
       end
 
-      @bills = @bills.includes(:unit, :organization).order(created_at: :desc)
+      @bills = @bills.includes(:organization, unit: :organization).order(created_at: :desc)
 
       if params[:period].present?
         @bills = @bills.where(period: params[:period])

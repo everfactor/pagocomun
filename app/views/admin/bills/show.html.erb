@@ -56,6 +56,10 @@
             <dd class="mt-1 text-sm text-gray-900"><%= @bill.auto_charge? ? "Yes" : "No" %></dd>
           </div>
         </dl>
+
+        <div class="mt-8 pt-8 border-t border-gray-200">
+          <%= render "shared/payer_details", bill: @bill %>
+        </div>
       </div>
     </div>
 

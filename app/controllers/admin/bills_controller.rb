@@ -14,7 +14,7 @@ module Admin
           .distinct
       end
 
-      @bills = @bills.includes(:unit, :organization).order(created_at: :desc)
+      @bills = @bills.includes(:organization, unit: :organization).order(created_at: :desc)
 
       if params[:organization_id].present?
         @bills = @bills.joins(:unit).where(units: {organization_id: params[:organization_id]})
