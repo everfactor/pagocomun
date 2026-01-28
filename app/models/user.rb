@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :payments, foreign_key: :payer_user_id
   belongs_to :unit, primary_key: :email, foreign_key: :email_address, optional: true
   has_many :units, through: :unit_user_assignments
+  has_one :active_assignment, -> { active }, class_name: "UnitUserAssignment"
 
   enum :role, %w[super_admin org_admin org_manager resident].index_by(&:itself), prefix: :role
   enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status
@@ -60,9 +61,7 @@ class User < ApplicationRecord
     to_sgid(expires_in: 30.days, for: "enrollment").to_s
   end
 
-  private
-
   def send_enrollment_email
-    ResidentMailer.with(user: self).enrollment_email.deliver_later
+    ResidentMailer.enrollment_email(self).deliver_later
   end
 end

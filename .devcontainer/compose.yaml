@@ -36,5 +36,13 @@ services:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: postgres
 
+  mailcatcher:
+    image: dockage/mailcatcher:0.8.2
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+
+
 volumes:
   postgres-data:

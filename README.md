@@ -89,6 +89,20 @@ bin/rails server
 
 The application will be available at `http://localhost:3000`.
 
+### Mailcatcher
+
+For local email previews, this app is configured to deliver SMTP to Mailcatcher.
+
+If you are using the Dev Container setup, the `mailcatcher` service is already included.
+
+Otherwise, you can run Mailcatcher with Docker:
+
+```bash
+docker run --rm -p 1025:1025 -p 1080:1080 dockage/mailcatcher:0.8.2
+```
+
+Open the Mailcatcher UI at `http://localhost:1080` to view messages.
+
 ### Running Tests
 
 Run the test suite:

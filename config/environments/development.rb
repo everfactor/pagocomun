@@ -37,6 +37,10 @@ Rails.application.configure do
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { address: "mailcatcher", port: 1025 }
+
+
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = {host: "127.0.0.1", port: 4002}
   config.action_controller.default_url_options = {host: "127.0.0.1", port: 4002}

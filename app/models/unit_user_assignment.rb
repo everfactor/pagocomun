@@ -14,6 +14,6 @@ class UnitUserAssignment < ApplicationRecord
   private
 
   def send_enrollment_invitation
-    ResidentMailer.with(user: user).enrollment_email.deliver_later
+    user.send_enrollment_email
   end
 end
