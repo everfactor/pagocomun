@@ -1,0 +1,17 @@
+Resumen Diario de Cobros
+
+Hola <%= @user.first_name || @user.email_address %>,
+
+<% if @organization %>
+Resumen de la corrida de cobros para la organización <%= @organization.name %>.
+<% else %>
+Resumen de la corrida de cobros para todas las organizaciones.
+<% end %>
+
+Estadísticas:
+- Total de Facturas: <%= @charge_run.total_bills %>
+- Cobros Exitosos: <%= @charge_run.successful_charges %>
+- Cobros Fallidos: <%= @charge_run.failed_charges %>
+- Omitidos: <%= @charge_run.skipped_charges %>
+
+Fecha de la corrida: <%= @charge_run.created_at.strftime("%d/%m/%Y %H:%M") %>

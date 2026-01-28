@@ -1,0 +1,20 @@
+Error Técnico en Cobro
+
+Hola <%= @user.first_name || @user.email_address %>,
+
+Se ha producido un error técnico al procesar un cobro automático en la organización <%= @organization.name %>.
+
+Detalles del Error:
+- Unidad: <%= @unit.number %>
+- Período: <%= @bill.period %>
+- Monto: $<%= number_with_delimiter(@bill.amount) %>
+- Tipo de Error: <%= @charge_attempt.error_type %>
+- Mensaje: <%= @charge_attempt.error_message %>
+- Reintentable: <%= @charge_attempt.retryable ? "Sí" : "No" %>
+- Intentos: <%= @charge_attempt.retry_count %>
+
+<% if @charge_attempt.retryable %>
+El sistema intentará procesar este cobro nuevamente automáticamente.
+<% else %>
+Este error requiere intervención manual. Por favor, revise el sistema.
+<% end %>

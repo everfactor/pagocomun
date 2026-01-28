@@ -1,0 +1,36 @@
+success:
+  charge_run: one
+  bill: one
+  payment: one
+  status: success
+  error_type: none
+  retryable: false
+  retry_count: 0
+
+failed:
+  charge_run: one
+  bill: two
+  status: failed
+  error_type: connection
+  error_message: "Connection timeout"
+  retryable: true
+  retry_count: 1
+
+rejected:
+  charge_run: two
+  bill: one
+  status: rejected
+  error_type: rejected
+  error_message: "Payment rejected by gateway"
+  response_code: -1
+  retryable: false
+  retry_count: 0
+
+skipped:
+  charge_run: two
+  bill: two
+  status: skipped
+  error_type: none
+  error_message: "No payment method"
+  retryable: false
+  retry_count: 0

@@ -76,3 +76,6 @@ gem "csv"
 gem "faraday"
 
 gem "pagy", "~> 43.2"
+
+gem "caxlsx"
+gem "caxlsx_rails"
