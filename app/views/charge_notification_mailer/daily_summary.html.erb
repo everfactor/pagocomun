@@ -1,0 +1,19 @@
+<h1>Resumen Diario de Cobros</h1>
+
+<p>Hola <%= @user.first_name || @user.email_address %>,</p>
+
+<% if @organization %>
+  <p>Resumen de la corrida de cobros para la organización <strong><%= @organization.name %></strong>.</p>
+<% else %>
+  <p>Resumen de la corrida de cobros para todas las organizaciones.</p>
+<% end %>
+
+<h2>Estadísticas</h2>
+<ul>
+  <li><strong>Total de Facturas:</strong> <%= @charge_run.total_bills %></li>
+  <li><strong>Cobros Exitosos:</strong> <%= @charge_run.successful_charges %></li>
+  <li><strong>Cobros Fallidos:</strong> <%= @charge_run.failed_charges %></li>
+  <li><strong>Omitidos:</strong> <%= @charge_run.skipped_charges %></li>
+</ul>
+
+<p>Fecha de la corrida: <%= @charge_run.created_at.strftime("%d/%m/%Y %H:%M") %></p>

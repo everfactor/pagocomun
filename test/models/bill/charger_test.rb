@@ -51,7 +51,8 @@ class Bill::ChargerTest < ActiveSupport::TestCase
 
     begin
       assert_difference "Payment.count", 1 do
-        assert Bill::Charger.new(@bill).call
+        result = Bill::Charger.new(@bill).call
+        assert result.success?
       end
     ensure
       # Restore
@@ -95,7 +96,8 @@ class Bill::ChargerTest < ActiveSupport::TestCase
 
     begin
       assert_no_difference "Payment.count" do
-        refute Bill::Charger.new(@bill).call
+        result = Bill::Charger.new(@bill).call
+        refute result.success?
       end
     ensure
       # Restore

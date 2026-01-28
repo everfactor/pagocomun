@@ -1,0 +1,107 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Corridas de Cobro</h1>
+      <p class="mt-2 text-sm text-gray-600">Historial de corridas automáticas y manuales</p>
+    </div>
+    <div class="flex gap-2">
+      <%= form_with url: manage_charge_runs_path, method: :post, local: true, class: "inline" do |f| %>
+        <%= f.select :organization_id, options_from_collection_for_select(@organizations, :id, :name, params[:organization_id]), {prompt: "Seleccionar organización"}, {class: "rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm mr-2"} %>
+        <%= f.submit "Ejecutar Corrida", class: "rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="rounded-lg bg-white p-6 shadow">
+      <%= form_tag manage_charge_runs_path, method: :get, class: "flex flex-col gap-4" do %>
+        <div>
+          <label for="organization_id" class="block text-sm font-medium text-gray-700">Organización</label>
+          <%= select_tag :organization_id, options_from_collection_for_select(@organizations, :id, :name, params[:organization_id]), prompt: "Todas las organizaciones", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", onchange: "this.form.submit()" %>
+        </div>
+        <div>
+          <label for="status" class="block text-sm font-medium text-gray-700">Estado</label>
+          <%= select_tag :status, options_for_select([["Pendiente", "pending"], ["Ejecutando", "running"], ["Completada", "completed"], ["Fallida", "failed"]], params[:status]), prompt: "Todos los estados", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", onchange: "this.form.submit()" %>
+        </div>
+        <div class="flex justify-end">
+          <%= submit_tag "Filtrar", class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">ID</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Tipo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Organización</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Estado</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Total</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Exitosos</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Fallidos</th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Fecha</th>
+            <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% if @charge_runs.any? %>
+            <% @charge_runs.each do |charge_run| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#<%= charge_run.id %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= charge_run.run_type == "scheduled" ? "Automática" : "Manual" %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <% if charge_run.organization %>
+                    <%= link_to charge_run.organization.name, manage_organization_path(charge_run.organization), class: "text-blue-600 hover:text-blue-900" %>
+                  <% else %>
+                    <span class="text-gray-400">Todas</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
+                    case charge_run.status
+                    when 'completed'
+                      'bg-green-100 text-green-800'
+                    when 'running'
+                      'bg-yellow-100 text-yellow-800'
+                    when 'failed'
+                      'bg-red-100 text-red-800'
+                    else
+                      'bg-gray-100 text-gray-800'
+                    end
+                  %>">
+                    <%= charge_run.status.humanize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= charge_run.total_bills %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600"><%= charge_run.successful_charges %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600"><%= charge_run.failed_charges %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= charge_run.created_at.strftime("%d/%m/%Y %H:%M") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <%= link_to "Ver", manage_charge_run_path(charge_run), class: "text-blue-600 hover:text-blue-900 mr-2" %>
+                  <%= link_to "CSV", export_manage_charge_run_path(charge_run, format: :csv), class: "text-blue-600 hover:text-blue-900 mr-2" %>
+                  <%= link_to "XLS", export_manage_charge_run_path(charge_run, format: :xlsx), class: "text-blue-600 hover:text-blue-900" %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="9" class="px-6 py-4 text-center text-sm text-gray-500">No se encontraron corridas</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <% if @pagy.pages > 1 %>
+    <div class="mt-6 flex justify-center">
+      <%== @pagy.series_nav %>
+    </div>
+  <% end %>
+</div>

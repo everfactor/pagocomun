@@ -1,0 +1,17 @@
+<h1>Pago Rechazado</h1>
+
+<p>Hola <%= @user.first_name || @user.email_address %>,</p>
+
+<p>Se ha rechazado un pago automático en la organización <strong><%= @organization.name %></strong>.</p>
+
+<h2>Detalles del Pago</h2>
+<ul>
+  <li><strong>Unidad:</strong> <%= @unit.number %></li>
+  <li><strong>Período:</strong> <%= @bill.period %></li>
+  <li><strong>Monto:</strong> $<%= number_with_delimiter(@bill.amount) %></li>
+  <li><strong>Fecha de Vencimiento:</strong> <%= @bill.due_date&.strftime("%d/%m/%Y") || "N/A" %></li>
+  <li><strong>Código de Respuesta:</strong> <%= @charge_attempt.response_code || "N/A" %></li>
+  <li><strong>Mensaje:</strong> <%= @charge_attempt.error_message %></li>
+</ul>
+
+<p>Por favor, contacte al residente para resolver este problema.</p>

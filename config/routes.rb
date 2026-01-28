@@ -35,6 +35,11 @@ Rails.application.routes.draw do
     resources :users
     resources :bills, only: [:index, :show]
     resources :payments, only: [:index, :show]
+    resources :charge_runs, only: [:index, :show, :create] do
+      member do
+        get :export
+      end
+    end
   end
 
   # Admin namespace
@@ -54,6 +59,11 @@ Rails.application.routes.draw do
     resources :payments, only: [:index, :show]
     resources :payment_methods
     resources :unit_assignments, path: "unit-assignments"
+    resources :charge_runs, only: [:index, :show, :create] do
+      member do
+        get :export
+      end
+    end
   end
 
   get "enroll/:token", to: "dashboard#index", as: :public_enrollment

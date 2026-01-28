@@ -7,6 +7,7 @@ class Organization < ApplicationRecord
   has_one :admin_membership, -> { role_org_admin }, class_name: "OrganizationMembership"
   has_one :owner, through: :admin_membership, source: :user
   has_many :bills, through: :units
+  has_many :charge_runs, dependent: :destroy
 
   enum :org_type, %w[community rental_space].index_by(&:itself), prefix: :org_type
   enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status

@@ -2,6 +2,6 @@ class ChargeBillJob < ApplicationJob
   queue_as :default
 
   def perform(bill)
-    Bill::Charger.new(bill).call
+    Bill::Charger.call(bill)
   end
 end
