@@ -30,9 +30,10 @@ class CMF::IndicatorFetcherTest < ActiveSupport::TestCase
   end
 
   test "fetch_ipc parses and saves data correctly" do
+    target_date = Date.current.beginning_of_month
     ipc_payload = {
       "IPCs" => [
-        {"Valor" => "0,5", "Fecha" => "2026-01-01"}
+        {"Valor" => "0,5", "Fecha" => target_date.to_s}
       ]
     }
 
@@ -48,7 +49,7 @@ class CMF::IndicatorFetcherTest < ActiveSupport::TestCase
 
     indicator = EconomicIndicator.latest_ipc
     assert_equal 0.5, indicator.value
-    assert_equal Date.parse("2026-01-01"), indicator.date
+    assert_equal target_date, indicator.date
   end
 
   test "call fetches both uf and ipc" do

@@ -1,16 +1,10 @@
 class TransbankClient
-  COMMERCE_CODE = Rails.application.credentials.transbank.commerce_code
-  API_KEY = Rails.application.credentials.transbank.api_key
-  TBK_ENVIRONMENT = Rails.configuration.settings.transbank_environment
-
   def self.client
     new.client
   end
 
   def initialize
-    @commerce_code = COMMERCE_CODE
-    @api_key = API_KEY
-    @tbk_environment = TBK_ENVIRONMENT
+    # Credentials loaded lazily via private methods
   end
 
   def client
@@ -27,7 +21,17 @@ class TransbankClient
 
   private
 
-  attr_reader :commerce_code, :api_key, :tbk_environment
+  def commerce_code
+    @commerce_code ||= Rails.application.credentials.dig(:transbank, :commerce_code)
+  end
+
+  def api_key
+    @api_key ||= Rails.application.credentials.dig(:transbank, :api_key)
+  end
+
+  def tbk_environment
+    @tbk_environment ||= Rails.configuration.settings.transbank_environment
+  end
 
   def options
     @options ||= Transbank::Webpay::Options.new(commerce_code, api_key, tbk_environment)

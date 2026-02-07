@@ -15,7 +15,7 @@ class UnitTest < ActiveSupport::TestCase
   end
 
   test "rental space unit validates mobile_number format" do
-    org = Organization.create!(name: "Unique Rental Org", rut: "2-2", org_type: "rental_space")
+    org = Organization.create!(name: "Unique Rental Org", rut: "22222221-4", tbk_child_commerce_code: "597099999991", org_type: "rental_space")
     unit = Unit.new(
       organization: org,
       number: "101",
@@ -43,7 +43,7 @@ class UnitTest < ActiveSupport::TestCase
     existing_unit = units(:one) # assuming one belongs to @rental_org in fixtures
     # Let's ensure organizations(:two) has one unit already if we want to test this.
     # Better to create manually.
-    org = Organization.create!(name: "Rental Org", rut: "1-1", org_type: "rental_space")
+    org = Organization.create!(name: "Rental Org", rut: "55555555-5", tbk_child_commerce_code: "597099999992", org_type: "rental_space")
     Unit.create!(
       organization: org,
       number: "1",
