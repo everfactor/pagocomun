@@ -74,6 +74,14 @@ es:
       cancel: "Cancelar"
       save: "Guardar"
 
+  pagination:
+    previous: "Anterior"
+    next: "Siguiente"
+    showing: "Mostrando"
+    to: "a"
+    of: "de"
+    results: "resultados"
+
   enums:
     organization:
       org_type:
@@ -116,3 +124,11 @@ es:
       amount: "Monto"
       status: "Estado"
       due_date: "Fecha de Vencimiento"
+      total_bills: "Total"
+      pending_bills: "Pendientes"
+      paid_bills: "Pagadas"
+      pending_amount: "Monto pendiente"
+      scroll_to_bills: "Ver detalle abajo"
+      no_bills_yet: "Sin cuentas"
+      all_bills: "Todas tus Cuentas"
+      all_bills_description: "Historial completo de cuentas de todas tus unidades"
