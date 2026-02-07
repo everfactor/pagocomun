@@ -18,7 +18,7 @@ bin/rails test                             # Run all tests (Minitest)
 bin/rails test test/models/user_test.rb    # Run single test file
 bin/rails test test/models/user_test.rb:25 # Run test at specific line
 bin/rails test:system                      # System tests (Capybara/Selenium)
-bin/rubocop                                # Lint (rubocop-rails-omakase style)
+bundle exec standardrb                     # Lint (Ruby Standard Style)
 bin/brakeman                               # Security static analysis
 bin/setup                                  # Full setup (install deps, prepare DB, start server)
 bin/setup --reset                          # Reset database during setup
@@ -80,7 +80,7 @@ View emails at `http://localhost:1080`.
 
 ## Code Conventions
 
-- **Linter**: `rubocop-rails-omakase` — run `bin/rubocop` before committing
+- **Linter**: Ruby Standard Style — run `bundle exec standardrb` before committing
 - **Strings**: Double quotes by default
 - **Model organization**: Macros first (`belongs_to`, `validates`, `enum`), then public methods, then `private`
 - **Controllers**: `before_action` for setup/auth, `private` for helpers and strong params
