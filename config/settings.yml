@@ -1,0 +1,12 @@
+default: &default
+  transbank_environment: :integration
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+  transbank_environment: :production
