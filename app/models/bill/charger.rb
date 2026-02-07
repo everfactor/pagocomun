@@ -9,23 +9,28 @@ class Bill::Charger < ApplicationService
     precheck = precheck_result
     return precheck if precheck
 
+    # Extract required data
     organization = bill.unit.organization
     assignment = bill.unit.active_assignment
     user = assignment.user
     payment_method = assignment.payment_method
 
+    # Mark bill as pending while processing
     bill.update(status: "pending")
 
-    amount = bill.amount
+    # Generate unique buy order with timestamp
     buy_order = "BILL-#{bill.id}-#{Time.now.to_i}"
 
-    response = authorize_payment(payment_method:, amount:, buy_order:)
+    # Authorize payment with Transbank
+    response = authorize_payment(payment_method:, amount: bill.amount, buy_order:)
+
+    # Handle response and create payment record
     handle_gateway_response(
       response:,
       organization:,
       user:,
       payment_method:,
-      amount:,
+      amount: bill.amount,
       buy_order:
     )
   rescue Transbank::Shared::TransbankError => e
@@ -41,22 +46,27 @@ class Bill::Charger < ApplicationService
   attr_reader :bill
 
   def precheck_result
-    return result(success: false, error_type: :none, error_message: "Bill already paid", skipped: true) if bill.status_paid?
+    # Skip if bill is already paid
+    return skip_result("Bill already paid") if bill.status_paid?
 
+    # Skip if bill is in invalid state
     if bill.status == "failed" || bill.status == "processing"
-      return result(success: false, error_type: :none, error_message: "Bill in invalid state: #{bill.status}", skipped: true)
+      return skip_result("Bill in invalid state: #{bill.status}")
     end
 
+    # Check for active assignment
     assignment = bill.unit.active_assignment
     unless assignment&.user
-      return result(success: false, error_type: :no_payment_method, error_message: "No active assignment for unit", skipped: true)
+      return skip_result("No active assignment for unit")
     end
 
+    # Check for active payment method
     payment_method = assignment.payment_method
     unless payment_method&.active?
-      return result(success: false, error_type: :no_payment_method, error_message: "No active payment method for payer", skipped: true)
+      return skip_result("No active payment method for payer")
     end
 
+    # All checks passed
     nil
   end
 
@@ -77,9 +87,21 @@ class Bill::Charger < ApplicationService
   end
 
   def handle_gateway_response(response:, organization:, user:, payment_method:, amount:, buy_order:)
-    detail = response.details.first
+    # Extract first detail from response (Transbank returns array of details)
+    detail = response["details"]&.first
 
-    if detail.response_code == 0
+    unless detail
+      return result(
+        success: false,
+        error_type: :gateway,
+        error_message: "Invalid response: missing details"
+      )
+    end
+
+    response_code = detail["response_code"]
+
+    # Response code 0 means success
+    if response_code == 0
       payment = create_payment!(
         response:,
         detail:,
@@ -91,19 +113,22 @@ class Bill::Charger < ApplicationService
       )
       result(success: true, payment: payment)
     else
+      # Payment rejected by bank (insufficient funds, card issues, etc.)
       bill.update(status: "failed")
       result(
         success: false,
         error_type: :rejected,
-        error_message: "Payment rejected by gateway",
-        response_code: detail.response_code
+        error_message: "Payment rejected by gateway (code: #{response_code})",
+        response_code: response_code
       )
     end
   end
 
   def create_payment!(response:, detail:, organization:, user:, payment_method:, amount:, buy_order:)
     payment = nil
+
     ActiveRecord::Base.transaction do
+      # Create payment record with Transbank response data
       payment = Payment.create!(
         bill: bill,
         organization: organization,
@@ -115,19 +140,22 @@ class Bill::Charger < ApplicationService
         period: bill.period,
         parent_buy_order: "P-#{buy_order}",
         child_buy_order: buy_order,
-        gateway_payload: response.as_json,
-        response_code: detail.response_code,
-        tbk_auth_code: detail.authorization_code,
+        gateway_payload: response, # Already a hash
+        response_code: detail["response_code"],
+        tbk_auth_code: detail["authorization_code"],
         economic_snapshot: EconomicIndicator.snapshot
       )
+
+      # Mark bill as paid
       bill.update!(status: "paid")
     end
+
     payment
   end
 
   def gateway_error(error)
     bill.update(status: "failed")
-    Rails.logger.error("Bill::Charger Transbank Error for Bill #{bill.id}: #{error.message}")
+
     result(
       success: false,
       error_type: :gateway,
@@ -137,9 +165,9 @@ class Bill::Charger < ApplicationService
   end
 
   def connection_error(error)
-    bill.update(status: "pending") # Keep as pending for retry
-    Rails.logger.error("Bill::Charger Connection Error for Bill #{bill.id}: #{error.message}")
-    # Network/connection errors are retryable
+    # Keep bill as pending so it can be retried
+    bill.update(status: "pending")
+
     result(
       success: false,
       error_type: :connection,
@@ -150,7 +178,7 @@ class Bill::Charger < ApplicationService
 
   def unexpected_error(error)
     bill.update(status: "failed")
-    Rails.logger.error("Bill::Charger Error for Bill #{bill.id}: #{error.message}")
+
     result(
       success: false,
       error_type: :other,
@@ -159,6 +187,17 @@ class Bill::Charger < ApplicationService
     )
   end
 
+  # Helper method for skip results
+  def skip_result(message)
+    result(
+      success: false,
+      error_type: :no_payment_method,
+      error_message: message,
+      skipped: true
+    )
+  end
+
+  # Build result object
   def result(success:, payment: nil, error_type: :none, error_message: nil, response_code: nil, retryable: false, skipped: false)
     OpenStruct.new(
       success?: success,
