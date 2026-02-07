@@ -1,6 +1,6 @@
 one:
   name: MyOrganization
-  rut: 12.345.678-9
+  rut: 12345678-5
   tbk_child_commerce_code: "597012345678"
   org_type: community
   status: approved
@@ -8,7 +8,7 @@ one:
 
 two:
   name: AnotherOrganization
-  rut: 98.765.432-1
+  rut: 98765432-5
   tbk_child_commerce_code: "597087654321"
   org_type: community
   status: approved
@@ -16,7 +16,7 @@ two:
 
 rental:
   name: RentalOrganization
-  rut: 1-1
+  rut: 11111111-1
   org_type: rental_space
   status: approved
   slug: rental-org

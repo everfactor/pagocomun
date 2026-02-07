@@ -27,9 +27,10 @@ module Admin
         post admin_organizations_path, params: {
           organization: {
             name: "New Org",
-            rut: "11.111.111-1",
+            rut: "76123456-0",
             org_type: "community",
-            status: "approved"
+            status: "approved",
+            tbk_child_commerce_code: "597099999999"
           }
         }
       end

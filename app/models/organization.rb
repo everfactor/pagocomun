@@ -13,5 +13,7 @@ class Organization < ApplicationRecord
   enum :status, %w[pending approved rejected].index_by(&:itself), prefix: :status
 
   validates :name, presence: true
-  validates :rut, presence: true
+  validates :rut, presence: true, uniqueness: true, rut: true
+
+  normalizes :rut, with: ->(rut) { rut&.upcase }
 end

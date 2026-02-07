@@ -14,23 +14,15 @@ class Bill::ChargerTest < ActiveSupport::TestCase
   end
 
   test "successful authorization creates payment with economic indicators" do
-    # Mock Transbank response manually
-    mock_response = Object.new
-    def mock_response.details
-      detail = Object.new
-      def detail.response_code
-        0
-      end
-
-      def detail.authorization_code
-        "AUTH123"
-      end
-      [detail]
-    end
-
-    def mock_response.as_json(options = nil)
-      {"mock" => "data"}
-    end
+    # Mock Transbank response as hash (matching actual Transbank response structure)
+    mock_response = {
+      "details" => [
+        {
+          "response_code" => 0,
+          "authorization_code" => "AUTH123"
+        }
+      ]
+    }
 
     # Manual stub for TransbankClient.mall_transaction
     class << TransbankClient
@@ -72,14 +64,13 @@ class Bill::ChargerTest < ActiveSupport::TestCase
   end
 
   test "failed authorization does not create payment" do
-    mock_response = Object.new
-    def mock_response.details
-      detail = Object.new
-      def detail.response_code
-        -1
-      end
-      [detail]
-    end
+    mock_response = {
+      "details" => [
+        {
+          "response_code" => -1
+        }
+      ]
+    }
 
     # Manual stub for TransbankClient.mall_transaction
     class << TransbankClient

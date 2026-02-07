@@ -8,7 +8,7 @@ puts "Creating base organization..."
 # Create base organization
 organization = Organization.find_or_create_by!(tbk_child_commerce_code: "597055555532") do |org|
   org.name = "Pago Común Demo Organization"
-  org.rut = "76.123.456-7"
+  org.rut = "76123456-0"
   org.slug = "demo-org"
   org.active = true
   org.org_type = :community
@@ -96,9 +96,9 @@ puts "\nCreating 3 organizations..."
 # Create 3 organizations
 organizations = []
 org_data = [
-  {name: "Organization Alpha", rut: "76.111.111-1", slug: "org-alpha", tbk_child_commerce_code: "597055555533"},
-  {name: "Organization Beta", rut: "76.222.222-2", slug: "org-beta", tbk_child_commerce_code: "597055555534"},
-  {name: "Organization Gamma", rut: "76.333.333-3", slug: "org-gamma", tbk_child_commerce_code: "597055555535"}
+  {name: "Organization Alpha", rut: "76111111-6", slug: "org-alpha", tbk_child_commerce_code: "597055555533"},
+  {name: "Organization Beta", rut: "76222222-1", slug: "org-beta", tbk_child_commerce_code: "597055555534"},
+  {name: "Organization Gamma", rut: "76333333-7", slug: "org-gamma", tbk_child_commerce_code: "597055555535"}
 ]
 
 org_data.each do |data|
