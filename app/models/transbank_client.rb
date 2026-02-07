@@ -1,7 +1,7 @@
 class TransbankClient
-  COMMERCE_CODE = "597055555541"
-  API_KEY = "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C"
-  TBK_ENVIRONMENT = :integration
+  COMMERCE_CODE = Rails.application.credentials.transbank.commerce_code
+  API_KEY = Rails.application.credentials.transbank.api_key
+  TBK_ENVIRONMENT = Rails.configuration.settings.transbank_environment
 
   def self.client
     new.client

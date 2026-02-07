@@ -1,0 +1,188 @@
+<div class="mx-auto max-w-7xl">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Corrida de Cobro #<%= @charge_run.id %></h1>
+      <p class="mt-2 text-sm text-gray-600">Detalles de la corrida</p>
+    </div>
+    <div class="flex gap-2">
+      <%= link_to "Exportar CSV", export_manage_charge_run_path(@charge_run, format: :csv), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= link_to "Exportar XLS", export_manage_charge_run_path(@charge_run, format: :xlsx), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= link_to "Volver", manage_charge_runs_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Información de la Corrida</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Tipo</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @charge_run.run_type == "scheduled" ? "Automática" : "Manual" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Estado</dt>
+            <dd class="mt-1">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
+                case @charge_run.status
+                when 'completed'
+                  'bg-green-100 text-green-800'
+                when 'running'
+                  'bg-yellow-100 text-yellow-800'
+                when 'failed'
+                  'bg-red-100 text-red-800'
+                else
+                  'bg-gray-100 text-gray-800'
+                end
+              %>">
+                <%= @charge_run.status.humanize %>
+              </span>
+            </dd>
+          </div>
+          <% if @charge_run.organization %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Organización</dt>
+              <dd class="mt-1 text-sm text-gray-900">
+                <%= link_to @charge_run.organization.name, manage_organization_path(@charge_run.organization), class: "text-blue-600 hover:text-blue-900" %>
+              </dd>
+            </div>
+          <% end %>
+          <% if @charge_run.triggered_by %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Iniciado por</dt>
+              <dd class="mt-1 text-sm text-gray-900">
+                <%= @charge_run.triggered_by.email_address %>
+              </dd>
+            </div>
+          <% end %>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Fecha de Inicio</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @charge_run.started_at&.strftime("%d/%m/%Y %H:%M:%S") || "N/A" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Fecha de Finalización</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @charge_run.completed_at&.strftime("%d/%m/%Y %H:%M:%S") || "N/A" %></dd>
+          </div>
+          <% if @charge_run.error_message.present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Error</dt>
+              <dd class="mt-1 text-sm text-red-600"><%= @charge_run.error_message %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Estadísticas</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Total de Facturas</dt>
+            <dd class="mt-1 text-lg font-semibold text-gray-900"><%= @charge_run.total_bills %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Cobros Exitosos</dt>
+            <dd class="mt-1 text-lg font-semibold text-green-600"><%= @charge_run.successful_charges %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Cobros Fallidos</dt>
+            <dd class="mt-1 text-lg font-semibold text-red-600"><%= @charge_run.failed_charges %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Omitidos</dt>
+            <dd class="mt-1 text-lg font-semibold text-gray-600"><%= @charge_run.skipped_charges %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 overflow-hidden rounded-lg bg-white shadow">
+    <div class="p-6">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-gray-900">Intentos de Cobro</h2>
+        <%= form_tag manage_charge_run_path(@charge_run), method: :get, class: "flex gap-2" do %>
+          <%= select_tag :status, options_for_select([["Todos", ""], ["Exitosos", "success"], ["Fallidos", "failed"], ["Rechazados", "rejected"], ["Omitidos", "skipped"]], params[:status]), class: "rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", onchange: "this.form.submit()" %>
+        <% end %>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Organización</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Unidad</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Período</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Monto</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Estado</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Error</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Intentos</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% if @charge_attempts.any? %>
+              <% @charge_attempts.each do |attempt| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#<%= attempt.id %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= attempt.bill.organization.name %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= attempt.bill.unit.number %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= attempt.bill.period %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <%= number_to_currency(attempt.bill.amount, unit: "$", separator: ".", delimiter: ".") %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
+                      case attempt.status
+                      when 'success'
+                        'bg-green-100 text-green-800'
+                      when 'failed'
+                        'bg-red-100 text-red-800'
+                      when 'rejected'
+                        'bg-orange-100 text-orange-800'
+                      when 'skipped'
+                        'bg-gray-100 text-gray-800'
+                      else
+                        'bg-yellow-100 text-yellow-800'
+                      end
+                    %>">
+                      <%= attempt.status.humanize %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-500">
+                    <% if attempt.error_message.present? %>
+                      <span class="text-xs"><%= truncate(attempt.error_message, length: 50) %></span>
+                    <% else %>
+                      -
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= attempt.retry_count %>
+                    <% if attempt.retryable %>
+                      <span class="text-yellow-600">(reintentable)</span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500">No se encontraron intentos</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <% if @pagy.pages > 1 %>
+        <div class="mt-6 flex justify-center">
+          <%== @pagy.series_nav %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

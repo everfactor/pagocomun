@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :payment_methods, through: :unit_user_assignments
   has_many :assigned_units, through: :unit_user_assignments, source: :unit
   has_many :payments, foreign_key: :payer_user_id
+  has_many :triggered_charge_runs, class_name: "ChargeRun", foreign_key: :triggered_by_id
   belongs_to :unit, primary_key: :email, foreign_key: :email_address, optional: true
   has_many :units, through: :unit_user_assignments
   has_one :active_assignment, -> { active }, class_name: "UnitUserAssignment"

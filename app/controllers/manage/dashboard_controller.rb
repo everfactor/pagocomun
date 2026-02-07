@@ -24,6 +24,14 @@ module Manage
       # Units without active user assignment
       @units_missing_assignment = @units.where.not(id: UnitUserAssignment.active.select(:unit_id))
 
+      # Technical errors from charge attempts (filtered by user's organizations)
+      @technical_errors = ChargeAttempt.technical_errors
+        .joins(:bill)
+        .where(bills: {unit_id: @units.pluck(:id)})
+        .includes(:bill, bill: [:unit, :organization])
+        .order(created_at: :desc)
+        .limit(10)
+
       # Economic Indicators status
       @indicators = EconomicIndicator.snapshot
       @uf_sync_error = Rails.cache.read("cmf_sync_error_uf")

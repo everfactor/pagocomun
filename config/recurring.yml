@@ -5,3 +5,6 @@ generate_monthly_bills:
 fetch_economic_indicators:
   command: "CMF::IndicatorFetcher.call"
   schedule: "0 6 * * *" # Run every day at 6:00 AM
+daily_charge_run:
+  class: DailyChargeJob
+  schedule: "0 8 * * *" # Run every day at 8:00 AM

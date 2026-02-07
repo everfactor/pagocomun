@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_18_232860) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_29_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,6 +24,47 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_18_232860) do
     t.bigint "unit_id", null: false
     t.datetime "updated_at", null: false
     t.index ["unit_id"], name: "index_bills_on_unit_id"
+  end
+
+  create_table "charge_attempts", force: :cascade do |t|
+    t.bigint "bill_id", null: false
+    t.bigint "charge_run_id", null: false
+    t.datetime "created_at", null: false
+    t.text "error_message"
+    t.string "error_type", default: "none"
+    t.bigint "payment_id"
+    t.integer "response_code"
+    t.integer "retry_count", default: 0
+    t.boolean "retryable", default: false
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bill_id"], name: "index_charge_attempts_on_bill_id"
+    t.index ["charge_run_id"], name: "index_charge_attempts_on_charge_run_id"
+    t.index ["error_type"], name: "index_charge_attempts_on_error_type"
+    t.index ["payment_id"], name: "index_charge_attempts_on_payment_id"
+    t.index ["retryable"], name: "index_charge_attempts_on_retryable"
+    t.index ["status"], name: "index_charge_attempts_on_status"
+  end
+
+  create_table "charge_runs", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.text "error_message"
+    t.integer "failed_charges", default: 0
+    t.bigint "organization_id"
+    t.string "run_type", default: "scheduled", null: false
+    t.integer "skipped_charges", default: 0
+    t.datetime "started_at"
+    t.string "status", default: "pending", null: false
+    t.integer "successful_charges", default: 0
+    t.integer "total_bills", default: 0
+    t.bigint "triggered_by_id"
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_charge_runs_on_created_at"
+    t.index ["organization_id"], name: "index_charge_runs_on_organization_id"
+    t.index ["run_type"], name: "index_charge_runs_on_run_type"
+    t.index ["status"], name: "index_charge_runs_on_status"
+    t.index ["triggered_by_id"], name: "index_charge_runs_on_triggered_by_id"
   end
 
   create_table "economic_indicators", force: :cascade do |t|
@@ -157,6 +198,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_18_232860) do
   end
 
   add_foreign_key "bills", "units"
+  add_foreign_key "charge_attempts", "bills"
+  add_foreign_key "charge_attempts", "charge_runs"
+  add_foreign_key "charge_attempts", "payments"
+  add_foreign_key "charge_runs", "organizations"
+  add_foreign_key "charge_runs", "users", column: "triggered_by_id"
   add_foreign_key "organization_memberships", "organizations"
   add_foreign_key "organization_memberships", "users"
   add_foreign_key "payment_methods", "unit_user_assignments"

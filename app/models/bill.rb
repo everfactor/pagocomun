@@ -2,6 +2,7 @@ class Bill < ApplicationRecord
   belongs_to :unit
   has_one :organization, through: :unit
   has_many :payments, dependent: :restrict_with_error
+  has_many :charge_attempts, dependent: :destroy
 
   enum :status, %w[pending paid failed].index_by(&:itself), prefix: :status
 

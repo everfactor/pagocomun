@@ -25,5 +25,6 @@ module Pagocomun
     # config.eager_load_paths << Rails.root.join("extras")
     config.i18n.default_locale = :es
     config.time_zone = "America/Santiago"
+    config.settings = config_for(:settings)
   end
 end
